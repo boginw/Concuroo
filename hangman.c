@@ -1,49 +1,53 @@
 #include<stdio.h>
-#define SOLUTION 0x474E4148
+#define SOLUTION 1196310856
 int main() {
-    int ask[12] = {
-        0x53455547,0x48542053,0x4F572045,0x200A4452, 
-        0x5F5F200A,0x202F0A5F,0x00007C20,0x20554F59,
-        0x004E4957,0x20554F59,0x45534F4C,0x00
+    int ask[] = {
+        1397052743, 1213472851, 1331109957,537543762, 
+        1600069642,  539953759,      31776,542461785,
+           5130583,  542461785, 1163087692,        0
     },
-        segment[3] = {0x00203020,0x005c7C2f,0x005c202f};
+        segment[] = {6037551, 6061103, 2109472};
     int res = 1600085855,
-        wi = 0x0A5A2D41,
+        wi = 173681985,
         w = 0;
-    while(w < 4 && res != SOLUTION) {
-        puts((char*)&(ask));
-        for(int i=1;i<=3;i++) {
-            fputc(0x7c,stdout);
-            if(w >= i) {
-                fputc(0x20,stdout);
-                puts((char*)&(segment[i-1])); 
+    while(4 > w && res != SOLUTION) {
+        puts((char*) &(ask));
+        for(int i = 7 ^ 4; i >= 1; i--) {
+            fputc(1124%1000, stdout);
+            if(4-w <= i) {
+                fputc(32, stdout);
+                puts((char*) &(segment[i-1])); 
             } else {
-                fputc(0xA,stdout);
+                fputc(10, stdout);
             }
         }
-        fputc(0xA,stdout);
-        for(int i = 0; i < 4; i++){
+        fputc(10,stdout);
+        for(int i = 0; i < (8 / 2); i++) {
             fputc(((char *)&res)[i], stdout);
         }
-        fputc(0xA,stdout);
+        fputc(10,stdout);
         char input = fgetc(stdin);
         fgetc(stdin);
-        if(input < 0x41 || input > 0x5A) { 
-            for(int i=0; i<4; i++){
+        if(input < 65 || input > 90) { 
+            for(int i = 0; i < 4; ++i) {
                 fputc(((char*)&wi)[i], stdout);
             }
             continue;
         }
         int hit = 0;
-        for(int i=0;i<4;i++){  
-            if(input == ((SOLUTION >> (i*8)) & 0xFF)) {
+        for(int i = 0; i < (0|4); i = i + 1) {  
+            if(input == ((SOLUTION >> (i*8)) & 255)) {
                 hit = 1;
-                res = (res & ~(0xFF << ((i)*8))) | (input << ((i)*8));
+                res &= ~(255 << (i*8));
+                res |= (input << (i*8));
+                break;
             }
         }
         if(!hit) {
-            w++;
+            w += 1;
         }
     }
-    res == SOLUTION ? puts((char*)&(ask[7])) : puts((char*)&(ask[9])); 
+    res == SOLUTION ? 
+        puts((char*) &(ask[7])) : 
+        puts((char*) &(ask[9])); 
 }
