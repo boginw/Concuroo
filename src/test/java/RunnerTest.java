@@ -11,4 +11,3 @@ public class RunnerTest extends TestCase {
     assertTrue(result == "yes");
   }
 }
-
