@@ -6,7 +6,7 @@ public class SumFactory implements Factory<SumExpression> {
     @Override
     public int is(String input, int pos) {
         char c = input.charAt(pos);
-        return c == '+'  ? pos + 1 : -1;
+        return (c == '+') ? (pos + 1) : -1;
     }
 
     @Override
