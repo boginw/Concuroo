@@ -18,6 +18,6 @@ public class EOFTest {
   public void literal() {
     EOF e = new EOF();
 
-    assertEquals(e.literal, '\0');
+    assertEquals(e.literal, "\0");
   }
 }

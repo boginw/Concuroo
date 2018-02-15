@@ -22,9 +22,8 @@ public class IdentifierNodeTest {
     IdentifierNode node_two = new IdentifierNode();
     node_two.setValue(5);
 
-
     IdentifierNode node_three = new IdentifierNode();
-    node_two.setValue(6);
+    node_three.setValue(6);
 
     assertTrue(node_one.equals(node_two));
     assertTrue(node_two.equals(node_one));
