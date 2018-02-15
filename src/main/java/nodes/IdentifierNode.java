@@ -3,10 +3,10 @@ package nodes;
 import symbol.Symbol;
 import symbol.SymbolType;
 
-public class IdentiferNode extends Symbol implements Node {
+public class IdentifierNode extends Symbol implements Node {
     private int value = 0;
 
-    public IdentiferNode() {
+    public IdentifierNode() {
         super("IDENT", 15, SymbolType.IDENT);
     }
 
