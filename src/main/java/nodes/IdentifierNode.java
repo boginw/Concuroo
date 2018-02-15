@@ -3,11 +3,11 @@ package nodes;
 import symbol.Symbol;
 import symbol.SymbolType;
 
-public class IdentiferNode extends Symbol implements Node {
+public class IdentifierNode extends Symbol implements Node {
     private int value = 0;
 
-    public IdentiferNode() {
-        super("IDENT", 15, SymbolType.IDENT);
+    public IdentifierNode(String literal) {
+        super(literal, 15, SymbolType.IDENT);
     }
 
     public void setValue(int val){

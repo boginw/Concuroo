@@ -1,20 +1,19 @@
 package symbol;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
 
 public class SymbolTable {
-    private List<Symbol> symbols;
+    private Hashtable<String, Symbol> symbols;
 
     public SymbolTable(){
-        symbols = new ArrayList<>();
+        symbols = new Hashtable<>();
     }
 
     public Symbol lookup(String literal) {
-        return null;
+        return symbols.get(literal);
     }
 
     public void insert(Symbol s){
-        symbols.add(s);
+        symbols.put(s.literal, s);
     }
 }

@@ -11,7 +11,13 @@ public class LG {
             new IntegerFactory(),
             new ModFactory(),
             new ProductFactory(),
-            new SumFactory()
+            new SumFactory(),
+            new AssignmentFactory()
+    };
+
+    public static StatementFactory<?> statements[] = new StatementFactory[]{
+            new AssignmentFactory(),
+            new IfFactory()
     };
 
     /*// Control

@@ -9,7 +9,8 @@ public enum SymbolType {
     FLOAT_LITERAL,
     EOF,
     TYPE,
-    QUALIFIER;
+    QUALIFIER,
+    DECLARATION;
 
     public long getValue(){
         return 1 << this.ordinal();
