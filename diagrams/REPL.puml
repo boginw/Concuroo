@@ -1,0 +1,14 @@
+@startuml
+!include Parser.puml
+
+class Lexer{
+}
+
+
+class Runner {
+    +start():void
+}
+
+Runner o-- Lexer
+Runner o-- Parser
+@enduml
