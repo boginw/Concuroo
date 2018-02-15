@@ -11,7 +11,7 @@ public class IdentifierNodeTest {
     IdentifierNode node_one = new IdentifierNode();
     node_one.setValue(5);
 
-    assertEquals(node_one.getValue, 5);
+    assertEquals(node_one.getValue(), 5);
   }
 
   @Test
