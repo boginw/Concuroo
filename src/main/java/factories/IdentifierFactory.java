@@ -1,8 +1,8 @@
 package factories;
 
-import nodes.IdentiferNode;
+import nodes.IdentifierNode;
 
-public class IdentifierFactory implements Factory<IdentiferNode> {
+public class IdentifierFactory implements Factory<IdentifierNode> {
     @Override
     public int is(String input, int pos) {
         String identifier = readIdentifier(input, pos);
@@ -10,8 +10,8 @@ public class IdentifierFactory implements Factory<IdentiferNode> {
     }
 
     @Override
-    public IdentiferNode makeInstance(String literal) {
-        return new IdentiferNode();
+    public IdentifierNode makeInstance(String literal) {
+        return new IdentifierNode();
     }
 
     private String readIdentifier(String input, int pos) {
