@@ -3,7 +3,7 @@ package factories.statement;
 import nodes.Node;
 import nodes.statements.IfStatement;
 import symbol.SymbolTable;
-import symbol.TokenType;
+import language.TokenType;
 
 public class IfFactory implements StatementFactory<IfStatement> {
 

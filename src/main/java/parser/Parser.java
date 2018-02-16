@@ -7,7 +7,7 @@ import nodes.expressions.operators.binary.BinaryOperator;
 import nodes.expressions.operators.groups.Group;
 import nodes.expressions.operators.unary.UnaryOperator;
 import nodes.statements.Statement;
-import symbol.LG;
+import language.LG;
 import symbol.SymbolTable;
 
 import java.util.Stack;

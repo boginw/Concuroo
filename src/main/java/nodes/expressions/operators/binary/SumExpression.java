@@ -1,7 +1,7 @@
 package nodes.expressions.operators.binary;
 
 import nodes.expressions.Expression;
-import symbol.Associativity;
+import language.Associativity;
 
 public class SumExpression implements BinaryOperator {
     private Expression left;

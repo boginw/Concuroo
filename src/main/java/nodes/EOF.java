@@ -1,6 +1,4 @@
-package symbol;
-
-import nodes.Node;
+package nodes;
 
 public class EOF implements Node {
 

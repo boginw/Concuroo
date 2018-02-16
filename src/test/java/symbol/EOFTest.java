@@ -2,6 +2,7 @@ package symbol;
 
 import static org.junit.Assert.*;
 
+import nodes.EOF;
 import org.junit.Test;
 
 public class EOFTest {

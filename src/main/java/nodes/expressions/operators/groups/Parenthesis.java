@@ -1,8 +1,7 @@
 package nodes.expressions.operators.groups;
 
 
-import nodes.expressions.operators.groups.Group;
-import symbol.Associativity;
+import language.Associativity;
 
 public class Parenthesis implements Group {
     private boolean isStart;

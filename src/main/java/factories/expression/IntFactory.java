@@ -1,7 +1,7 @@
 package factories.expression;
 
 import nodes.expressions.atoms.IntegerNode;
-import symbol.TokenType;
+import language.TokenType;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

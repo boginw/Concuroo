@@ -1,7 +1,7 @@
 import lexer.Lexer;
 import nodes.Node;
 import parser.Parser;
-import symbol.LG;
+import language.LG;
 import symbol.SymbolTable;
 
 import java.util.Scanner;
@@ -10,8 +10,7 @@ public class REPL {
     @SuppressWarnings("InfiniteLoopStatement")
     public static void start(){
         SymbolTable st = new SymbolTable();
-        LG lg = new LG();
-        LD.registerTokens(lg);
+        LG lg = new ConcurooDefinition().getGrammar();
         Lexer l = new Lexer(st, lg);
 
         while(true) {

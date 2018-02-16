@@ -1,16 +1,19 @@
 
 import factories.expression.*;
 import factories.statement.IfFactory;
+import language.LanguageDefinition;
 import nodes.expressions.operators.groups.Curly;
 import nodes.expressions.operators.groups.Parenthesis;
 import nodes.expressions.operators.groups.Square;
-import symbol.LG;
+import language.LG;
 
-import static symbol.LG.LanguageType.*;
-import static symbol.TokenType.*;
+import static language.LG.LanguageType.*;
+import static language.TokenType.*;
 
-public class LD {
-    public static void registerTokens(LG g){
+public class ConcurooDefinition extends LanguageDefinition{
+
+    @Override
+    public void registerTokens(LG g){
         // Operators
         g.registerToken("+", new SumFactory());
         /*g.registerToken("-", new DifferenceFactory());
@@ -40,11 +43,13 @@ public class LD {
         g.registerToken("BOOL","bool", TYPE);
         g.registerToken("STRING","string", TYPE);
         g.registerToken("VOID","void", TYPE);
+    }
 
+    @Override
+    public void registerStatements(LG g) {
         g.registerStatement(new IfFactory(), new Object[][]{
                 new Object[]{"IF","(",EXPR,")","{",STAT,"}"}
         });
-
         /*g.registerStatement(new DeclarationFactory(), new Object[][]{
                 new Object[]{TYPE,"IDENT","="}
         });

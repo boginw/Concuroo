@@ -1,7 +1,7 @@
 package factories.expression;
 
 import nodes.expressions.operators.groups.Group;
-import symbol.TokenType;
+import language.TokenType;
 
 import java.util.function.Supplier;
 

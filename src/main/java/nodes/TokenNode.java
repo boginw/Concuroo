@@ -1,6 +1,6 @@
 package nodes;
 
-import symbol.TokenType;
+import language.TokenType;
 
 public class TokenNode implements Node {
 

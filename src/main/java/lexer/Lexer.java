@@ -1,5 +1,7 @@
 package lexer;
 
+import language.LG;
+import nodes.EOF;
 import nodes.Node;
 import symbol.*;
 

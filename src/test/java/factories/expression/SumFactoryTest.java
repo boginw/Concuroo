@@ -3,7 +3,7 @@ package factories.expression;
 import nodes.expressions.operators.binary.SumExpression;
 import org.junit.Assert;
 import org.junit.Test;
-import symbol.Associativity;
+import language.Associativity;
 
 
 public class SumFactoryTest {

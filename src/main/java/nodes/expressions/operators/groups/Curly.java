@@ -1,6 +1,6 @@
 package nodes.expressions.operators.groups;
 
-import symbol.Associativity;
+import language.Associativity;
 
 public class Curly implements Group {
     private boolean isStart;

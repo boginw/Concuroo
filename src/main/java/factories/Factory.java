@@ -1,7 +1,7 @@
 package factories;
 
 import nodes.Node;
-import symbol.TokenType;
+import language.TokenType;
 
 /**
  * This interface defines two critical part of the lexer

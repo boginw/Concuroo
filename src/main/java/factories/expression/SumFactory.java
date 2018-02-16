@@ -1,7 +1,7 @@
 package factories.expression;
 
 import nodes.expressions.operators.binary.SumExpression;
-import symbol.TokenType;
+import language.TokenType;
 
 public class SumFactory implements ExpressionFactory<SumExpression> {
     @Override

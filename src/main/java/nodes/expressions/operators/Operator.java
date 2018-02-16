@@ -1,7 +1,7 @@
 package nodes.expressions.operators;
 
 import nodes.expressions.Expression;
-import symbol.Associativity;
+import language.Associativity;
 
 public interface Operator extends Expression {
     int getPrecedence();

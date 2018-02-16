@@ -1,4 +1,4 @@
-package symbol;
+package language;
 
 public enum Associativity {
     LeftToRight,
