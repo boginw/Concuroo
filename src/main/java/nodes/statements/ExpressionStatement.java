@@ -1,14 +1,17 @@
 package nodes.statements;
 
 import nodes.Node;
-import symbol.SymbolType;
 
-public class ExpressionStatement extends Statement {
+public class ExpressionStatement implements Statement {
     private final Node expr;
 
     public ExpressionStatement(Node expr) {
-        super("", 0, SymbolType.INT_LITERAL);
         this.expr = expr;
+    }
+
+    @Override
+    public String getLiteral() {
+        return expr.getLiteral();
     }
 
     @Override

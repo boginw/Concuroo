@@ -1,26 +1,27 @@
 import lexer.Lexer;
+import nodes.Node;
 import parser.Parser;
-import symbol.Symbol;
+import symbol.LG;
 import symbol.SymbolTable;
 
-import java.util.Arrays;
 import java.util.Scanner;
-import java.util.stream.Stream;
 
 public class REPL {
     @SuppressWarnings("InfiniteLoopStatement")
     public static void start(){
         SymbolTable st = new SymbolTable();
-        Lexer l = new Lexer(st);
+        LG lg = new LG();
+        LD.registerTokens(lg);
+        Lexer l = new Lexer(st, lg);
 
         while(true) {
             System.out.print(">> ");
             Scanner scanner = new Scanner(System.in);
             String line = scanner.nextLine();
-            Symbol[] symbols = l.lex(line);
+            Node[] tokens = l.lex(line);
 
             try {
-                String result = String.valueOf(Parser.AST(line, st, symbols).getVal());
+                String result = String.valueOf(Parser.AST(line, st, tokens, lg).getVal());
                 System.out.println(result);
             } catch (Exception e) {
                 System.out.println();

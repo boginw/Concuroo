@@ -1,7 +1,16 @@
 package symbol;
 
-public class EOF extends Symbol {
-    public EOF() {
-        super("\0", 0, SymbolType.EOF);
+import nodes.Node;
+
+public class EOF implements Node {
+
+    @Override
+    public String getLiteral() {
+        return "EOF";
+    }
+
+    @Override
+    public int getVal() {
+        return 0;
     }
 }

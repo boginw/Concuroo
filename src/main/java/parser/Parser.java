@@ -1,107 +1,87 @@
 package parser;
 
-import factories.StatementFactory;
-import lexer.Lexer;
 import nodes.Node;
 import nodes.expressions.Expression;
-import nodes.statements.ExpressionStatement;
+import nodes.expressions.operators.Operator;
+import nodes.expressions.operators.binary.BinaryOperator;
+import nodes.expressions.operators.groups.Group;
+import nodes.expressions.operators.unary.UnaryOperator;
 import nodes.statements.Statement;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import symbol.LG;
-import symbol.Symbol;
 import symbol.SymbolTable;
-import symbol.SymbolType;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
 public class Parser {
 
-    public static Statement AST(String input, SymbolTable st, Symbol[] symbols) {
-        return StatementAST(symbols, st);
+    public static Statement AST(String input, SymbolTable st, Node[] tokens, LG lg) {
+        return StatementAST(tokens, st, lg);
     }
 
-    public static Statement StatementAST(Symbol[] symbols, SymbolTable st) {
-        List<Pair<Integer, Statement>> apply = new ArrayList<>();
-        for (StatementFactory<?> factory: LG.statements) {
-            int newPos = factory.is(symbols);
-            if(newPos != -1) {
-                apply.add(new ImmutablePair<>(newPos,
-                        factory.makeInstance(symbols, st)));
-            }
-        }
-
-        Statement ret;
-
-        if(apply.size() == 1) {
-            ret = apply.get(0).getValue();
-        } else if(apply.size() > 1) {
-            // TODO: handle this
-            return null;
-        } else {
-            ret = new ExpressionStatement(ExpressionAST(symbols, st));
-        }
-
-        return ret;
+    private static Statement StatementAST(Node[] tokens, SymbolTable st, LG lg) {
+        return (Statement) lg.lookupStatement(tokens);
     }
 
-    public static Node ExpressionAST(Symbol[] symbols, SymbolTable st) {
+    public static Node ExpressionAST(Node[] tokens, SymbolTable st) {
         // Shutting-yard algorithm
         // https://en.wikipedia.org/wiki/Shunting-yard_algorithm#The_algorithm_in_detail
-        Stack<Symbol> operators = new Stack<>();
+        Stack<Node> operators = new Stack<>();
         Stack<Node> outputs = new Stack<>();
 
-        for(Symbol t : symbols) {
-            if(t.type == SymbolType.CONTROL && t.literal.equals("(")) {
+        for(Node t : tokens) {
+            if(t instanceof Group && ((Group)t).isStart()) {
                 operators.push(t);
-            } else if((t.type.getValue() & SymbolType.OPERATOR.getValue()) > 0) {
+            } else if(t instanceof BinaryOperator) {
                 if(!operators.empty()) {
-                    Symbol op = operators.peek();
+                    BinaryOperator op = (BinaryOperator) operators.peek();
 
-                    while(!operators.empty() && op.precedence <= t.precedence &&
-                            !op.literal.equals("(")){
-                        Symbol operator = operators.pop();
+                    while(!operators.empty() && op.getPrecedence() <= ((BinaryOperator) t).getPrecedence() &&
+                            !op.getLiteral().equals("(")){
+                        Node operator = operators.pop();
                         expressionFromOperator(operator, outputs);
-                        op = operators.peek();
+                        op = (BinaryOperator) operators.peek();
                     }
                 }
                 operators.push(t);
-            } else if(t.type == SymbolType.CONTROL && t.literal.equals(")")) {
-                while (!operators.empty() && !operators.peek().literal.equals("(")) {
-                    Symbol operator = operators.pop();
+            } else if(t instanceof Group && !((Group)t).isStart()) {
+                while (!operators.empty() && !operators.peek().getLiteral().equals("(")) {
+                    Operator operator = (Operator) operators.pop();
                     expressionFromOperator(operator, outputs);
                 }
                 operators.pop();
-            } else if(t.type == SymbolType.IDENT) {
-                outputs.push((Node) st.lookup(t.literal));
+            /*} else if(t.type == TokenType.VARIABLE) {
+                outputs.push((Node) st.lookup(t.literal));*/
             } else {
-                outputs.push((Node) t);
+                outputs.push(t);
             }
         }
 
         while (!operators.empty()) {
-            Symbol operator = operators.pop();
+            Node operator = operators.pop();
             expressionFromOperator(operator, outputs);
         }
 
         return outputs.pop();
     }
 
-    private static void expressionFromOperator(Symbol operator, Stack<Node> outputs) {
+    private static void expressionFromOperator(Node operator, Stack<Node> outputs) {
         Expression exp;
         if(operator instanceof Expression) {
             exp = ((Expression) operator);
+            if(operator instanceof BinaryOperator){
+                Node e2 = outputs.pop();
+                Node e1 = outputs.pop();
+                ((BinaryOperator)exp).setLeft((Expression) e1);
+                ((BinaryOperator)exp).setRight((Expression) e2);
+            } else if(operator instanceof UnaryOperator){
+                Node e1 = outputs.pop();
+                ((UnaryOperator)exp).setLeft((Expression) e1);
+            }
         } else {
             // TODO: handle error
             return;
         }
 
-        Node e2 = outputs.pop();
-        Node e1 = outputs.pop();
-        exp.setLeft(e1);
-        exp.setRight(e2);
         outputs.push(exp);
     }
 }

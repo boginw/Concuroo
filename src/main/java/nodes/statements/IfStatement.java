@@ -1,15 +1,13 @@
 package nodes.statements;
 
 import nodes.Node;
-import symbol.SymbolType;
 
-public class IfStatement extends Statement {
+public class IfStatement implements Statement {
     private Node condition;
     private Statement consequence;
     private Statement alternative;
 
     public IfStatement() {
-        super("IF", 0, SymbolType.CONTROL);
     }
 
     public void setCondition(Node condition){
@@ -25,10 +23,18 @@ public class IfStatement extends Statement {
     }
 
     @Override
+    public String getLiteral() {
+        return "";
+    }
+
+    @Override
     public int getVal() {
         if(condition.getVal() != 0){
             return consequence.getVal();
+        } else if(alternative != null && alternative.getVal() != 0){
+            return alternative.getVal();
         }
-        return alternative.getVal();
+
+        return 0;
     }
 }

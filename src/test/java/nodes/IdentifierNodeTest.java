@@ -2,6 +2,7 @@ package nodes;
 
 import static org.junit.Assert.*;
 
+import nodes.expressions.atoms.IdentifierNode;
 import org.junit.Test;
 
 public class IdentifierNodeTest {

@@ -1,38 +1,37 @@
 package lexer;
 
-import factories.Factory;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import nodes.Node;
 import symbol.*;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Lexer {
     private final SymbolTable symtable;
+    private final LG lg;
     private String input;
     private int pos; // points to current char
     private int readPos; // after current char
     private char ch; // current char under examination
 
-    public Lexer(SymbolTable symtable){
+    public Lexer(SymbolTable symtable, LG lg){
         this.symtable = symtable;
+        this.lg = lg;
     }
 
-    public Symbol[] lex(String input){
+    public Node[] lex(String input){
         this.input = input;
         pos = 0;
         readPos = 0;
         ch = 0;
         readChar();
 
-        List<Symbol> symbols = new ArrayList<>();
-        for (Symbol t = nextToken(); t.type != SymbolType.EOF; t = nextToken()) {
+        List<Node> symbols = new ArrayList<>();
+        for (Node t = nextNode(); t instanceof EOF; t = nextNode()) {
             symbols.add(t);
         }
 
-        return symbols.toArray(new Symbol[symbols.size()]);
+        return symbols.toArray(new Node[symbols.size()]);
     }
 
     private void readChar() {
@@ -45,41 +44,19 @@ public class Lexer {
         readPos++;
     }
 
-    private Symbol nextToken() {
+    private Node nextNode() {
         skipWhitespace();
 
         if(pos == input.length()){
             return new EOF();
         }
 
-        List<Pair<Integer, Symbol>> apply = new ArrayList<>();
-        for (Factory<?> factory: LG.symbols) {
-            int newPos = factory.is(input, pos);
-            if(newPos != -1){
-                apply.add(new ImmutablePair<>(newPos,
-                        factory.makeInstance(input.substring(pos, newPos))));
-            }
-        }
+        Node t = lg.lookupToken(input.substring(pos));
 
-        Pair<Integer, Symbol> ret;
-
-        switch (apply.size()) {
-            case 0:
-                ret = new ImmutablePair<>(0, null);
-                break;
-            case 1:
-                ret = apply.get(0);
-                break;
-            default:
-                apply.sort(Comparator.comparingInt(Pair::getKey));
-                ret = apply.get(apply.size() - 1);
-                break;
-        }
-
-        readPos = ret.getKey();
+        readPos = t.toString().length();
         readChar();
 
-        return ret.getValue();
+        return t;
     }
 
     private void skipWhitespace() {

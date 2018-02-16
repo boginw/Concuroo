@@ -1,19 +1,21 @@
 package symbol;
 
+import nodes.Node;
+
 import java.util.Hashtable;
 
 public class SymbolTable {
-    private Hashtable<String, Symbol> symbols;
+    private Hashtable<String, Node> symbols;
 
     public SymbolTable(){
         symbols = new Hashtable<>();
     }
 
-    public Symbol lookup(String literal) {
+    public Node lookup(String literal) {
         return symbols.get(literal);
     }
 
-    public void insert(Symbol s){
-        symbols.put(s.literal, s);
+    public void insert(Node s){
+        symbols.put(s.getLiteral(), s);
     }
 }
