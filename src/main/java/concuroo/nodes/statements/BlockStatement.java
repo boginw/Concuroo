@@ -25,6 +25,14 @@ public class BlockStatement implements Statement{
         statements.add(statement);
     }
 
+    /**
+     * Gets all statements in block
+     * @return All statements in block
+     */
+    public List<Statement> getStatements(){
+        return this.statements;
+    }
+
     @Override
     public String getLiteral() {
         // TODO: figure this out

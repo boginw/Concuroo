@@ -14,12 +14,12 @@ import java.util.Stack;
 
 public class Parser {
 
-    public static Statement AST(Node[] tokens, LG lg) {
-        return StatementAST(tokens, lg);
+    public static Statement AST(Node[] tokens, LG lg, SymbolTable st) {
+        return StatementAST(tokens, lg, st);
     }
 
-    public static Statement StatementAST(Node[] tokens, LG lg) {
-        return (Statement) lg.lookupStatement(tokens);
+    public static Statement StatementAST(Node[] tokens, LG lg, SymbolTable st) {
+        return (Statement) lg.lookupStatement(tokens, st);
     }
 
     public static Node ExpressionAST(Node[] tokens, SymbolTable st) {

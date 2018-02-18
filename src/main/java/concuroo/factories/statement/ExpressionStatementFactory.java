@@ -7,23 +7,12 @@ import concuroo.parser.Parser;
 import concuroo.symbol.SymbolTable;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class ExpressionStatementFactory implements StatementFactory<ExpressionStatement>{
-    @Override
-    public int is(Node[] symbols) {
-        if(!(symbols[0] instanceof Expression)){
-            return -1;
-        }
-
-        int i = 1;
-        while(i < symbols.length && symbols[i] instanceof Expression){
-            i++;
-        }
-        return i;
-    }
 
     @Override
-    public ExpressionStatement makeInstance(Node[] symbols, SymbolTable st) {
+    public ExpressionStatement makeInstance(Node[] symbols, List<Node> st) {
         ExpressionStatement e = new ExpressionStatement();
         int i = 0;
         while(i < symbols.length && symbols[i] instanceof Expression){

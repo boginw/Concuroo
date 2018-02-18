@@ -53,4 +53,14 @@ public abstract class LanguageDefinition {
     protected final Class<Statement> stat(){
         return Statement.class;
     }
+
+    /**
+     * Used in statement definitions to denote a multiple
+     * of either statements or expressions
+     * @param t Multiple of
+     * @return Array with t inside.
+     */
+    protected final Class<?>[] multi(Class<?> t){
+        return new Class<?>[]{t};
+    }
 }

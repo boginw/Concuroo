@@ -3,7 +3,6 @@ package concuroo;
 import concuroo.factories.expression.*;
 import concuroo.factories.statement.IfFactory;
 import concuroo.language.LanguageDefinition;
-import concuroo.language.TokenType;
 import concuroo.nodes.expressions.operators.groups.Curly;
 import concuroo.nodes.expressions.operators.groups.Parenthesis;
 import concuroo.nodes.expressions.operators.groups.Square;
@@ -30,7 +29,6 @@ public class ConcurooDefinition extends LanguageDefinition{
         // Statements
         g.registerToken("IF", new IfFactory());
         g.registerToken("ELSE", "^else", STATEMENT);
-
         // Literals
         g.registerToken("LIT_INT", new IntFactory());
         // Types
@@ -44,9 +42,11 @@ public class ConcurooDefinition extends LanguageDefinition{
 
     @Override
     public void registerStatements(LG g) {
+        // ORDER OF REGISTRATION MATTERS, REGISTER EXPRESSION STATEMENTS LAST!
+
         g.registerStatement(new IfFactory(), new Object[][]{
+                new Object[]{ "IF", "(", expr(), ")", stat(), "ELSE", stat() },
                 new Object[]{ "IF", "(", expr(), ")", stat() }
         });
-
     }
 }

@@ -22,7 +22,7 @@ public class REPL {
             Node[] tokens = l.lex(line);
 
             try {
-                String result = String.valueOf(Parser.AST(tokens, lg).getVal());
+                String result = String.valueOf(Parser.AST(tokens, lg, st).getVal());
                 System.out.println(result);
             } catch (Exception e) {
                 System.out.println();

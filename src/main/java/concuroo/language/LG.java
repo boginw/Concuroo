@@ -8,6 +8,7 @@ import concuroo.nodes.expressions.Expression;
 import concuroo.nodes.expressions.operators.groups.Curly;
 import concuroo.nodes.expressions.operators.groups.Parenthesis;
 import concuroo.nodes.statements.Statement;
+import concuroo.parser.Parser;
 import concuroo.symbol.SymbolTable;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,7 +21,7 @@ public class LG {
     private final HashMap<String, Object[]> tokens;
     private final List<Pair<Object[][], StatementFactory<?>>> statements;
 
-    public LG(){
+    LG(){
         tokens = new HashMap<>();
         statements = new ArrayList<>();
     }
@@ -64,13 +65,14 @@ public class LG {
     }
 
     // TODO: clean this algorithm
-    // TODO: make this method return the Node and an int offset
-    public Node lookupStatement(Node[] tokens){
+    public Pair<Node, Integer> lookupStatement(Node[] tokens, SymbolTable symtable){
         for (Pair<Object[][], StatementFactory<?>> pair: statements) {
             Object[][] perms = pair.getLeft();
             for (Object[] perm: perms) {
                 boolean hit = true;
-                for (int i = 0, j = 0; i < perm.length && j < tokens.length; i++) {
+                int j = 0;
+                List<Node> arguments = new ArrayList<>();
+                for (int i = 0; i < perm.length && j < tokens.length; i++) {
                     // It's a string, which means it's a token
                     if(perm[i] instanceof String) {
                         Object[] p = this.tokens.get(perm[i].toString());
@@ -89,6 +91,8 @@ public class LG {
                             break;
                         }
 
+                        int from = j;
+
                         // If the last thing we saw was a '(' then we expect a ')'
                         if(i > 0 && perm[i - 1] instanceof String && perm[i - 1].equals("(")){
                             j = Utilities.findClosingToken(tokens, j, Parenthesis.class);
@@ -98,17 +102,43 @@ public class LG {
                                 j++;
                             }
                         }
-                    } else if(perm[i] instanceof Class && perm[i] == Statement.class){
-                        // If the last thing we saw was a '{' then we expect a '}'
-                        if(i > 0 && perm[i - 1] instanceof String && perm[i - 1].equals("{")){
-                            j = Utilities.findClosingToken(tokens, j, Curly.class);
-                        } else {
-                            // Recursively look for statement
-                            Statement st = (Statement) lookupStatement(Arrays.copyOfRange(tokens, j, tokens.length));
-                            if(st == null) {
-                                hit = false;
-                                break;
+
+                        Node[] t = Arrays.copyOfRange(tokens, from, j);
+                        if(j < tokens.length && tokens[j].getLiteral().equals(";")){
+                            j++;
+                        }
+                        arguments.add(Parser.ExpressionAST(t, new SymbolTable()));
+                    } else if(perm[i] instanceof Class && perm[i] == Statement.class) {
+                        // Recursively look for statement
+                        Pair<Node, Integer> st = lookupStatement(
+                                Arrays.copyOfRange(tokens, j, tokens.length), symtable);
+                        if (st == null) {
+                            hit = false;
+                            break;
+                        }
+                        j += st.getValue();
+                        arguments.add(st.getKey());
+                    } else if(perm[i] instanceof Class<?>[]){
+                        Class<?> c = ((Class<?>[]) perm[i])[0];
+                        if(c == Statement.class){
+                            int end = tokens.length;
+                            if(j > 0 && tokens.length > 1 && tokens[j - 1].getLiteral().equals("{")){
+                                end = Utilities.findClosingToken(tokens, j, Curly.class);
                             }
+
+                            while(j < end){
+                                Pair<Node, Integer> st = lookupStatement(
+                                        Arrays.copyOfRange(tokens, j, tokens.length), symtable);
+
+                                if(st == null){
+                                    break;
+                                }
+                                arguments.add(st.getKey());
+                                j += st.getValue();
+                            }
+                        } else {
+                            hit = false;
+                            break;
                         }
                     } else {
                         hit = false;
@@ -116,7 +146,8 @@ public class LG {
                     }
                 }
                 if(hit){
-                    return pair.getValue().makeInstance(tokens, new SymbolTable());
+                    Node n = pair.getValue().makeInstance(tokens, arguments);
+                    return new ImmutablePair<>(n, j);
                 }
             }
         }

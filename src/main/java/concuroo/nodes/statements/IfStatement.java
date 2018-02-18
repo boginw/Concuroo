@@ -14,12 +14,24 @@ public class IfStatement implements Statement {
         this.condition = condition;
     }
 
+    public Node getCondition() {
+        return condition;
+    }
+
     public void setConsequence(Statement consequence){
         this.consequence = consequence;
     }
 
+    public Statement getConsequence() {
+        return consequence;
+    }
+
     public void setAlternative(Statement alternative){
         this.alternative = alternative;
+    }
+
+    public Statement getAlternative() {
+        return alternative;
     }
 
     @Override

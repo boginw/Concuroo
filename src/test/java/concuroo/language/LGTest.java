@@ -15,6 +15,8 @@ import concuroo.nodes.statements.BlockStatement;
 import concuroo.nodes.statements.ExpressionStatement;
 import concuroo.nodes.statements.IfStatement;
 import concuroo.nodes.statements.Statement;
+import concuroo.symbol.SymbolTable;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,18 +25,20 @@ import static org.junit.Assert.*;
 
 public class LGTest {
     private static LG lg;
+    private static SymbolTable st;
     private static GroupFactory<Parenthesis> lpar;
     private static GroupFactory<Parenthesis> rpar;
-    private static GroupFactory<Curly> lqur;
-    private static GroupFactory<Curly> rqur;
+    private static GroupFactory<Curly> lcur;
+    private static GroupFactory<Curly> rcur;
 
     @Before
     public void beforeEach() {
         lg = new LG();
+        st = new SymbolTable();
         lpar = new GroupFactory<>('(', Parenthesis::new);
         rpar = new GroupFactory<>(')', Parenthesis::new);
-        lqur = new GroupFactory<>('{', Curly::new);
-        rqur = new GroupFactory<>('}', Curly::new);
+        lcur = new GroupFactory<>('{', Curly::new);
+        rcur = new GroupFactory<>('}', Curly::new);
     }
 
     @Test
@@ -76,20 +80,20 @@ public class LGTest {
                 new Object[]{ Expression.class }
         });
 
-        Node n = lg.lookupStatement(new Node[]{
+        Pair<Node, Integer> n = lg.lookupStatement(new Node[]{
                 new IntegerNode("1")
-        });
+        }, st);
 
-        assertTrue(n instanceof ExpressionStatement);
+        assertTrue(n.getKey() instanceof ExpressionStatement);
     }
 
     @Test
-    public void registersBlockStatement() {
+    public void registersEmptyBlockStatement() {
         lg.registerToken("{", new GroupFactory<>('{', Curly::new));
         lg.registerToken("}", new GroupFactory<>('}', Curly::new));
 
         lg.registerStatement(new BlockFactory(), new Object[][]{
-                new Object[]{ "{", Statement.class, "}" },
+                new Object[]{ "{", new Class<?>[]{Statement.class}, "}" },
                 new Object[]{ "{", "}" },
         });
 
@@ -97,13 +101,44 @@ public class LGTest {
                 new Object[]{ Expression.class }
         });
 
-        Node n = lg.lookupStatement(new Node[]{
-                lqur.makeNode("{"),
-                new IntegerNode("1"),
-                rqur.makeNode("}"),
+        Pair<Node, Integer> n = lg.lookupStatement(new Node[]{
+                lcur.makeNode("{"),
+                rcur.makeNode("}"),
+        }, st);
+
+        assertTrue(n.getKey() instanceof BlockStatement);
+        assertTrue(n.getValue() == 2);
+        assertTrue(((BlockStatement) n.getKey()).getStatements().size() == 0);
+    }
+
+    @Test
+    public void registersBlockStatement() {
+        lg.registerToken("{", new GroupFactory<>('{', Curly::new));
+        lg.registerToken("}", new GroupFactory<>('}', Curly::new));
+        lg.registerToken(";", "^\\;", SEMICOLON);
+
+
+        lg.registerStatement(new BlockFactory(), new Object[][]{
+                new Object[]{ "{", new Class<?>[]{Statement.class}, "}" },
+                new Object[]{ "{", "}" },
         });
 
-        assertTrue(n instanceof BlockStatement);
+        lg.registerStatement(new ExpressionStatementFactory(), new Object[][]{
+                new Object[]{ Expression.class }
+        });
+
+        Pair<Node, Integer> n = lg.lookupStatement(new Node[]{
+                lcur.makeNode("{"),
+                new IntegerNode("1"),
+                new TokenNode(";", TokenType.SEMICOLON, ";"),
+                new IntegerNode("2"),
+                new TokenNode(";", TokenType.SEMICOLON, ";"),
+                rcur.makeNode("}"),
+        }, st);
+
+        assertTrue(n.getKey() instanceof BlockStatement);
+        assertTrue(n.getValue() == 6);
+        assertTrue(((BlockStatement) n.getKey()).getStatements().size() == 2);
     }
 
     @Test
@@ -121,14 +156,91 @@ public class LGTest {
                 new Object[]{ Expression.class }
         });
 
-        Node n = lg.lookupStatement(new Node[]{
+        Pair<Node, Integer> n = lg.lookupStatement(new Node[]{
                 new IfStatement(),
                 lpar.makeNode("("),
                 new IntegerNode("1"),
                 rpar.makeNode(")"),
                 new IntegerNode("1")
+        }, st);
+
+        assertTrue(n.getKey() instanceof IfStatement);
+        assertTrue(5 == n.getValue());
+        assertTrue(((IfStatement) n.getKey()).getCondition() instanceof IntegerNode);
+        assertTrue(((IfStatement) n.getKey()).getConsequence() instanceof ExpressionStatement);
+    }
+
+    @Test
+    public void registersIfElseStatement() {
+        lg.registerToken("IF", new IfFactory());
+        lg.registerToken("(", new GroupFactory<>('(', Parenthesis::new));
+        lg.registerToken(")", new GroupFactory<>(')', Parenthesis::new));
+        lg.registerToken("ELSE", "^else", STATEMENT);
+
+        lg.registerStatement(new IfFactory(), new Object[][]{
+                new Object[]{ "IF", "(", Expression.class, ")", Statement.class, "ELSE", Statement.class },
+                new Object[]{ "IF", "(", Expression.class, ")", Statement.class }
         });
 
-        assertTrue(n instanceof IfStatement);
+        lg.registerStatement(new ExpressionStatementFactory(), new Object[][]{
+                new Object[]{ Expression.class }
+        });
+
+        Pair<Node, Integer> n = lg.lookupStatement(new Node[]{
+                new IfStatement(),
+                lpar.makeNode("("),
+                new IntegerNode("1"),
+                rpar.makeNode(")"),
+                new IntegerNode("1"),
+                new TokenNode("ELSE", TokenType.STATEMENT, "else"),
+                new IntegerNode("1")
+        }, st);
+
+        assertTrue(n.getKey() instanceof IfStatement);
+        assertTrue(7 == n.getValue());
+        assertTrue(((IfStatement) n.getKey()).getCondition() instanceof IntegerNode);
+        assertTrue(((IfStatement) n.getKey()).getConsequence() instanceof ExpressionStatement);
+        assertTrue(((IfStatement) n.getKey()).getAlternative() instanceof ExpressionStatement);
+    }
+
+
+    @Test
+    public void registersIfElseIfStatement() {
+        lg.registerToken("IF", new IfFactory());
+        lg.registerToken("(", new GroupFactory<>('(', Parenthesis::new));
+        lg.registerToken(")", new GroupFactory<>(')', Parenthesis::new));
+        lg.registerToken("ELSE", "^else", STATEMENT);
+
+        lg.registerStatement(new IfFactory(), new Object[][]{
+                new Object[]{ "IF", "(", Expression.class, ")", Statement.class, "ELSE", Statement.class },
+                new Object[]{ "IF", "(", Expression.class, ")", Statement.class }
+        });
+
+        lg.registerStatement(new ExpressionStatementFactory(), new Object[][]{
+                new Object[]{ Expression.class }
+        });
+
+        Pair<Node, Integer> n = lg.lookupStatement(new Node[]{
+                new IfStatement(),
+                lpar.makeNode("("),
+                new IntegerNode("1"),
+                rpar.makeNode(")"),
+                new IntegerNode("1"),
+                new TokenNode("ELSE", TokenType.STATEMENT, "else"),
+                new IfStatement(),
+                lpar.makeNode("("),
+                new IntegerNode("1"),
+                rpar.makeNode(")"),
+                new IntegerNode("1")
+        }, st);
+
+        assertTrue(n.getKey() instanceof IfStatement);
+        assertTrue(11 == n.getValue());
+        IfStatement st = (IfStatement) n.getKey();
+        assertTrue(st.getCondition() instanceof IntegerNode);
+        assertTrue(st.getConsequence() instanceof ExpressionStatement);
+        assertTrue(st.getAlternative() instanceof IfStatement);
+        assertTrue(((IfStatement) st.getAlternative()).getCondition() instanceof IntegerNode);
+        assertTrue(((IfStatement) st.getAlternative()).getConsequence() instanceof ExpressionStatement);
     }
 }

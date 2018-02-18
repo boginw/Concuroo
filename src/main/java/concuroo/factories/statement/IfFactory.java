@@ -1,13 +1,10 @@
 package concuroo.factories.statement;
 
-import concuroo.language.Utilities;
 import concuroo.nodes.Node;
-import concuroo.nodes.expressions.operators.groups.Curly;
-import concuroo.nodes.expressions.operators.groups.Parenthesis;
 import concuroo.nodes.statements.IfStatement;
-import concuroo.symbol.SymbolTable;
+import concuroo.nodes.statements.Statement;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class IfFactory implements StatementFactory<IfStatement> {
 
@@ -27,39 +24,18 @@ public class IfFactory implements StatementFactory<IfStatement> {
     }
 
     @Override
-    public int is(Node[] tokens) {
-        if(tokens.length < 6)
-        if(!(tokens[0] instanceof IfStatement)){
-            return -1;
-        } else if(!(tokens[1] instanceof Parenthesis) || !((Parenthesis)tokens[1]).isStart()){
-            return -1;
+    public IfStatement makeInstance(Node[] symbols, List<Node> st) {
+        IfStatement stat = new IfStatement();
+        if(st.size() > 0){
+            stat.setCondition(st.get(0));
+        }
+        if(st.size() > 1){
+            stat.setConsequence((Statement) st.get(1));
+        }
+        if(st.size() > 2){
+            stat.setAlternative((Statement) st.get(2));
         }
 
-        int par = Utilities.findClosingToken(tokens, 1, Parenthesis.class);
-
-        if(par == -1){
-            return -1;
-        }
-
-        if(!(tokens[par] instanceof Curly) || !((Curly)tokens[par]).isStart()){
-            // TODO: syntax error;
-            return -1;
-        }
-
-        Node[] condition = Arrays.copyOfRange(tokens, 2, par);
-
-        int cur = Utilities.findClosingToken(tokens, 1, Curly.class);
-
-        if(cur == -1){
-            return -1;
-        }
-
-        Node[] consequence = Arrays.copyOfRange(tokens, 2, par);
-        return -1;
-    }
-
-    @Override
-    public IfStatement makeInstance(Node[] symbols, SymbolTable st) {
-        return new IfStatement();
+        return stat;
     }
 }
