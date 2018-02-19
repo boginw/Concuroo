@@ -1,2 +1,3 @@
-# Language for concurrency in Arduino
-yea
+# Concuroo
+
+A C-like language for Arduino, built with concurrency.
