@@ -1,54 +1,55 @@
 package concuroo.nodes.expressions.operators.binary;
 
-import concuroo.nodes.expressions.Expression;
 import concuroo.language.Associativity;
+import concuroo.nodes.expressions.Expression;
 
 public class SumExpression implements BinaryOperator {
-    private Expression left;
-    private Expression right;
-    private final String literal;
 
-    public SumExpression(String literal){
-        this.literal = literal;
-    }
+  private final String literal;
+  private Expression left;
+  private Expression right;
 
-    @Override
-    public Expression getLeft() {
-        return left;
-    }
+  public SumExpression(String literal) {
+    this.literal = literal;
+  }
 
-    @Override
-    public Expression getRight() {
-        return right;
-    }
+  @Override
+  public Expression getLeft() {
+    return left;
+  }
 
-    @Override
-    public void setLeft(Expression e) {
-        left = e;
-    }
+  @Override
+  public void setLeft(Expression e) {
+    left = e;
+  }
 
-    @Override
-    public void setRight(Expression e) {
-        right = e;
-    }
+  @Override
+  public Expression getRight() {
+    return right;
+  }
 
-    @Override
-    public int getPrecedence() {
-        return 3;
-    }
+  @Override
+  public void setRight(Expression e) {
+    right = e;
+  }
 
-    @Override
-    public Associativity getAssociativity() {
-        return Associativity.LeftToRight;
-    }
+  @Override
+  public int getPrecedence() {
+    return 3;
+  }
 
-    @Override
-    public String getLiteral() {
-        return literal;
-    }
+  @Override
+  public Associativity getAssociativity() {
+    return Associativity.LeftToRight;
+  }
 
-    @Override
-    public int getVal() {
-        return left.getVal() + right.getVal();
-    }
+  @Override
+  public String getLiteral() {
+    return literal;
+  }
+
+  @Override
+  public int getVal() {
+    return left.getVal() + right.getVal();
+  }
 }

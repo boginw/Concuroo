@@ -1,6 +1,8 @@
 package concuroo.nodes;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import concuroo.nodes.expressions.atoms.IdentifierNode;
 import org.junit.Test;
@@ -17,16 +19,16 @@ public class IdentifierNodeTest {
 
   @Test
   public void equals() {
-      IdentifierNode node_one = new IdentifierNode("a");
-      node_one.setValue(5);
+    IdentifierNode node_one = new IdentifierNode("a");
+    node_one.setValue(5);
 
-      IdentifierNode node_two = new IdentifierNode("b");
-      node_two.setValue(5);
+    IdentifierNode node_two = new IdentifierNode("b");
+    node_two.setValue(5);
 
-      IdentifierNode node_three = new IdentifierNode("c");
-      node_three.setValue(6);
+    IdentifierNode node_three = new IdentifierNode("c");
+    node_three.setValue(6);
 
-      assertTrue(node_one.getVal() == node_two.getVal());
-      assertFalse(node_one.getVal() == node_three.getVal());
+    assertTrue(node_one.getVal() == node_two.getVal());
+    assertFalse(node_one.getVal() == node_three.getVal());
   }
 }

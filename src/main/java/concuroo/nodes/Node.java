@@ -1,6 +1,8 @@
 package concuroo.nodes;
 
 public interface Node {
-    String getLiteral();
-    int getVal();
+
+  String getLiteral();
+
+  int getVal();
 }

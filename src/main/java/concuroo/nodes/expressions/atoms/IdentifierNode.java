@@ -1,24 +1,25 @@
 package concuroo.nodes.expressions.atoms;
 
 public class IdentifierNode implements Atom {
-    private final String literal;
-    private int value = 0;
 
-    public IdentifierNode(String literal) {
-        this.literal = literal;
-    }
+  private final String literal;
+  private int value = 0;
 
-    public void setValue(int val){
-        value = val;
-    }
+  public IdentifierNode(String literal) {
+    this.literal = literal;
+  }
 
-    @Override
-    public String getLiteral() {
-        return literal;
-    }
+  public void setValue(int val) {
+    value = val;
+  }
 
-    @Override
-    public int getVal(){
-        return value;
-    }
+  @Override
+  public String getLiteral() {
+    return literal;
+  }
+
+  @Override
+  public int getVal() {
+    return value;
+  }
 }
