@@ -7,19 +7,19 @@ import concuroo.symbol.SymbolTable;
 import java.util.List;
 
 /**
- * The factory type that creates statements
+ * Factory that creates Statement Nodes
  *
- * @param <T> Type of the statement
+ * @param <T> A type T that extends the Statement interface
  */
 public interface StatementFactory<T extends Statement> extends Factory {
 
   /**
-   * Creates an instance and populates it with the arguments given
+   * Creates an populated instance of the given Node, given the arguments to do so.
    *
-   * @param symbols Symbols used to identifies the statement
-   * @param arguments Arguments found in the symbols
-   * @param symbolTable Symbol table
-   * @return An initialized instance of the statement
+   * @param symbols Symbols that recognized the node
+   * @param arguments Arguments for instantiating.
+   * @param symbolTable current SymbolTable at node's scope
+   * @return Instance of the given statement node.
    */
   T makeInstance(Node[] symbols, List<Node> arguments, SymbolTable symbolTable);
 }

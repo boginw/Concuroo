@@ -1,5 +1,6 @@
 package concuroo.nodes.statements;
 
+import concuroo.symbol.SymbolTable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,12 +10,14 @@ import java.util.List;
 public class BlockStatement implements Statement {
 
   private final List<Statement> statements;
+  private SymbolTable symbolTable;
 
   /**
    * Default constructor
    */
   public BlockStatement() {
     statements = new ArrayList<>();
+    symbolTable = new SymbolTable();
   }
 
   /**
@@ -48,5 +51,23 @@ public class BlockStatement implements Statement {
     }
 
     return 0;
+  }
+
+  /**
+   * Fetches the block's SymbolTable
+   *
+   * @return SymbolTable of the block
+   */
+  public SymbolTable getSymbolTable() {
+    return symbolTable;
+  }
+
+  /**
+   * Sets the block's SymbolTable
+   *
+   * @param symbolTable SymbolTable for the block
+   */
+  public void setSymbolTableParent(SymbolTable symbolTable) {
+    this.symbolTable.setParent(symbolTable);
   }
 }
