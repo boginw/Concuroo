@@ -20,28 +20,59 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * Language Grammar
+ */
 public class LG {
 
   private final HashMap<String, Object[]> tokens;
   private final List<Pair<Object[][], StatementFactory<?>>> statements;
 
+  /**
+   * Default constructor
+   */
   LG() {
     tokens = new HashMap<>();
     statements = new ArrayList<>();
   }
 
+  /**
+   * Registers a token to the grammar
+   *
+   * @param key Key of the token
+   * @param factory The factory that can recognize and create it
+   */
   public void registerToken(String key, Factory<?> factory) {
     tokens.put(key, new Object[]{factory});
   }
 
+  /**
+   * Registers a token to the grammar
+   *
+   * @param key Key of the token
+   * @param pattern RegEx pattern
+   * @param type Type of the token
+   */
   public void registerToken(String key, String pattern, TokenType type) {
     tokens.put(key, new Object[]{pattern, type});
   }
 
+  /**
+   * Registers a statement to the grammar
+   *
+   * @param factory The factory that can create it
+   * @param objects The patterns of the statement
+   */
   public void registerStatement(Factory<?> factory, Object[][] objects) {
     statements.add(new ImmutablePair<>(objects, (StatementFactory<?>) factory));
   }
 
+  /**
+   * Looks at all the tokens registered and finds the one that recognizes the input
+   *
+   * @param input Literal string to look for
+   * @return A token that recognizes the input
+   */
   public Node lookupToken(String input) {
     String found;
     for (Map.Entry<String, Object[]> t : tokens.entrySet()) {
@@ -68,6 +99,13 @@ public class LG {
     return null;
   }
 
+  /**
+   * Looks at all the statement patterns and finds the one that recognizes the tokens
+   *
+   * @param tokens Tokens to look at
+   * @param symtable The SymbolTable of the current scope
+   * @return A Pair with the Statement and how many tokens it is long
+   */
   // TODO: clean this algorithm
   public Pair<Node, Integer> lookupStatement(Node[] tokens, SymbolTable symtable) {
     for (Pair<Object[][], StatementFactory<?>> pair : statements) {

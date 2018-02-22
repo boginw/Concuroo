@@ -16,11 +16,23 @@ public class Lexer {
   private int readPos; // after current char
   private char ch; // current char under examination
 
+  /**
+   * Default constructor
+   *
+   * @param symtable Symboltable of the current scope
+   * @param lg Language grammar
+   */
   public Lexer(SymbolTable symtable, LG lg) {
     this.symtable = symtable;
     this.lg = lg;
   }
 
+  /**
+   * Performs a lexical analysis on the input
+   *
+   * @param input Input to lex
+   * @return A list of tokens in Node form
+   */
   public Node[] lex(String input) {
     this.input = input;
     pos = 0;
@@ -36,6 +48,9 @@ public class Lexer {
     return symbols.toArray(new Node[symbols.size()]);
   }
 
+  /**
+   * Reads a character
+   */
   private void readChar() {
     if (readPos >= input.length()) {
       ch = 0;
@@ -46,6 +61,11 @@ public class Lexer {
     readPos++;
   }
 
+  /**
+   * Finds the next token
+   *
+   * @return The next token
+   */
   private Node nextNode() {
     skipWhitespace();
 
@@ -61,6 +81,9 @@ public class Lexer {
     return t;
   }
 
+  /**
+   * Skips until the next character is not a whitespace character
+   */
   private void skipWhitespace() {
     while (Character.isWhitespace(ch)) {
       readChar();
