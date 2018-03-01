@@ -192,6 +192,7 @@ public class LG {
    * @param arguments The argument list.
    * @return The new token count pointer.
    */
+  // TODO: CONSIDER REWRITE THE Arrays.copyOfRange PART
   private int findBlockStatement(Node[] tokens, SymbolTable symtable, int j, List<Node> arguments) {
     int end = tokens.length;
     if (j > 0 && tokens.length > 1 && tokens[j - 1].getLiteral().equals("{")) {
@@ -257,7 +258,7 @@ public class LG {
   }
 
   /**
-   * Determine whether or not a permutation is a OpenToken.
+   * Determine whether or not a permutation is a open parenthesis.
    *
    * @param perm the permutation
    * @return True or False.
