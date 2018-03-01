@@ -10,12 +10,15 @@ import concuroo.nodes.expressions.operators.groups.Parenthesis;
 import concuroo.nodes.statements.Statement;
 import concuroo.parser.Parser;
 import concuroo.symbol.SymbolTable;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * Language Grammar
@@ -119,92 +122,70 @@ public class LG {
 
   /**
    * Gets all arguments for a permutation.
+   *
    * @param perm The permutation object array.
    * @param tokens Tokens to look at.
    * @param symtable The SymbolTable of the current scope.
    * @return A Pair with the arguments and the token count pointer.
    */
-  private Pair<List<Node>, Integer> getArguments(Object[] perm, Node[] tokens, SymbolTable symtable){
+  private Pair<List<Node>, Integer> getArguments(Object[] perm, Node[] tokens,
+      SymbolTable symtable) {
     boolean hit = true;
     int j = 0;
     List<Node> arguments = new ArrayList<>();
-    loop:  for (int i = 0; i < perm.length && j < tokens.length; i++) {
-      switch(getClassification(perm[i])){
-
-        case "token":
-          if (this.tokenExists(perm[i], tokens[j])) {
-            j++;
-            continue;
-          }
+    for (int i = 0; i < perm.length && j < tokens.length; i++) {
+      if (this.isToken(perm[i])) {
+        if (this.tokenExists(perm[i], tokens[j])) {
+          j++;
+          continue;
+        }
+        hit = false;
+        break;
+      } else if (this.isExpression(perm[i])) {
+        if (!(tokens[j] instanceof Expression)) {
           hit = false;
-          break loop;
-
-        case "expression":
-          if (!(tokens[j] instanceof Expression)) {
-            hit = false;
-            break loop;
-          }
-          int from = j;
-          j = this.findExpressionEnd(perm, i, from, tokens);
-          Node[] t = Arrays.copyOfRange(tokens, from, j);
-          if (j < tokens.length && tokens[j].getLiteral().equals(";")) {
-            j++;
-          }
-          arguments.add(Parser.ExpressionAST(t, new SymbolTable()));
           break;
-
-        case "statement":
-          Pair<Node, Integer> st = lookupStatement(
-              Arrays.copyOfRange(tokens, j, tokens.length), symtable);
-          if (st == null) {
-            hit = false;
-            break loop;
-          }
-          j += st.getValue();
-          arguments.add(st.getKey());
-          break;
-
-        case "class":
-          Class<?> c = ((Class<?>[]) perm[i])[0];
-          if (c == Statement.class) {
-            j = findBlockStatement(tokens, symtable, j, arguments);
-          } else {
-            hit = false;
-            break loop;
-          }
-          break;
-
-        default:
+        }
+        int from = j;
+        j = this.findExpressionEnd(perm, i, from, tokens);
+        Node[] t = Arrays.copyOfRange(tokens, from, j);
+        if (j < tokens.length && tokens[j].getLiteral().equals(";")) {
+          j++;
+        }
+        arguments.add(Parser.ExpressionAST(t, new SymbolTable()));
+      } else if (this.isStatement(perm[i])) {
+        Pair<Node, Integer> st = lookupStatement(
+            Arrays.copyOfRange(tokens, j, tokens.length), symtable);
+        if (st == null) {
           hit = false;
-          break loop;
+          break;
+        }
+        j += st.getValue();
+        arguments.add(st.getKey());
+
+      } else if (this.isClass(perm[i])) {
+        Class<?> c = ((Class<?>[]) perm[i])[0];
+        if (c == Statement.class) {
+          j = findBlockStatement(tokens, symtable, j, arguments);
+        } else {
+          hit = false;
+          break;
+        }
+      } else {
+        hit = false;
+        break;
       }
     }
-    if(!hit){
+    if (!hit) {
       arguments = null;
     }
     return new ImmutablePair<>(arguments, j);
   }
 
   /**
-   * Returns a string that specifies the Classification of an permutation.
-   * @param perm The permutation to evaluate.
-   * @return A String that describes what it is.
-   */
-  private String getClassification(Object perm){
-    if(this.isAToken(perm)){
-      return "token";
-    }else if(this.isAExpression(perm)){
-      return "expression";
-    }else if(this.isAStatement(perm)){
-      return "statement";
-    }else if(this.isAClass(perm)){
-      return "class";
-    }
-    return null;
-  }
-
-  /**
-   * Finds and evaluates a block statement. It directly adds the "result" from the recursive call on the current arguments-list.
+   * Finds and evaluates a block statement. It directly adds the "result" from the recursive call on
+   * the current arguments-list.
+   *
    * @param tokens The tokens to look at.
    * @param symtable The SymbolTable for the current scope.
    * @param j The Token count pointer.
@@ -232,6 +213,7 @@ public class LG {
 
   /**
    * Finds the end of an expression.
+   *
    * @param perm The permutation array
    * @param i The permutation array pointer
    * @param from The token count pointer to start at.
@@ -242,7 +224,7 @@ public class LG {
     int end = from;
 
     // If the last thing we saw was a '(' then we expect a ')'
-    if (i > 0 && isOpenToken(perm[i - 1])) {
+    if (i > 0 && isOpeningParenthesis(perm[i - 1])) {
       end = Utilities.findClosingToken(tokens, end, Parenthesis.class);
     } else {
       // If not, we have no other choice than to do this.
@@ -256,51 +238,57 @@ public class LG {
 
   /**
    * Determine whether or not a permutation is a class.
+   *
    * @param perm the permutation
    * @return True or False.
    */
-  private boolean isAClass(Object perm){
+  private boolean isClass(Object perm) {
     return perm instanceof Class<?>[];
   }
 
   /**
    * Determine whether or not a permutation is a Statement.
+   *
    * @param perm the permutation
    * @return True or False.
    */
-  private boolean isAStatement(Object perm) {
+  private boolean isStatement(Object perm) {
     return perm instanceof Class && perm == Statement.class;
   }
 
   /**
    * Determine whether or not a permutation is a OpenToken.
+   *
    * @param perm the permutation
    * @return True or False.
    */
-  private boolean isOpenToken(Object perm) {
+  private boolean isOpeningParenthesis(Object perm) {
     return perm instanceof String && perm.equals("(");
   }
 
   /**
    * Determine whether or not a permutation is a Expression.
+   *
    * @param perm the permutation
    * @return True or False.
    */
-  private boolean isAExpression(Object perm) {
+  private boolean isExpression(Object perm) {
     return perm instanceof Class && perm == Expression.class;
   }
 
   /**
    * Determine whether or not a permutation is a Token.
+   *
    * @param perm the permutation
    * @return True or False.
    */
-  private boolean isAToken(Object perm) {
+  private boolean isToken(Object perm) {
     return perm instanceof String;
   }
 
   /**
    * Determine whether or not a token exists.
+   *
    * @param perm the permutation.
    * @param token the token to look at.
    * @return True or False.
