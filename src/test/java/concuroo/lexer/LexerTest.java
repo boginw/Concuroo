@@ -7,7 +7,7 @@ import concuroo.ConcurooDefinition;
 import concuroo.language.LG;
 import concuroo.nodes.Node;
 import concuroo.nodes.expressions.atoms.IntegerNode;
-import concuroo.nodes.expressions.operators.binary.SumExpression;
+import concuroo.nodes.expressions.operators.indecisive.SumExpression;
 import concuroo.nodes.statements.IfStatement;
 import concuroo.symbol.SymbolTable;
 import org.junit.BeforeClass;

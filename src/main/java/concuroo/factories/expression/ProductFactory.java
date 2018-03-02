@@ -3,33 +3,34 @@ package concuroo.factories.expression;
 import concuroo.factories.expression.parselets.Parselets;
 import concuroo.nodes.Node;
 import concuroo.nodes.expressions.Expression;
-import concuroo.nodes.expressions.operators.indecisive.SumExpression;
+import concuroo.nodes.expressions.operators.binary.ProductExpression;
 import concuroo.parser.Parser;
 
-public class SumFactory implements ExpressionFactory<SumExpression> {
+public class ProductFactory implements ExpressionFactory<ProductExpression> {
 
   @Override
   public String getPattern() {
-    return "^\\+";
+    return "^\\*";
   }
 
   @Override
   public int is(String input) {
-    return input.charAt(0) == '+' ? 1 : -1;
+    return input.charAt(0) == '*' ? 1 : -1;
   }
 
   @Override
   public boolean is(Node node) {
-    return node instanceof SumExpression;
+    return node instanceof ProductExpression;
   }
 
   @Override
-  public SumExpression makeNode(String literal) {
-    return new SumExpression();
+  public ProductExpression makeNode(String literal) {
+    return new ProductExpression();
   }
 
   @Override
   public Expression parse(Parser parser, Expression pre, Node in, Expression post) {
-    return Parselets.parse(makeNode("+"), parser, pre, in, post);
+    return Parselets.parse(makeNode("*"), parser, pre, in, post);
+
   }
 }

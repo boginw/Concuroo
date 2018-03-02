@@ -5,9 +5,10 @@ import concuroo.nodes.EOF;
 import concuroo.nodes.Node;
 import concuroo.symbol.SymbolTable;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class Lexer {
+public class Lexer implements Iterator<Node> {
 
   private final SymbolTable symtable;
   private final LG lg;
@@ -25,6 +26,13 @@ public class Lexer {
   public Lexer(SymbolTable symtable, LG lg) {
     this.symtable = symtable;
     this.lg = lg;
+  }
+
+  public void reset(String input) {
+    this.input = input;
+    pos = 0;
+    readPos = 0;
+    ch = 0;
   }
 
   /**
@@ -88,5 +96,15 @@ public class Lexer {
     while (Character.isWhitespace(ch)) {
       readChar();
     }
+  }
+
+  @Override
+  public boolean hasNext() {
+    return readPos != input.length();
+  }
+
+  @Override
+  public Node next() {
+    return nextNode();
   }
 }

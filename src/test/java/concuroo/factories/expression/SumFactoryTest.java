@@ -1,7 +1,7 @@
 package concuroo.factories.expression;
 
 import concuroo.language.Associativity;
-import concuroo.nodes.expressions.operators.binary.SumExpression;
+import concuroo.nodes.expressions.operators.indecisive.SumExpression;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,8 +18,8 @@ public class SumFactoryTest {
   public void makeNode() {
     SumExpression se = new SumFactory().makeNode("+");
 
-    Assert.assertTrue(se.getLeft() == null);
-    Assert.assertTrue(se.getRight() == null);
+    Assert.assertTrue(se.getOperand() == null);
+    Assert.assertTrue(se.getSecondOperand() == null);
     Assert.assertTrue(se.getAssociativity() == Associativity.LeftToRight);
     Assert.assertTrue(se.getLiteral().equals("+"));
   }

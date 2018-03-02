@@ -13,26 +13,26 @@ public interface BinaryOperator extends Operator {
    *
    * @return Expression
    */
-  Expression getLeft();
+  Expression getOperand();
 
   /**
    * Sets the left side of the expression
    *
    * @param e Expression
    */
-  void setLeft(Expression e);
+  void setOperand(Expression e);
 
   /**
    * Gets the right side of the expression
    *
    * @return Expression
    */
-  Expression getRight();
+  Expression getSecondOperand();
 
   /**
    * Sets the right side of the expression
    *
    * @param e Expression
    */
-  void setRight(Expression e);
+  void setSecondOperand(Expression e);
 }

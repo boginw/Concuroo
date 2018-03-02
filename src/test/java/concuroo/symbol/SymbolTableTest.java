@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import concuroo.nodes.Node;
 import concuroo.nodes.expressions.atoms.IdentifierNode;
-import concuroo.nodes.expressions.atoms.IntegerNode;
 import org.junit.Before;
 import org.junit.Test;
 

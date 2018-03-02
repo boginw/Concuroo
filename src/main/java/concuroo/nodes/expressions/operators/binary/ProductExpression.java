@@ -1,35 +1,32 @@
 package concuroo.nodes.expressions.operators.binary;
 
+import concuroo.factories.expression.ExpressionFactory;
+import concuroo.factories.expression.ProductFactory;
 import concuroo.language.Associativity;
 import concuroo.nodes.expressions.Expression;
 
-public class SumExpression implements BinaryOperator {
+public class ProductExpression implements BinaryOperator {
 
-  private final String literal;
   private Expression left;
   private Expression right;
 
-  public SumExpression(String literal) {
-    this.literal = literal;
-  }
-
   @Override
-  public Expression getLeft() {
+  public Expression getOperand() {
     return left;
   }
 
   @Override
-  public void setLeft(Expression e) {
+  public void setOperand(Expression e) {
     left = e;
   }
 
   @Override
-  public Expression getRight() {
+  public Expression getSecondOperand() {
     return right;
   }
 
   @Override
-  public void setRight(Expression e) {
+  public void setSecondOperand(Expression e) {
     right = e;
   }
 
@@ -44,12 +41,17 @@ public class SumExpression implements BinaryOperator {
   }
 
   @Override
+  public ExpressionFactory getFactory() {
+    return new ProductFactory();
+  }
+
+  @Override
   public String getLiteral() {
-    return literal;
+    return "*";
   }
 
   @Override
   public int getVal() {
-    return left.getVal() + right.getVal();
+    return 0;
   }
 }

@@ -1,5 +1,7 @@
 package concuroo.nodes.statements;
 
+import concuroo.factories.statement.BlockFactory;
+import concuroo.factories.statement.StatementFactory;
 import concuroo.symbol.SymbolTable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,14 +12,18 @@ import java.util.List;
 public class BlockStatement implements Statement {
 
   private final List<Statement> statements;
-  private SymbolTable symbolTable;
+  private final String literal;
+  private final SymbolTable symbolTable;
 
   /**
    * Default constructor
+   *
+   * @param literal The literal read
    */
-  public BlockStatement() {
+  public BlockStatement(String literal) {
     statements = new ArrayList<>();
     symbolTable = new SymbolTable();
+    this.literal = literal;
   }
 
   /**
@@ -40,8 +46,7 @@ public class BlockStatement implements Statement {
 
   @Override
   public String getLiteral() {
-    // TODO: figure this out
-    return null;
+    return literal;
   }
 
   @Override
@@ -70,4 +75,10 @@ public class BlockStatement implements Statement {
   public void setSymbolTableParent(SymbolTable symbolTable) {
     this.symbolTable.setParent(symbolTable);
   }
+
+  @Override
+  public StatementFactory getFactory() {
+    return new BlockFactory();
+  }
+
 }

@@ -1,5 +1,7 @@
 package concuroo.nodes.expressions.atoms;
 
+import concuroo.factories.expression.ExpressionFactory;
+
 public class IdentifierNode implements Atom {
 
   private final String literal;
@@ -22,4 +24,10 @@ public class IdentifierNode implements Atom {
   public int getVal() {
     return value;
   }
+
+  @Override
+  public ExpressionFactory getFactory() {
+    return null;
+  }
+
 }
