@@ -18,63 +18,77 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
-public class ParseExpressions {
+public class NegativeParseExpressions {
 
   @Parameters(name = "{0}")
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][]{
         {
-            "Handles whitespace",
-            " - 1 + 1 ",
-            "((-1)+1)"
+            "Throws on alphabetic and numeric input",
+            "1a+1"
         },
         {
-            "Handles Unary",
-            "-1+1",
-            "((-1)+1)"
+            "Throws on missing operand",
+            "1*"
         },
         {
-            "Handles Unaries",
-            "----1",
-            "(-(-(-(-1))))"
+            "Throws on multiple operators",
+            "1*+*1"
         },
         {
-            "Handles Unaries",
-            "1+-1",
-            "(1+(-1))"
+            "Throws on operator only",
+            "+"
         },
         {
-            "Handles Parenthesis",
-            "(-1)+1",
-            "((-1)+1)"
+            "Throws on missing right parenthesis",
+            "(1+1",
         },
         {
-            "Handles Precedence",
-            "5+1*2",
-            "(5+(1*2))"
+            "Throws on missing right parenthesis, long statement",
+            "(1+1+(1+1)",
         },
         {
-            "Handles multiply and unary plus",
-            "1*+1",
-            "(1*(+1))"
+            "Throws on missing left parenthesis",
+            "1+1)",
         },
         {
-            "Handles negative number multiplied",
-            "-1*4",
-            "((-1)*4)"
+            "Throws on missing left parenthesis, long statement",
+            "(1+1)+1)"
+        },
+        {
+            "Throws on illegal character in number",
+            "1´1"
+        },
+        {
+            "Throws on illegal character beginning number",
+            "¨1"
+        },
+        {
+            "Throws on illegal character in statement",
+            "1+¨1"
+        },
+        {
+            "Throws on illegal character beginning statement",
+            "¨1+1"
+        },
+        {
+            "Throws on whitespace in number",
+            "1 1"
+        },
+        {
+            "Throws on whitespace in number after statement",
+            "1 + 1 1"
         }
     });
   }
 
   private final String input;
-  private final String expected;
 
-  public ParseExpressions(String name, String input, String expected) {
+  public NegativeParseExpressions(String name, String input) {
     this.input = input;
-    this.expected = expected;
   }
 
-  @Test
+  @Test (expected = Exception.class)
   public void test() {
     LG lg = new ConcurooDefinition().getGrammar();
     SymbolTable st = new SymbolTable();
@@ -86,8 +100,6 @@ public class ParseExpressions {
     Expression n = p.parseExpression();
     buildExpressionString(n, sb);
     String actual = sb.toString();
-
-    assertEquals(expected, actual);
   }
 
   private void buildExpressionString(Expression e, StringBuilder sb) {
