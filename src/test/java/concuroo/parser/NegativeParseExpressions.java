@@ -48,14 +48,6 @@ public class NegativeParseExpressions {
             "(1+1+(1+1)",
         },
         {
-            "Throws on missing left parenthesis",
-            "1+1)",
-        },
-        {
-            "Throws on missing left parenthesis, long statement",
-            "(1+1)+1)"
-        },
-        {
             "Throws on illegal character in number",
             "1´1"
         },
@@ -70,14 +62,6 @@ public class NegativeParseExpressions {
         {
             "Throws on illegal character beginning statement",
             "¨1+1"
-        },
-        {
-            "Throws on whitespace in number",
-            "1 1"
-        },
-        {
-            "Throws on whitespace in number after statement",
-            "1 + 1 1"
         }
     });
   }
@@ -97,38 +81,6 @@ public class NegativeParseExpressions {
     StringBuilder sb = new StringBuilder();
 
     l.reset(input);
-    Expression n = p.parseExpression();
-    buildExpressionString(n, sb);
-    String actual = sb.toString();
-  }
-
-  private void buildExpressionString(Expression e, StringBuilder sb) {
-    if (e instanceof Atom) {
-      sb.append(e.getLiteral());
-    } else if (e instanceof BinaryOperator) {
-      BinaryOperator bo = (BinaryOperator) e;
-
-      sb.append("(");
-
-      buildExpressionString(bo.getOperand(), sb);
-      sb.append(bo.getLiteral());
-      buildExpressionString(bo.getSecondOperand(), sb);
-
-      sb.append(")");
-    } else if (e instanceof UnaryOperator) {
-      UnaryOperator uo = (UnaryOperator) e;
-
-      sb.append("(");
-
-      if (uo.isPrefix()) {
-        sb.append(uo.getLiteral());
-        buildExpressionString(uo.getOperand(), sb);
-      } else {
-        buildExpressionString(uo.getOperand(), sb);
-        sb.append(uo.getLiteral());
-      }
-
-      sb.append(")");
-    }
+    p.parseExpression();
   }
 }

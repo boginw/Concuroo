@@ -56,12 +56,32 @@ public class ParseExpressions {
         {
             "Handles multiply and unary plus",
             "1*+2",
-            "(1*(+1))"
+            "(1*(+2))"
         },
         {
             "Handles unary precedence",
             "-1*2",
             "((-1)*2)"
+        },
+        {
+            "Doesn't throw on missing left parenthesis",
+            "1+1)",
+            "(1+1)"
+        },
+        {
+            "Doesn't throws on missing left parenthesis, long statement",
+            "(1+1)+1)",
+            "((1+1)+1)"
+        },
+        {
+            "Doesn't throws on whitespace in number",
+            "1 1",
+            "1"
+        },
+        {
+            "Throws on whitespace in number after statement",
+            "1 + 1 1",
+            "(1+1)"
         }
     });
   }
