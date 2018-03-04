@@ -55,13 +55,13 @@ public class ParseExpressions {
         },
         {
             "Handles multiply and unary plus",
-            "1*+1",
+            "1*+2",
             "(1*(+1))"
         },
         {
-            "Handles negative number multiplied",
-            "-1*4",
-            "((-1)*4)"
+            "Handles unary precedence",
+            "-1*2",
+            "((-1)*2)"
         }
     });
   }

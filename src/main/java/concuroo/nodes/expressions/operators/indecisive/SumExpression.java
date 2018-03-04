@@ -41,6 +41,11 @@ public class SumExpression implements Indecisive {
   }
 
   @Override
+  public int getUnaryPrecedence() {
+    return 2;
+  }
+
+  @Override
   public Associativity getAssociativity() {
     return Associativity.LeftToRight;
   }
