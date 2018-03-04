@@ -52,6 +52,11 @@ public class ParseExpressions {
             "Handles Precedence",
             "5+1*2",
             "(5+(1*2))"
+        },
+        {
+            "Handles Unary precedence",
+            "-8*4",
+            "((-8)*4)"
         }
     });
   }

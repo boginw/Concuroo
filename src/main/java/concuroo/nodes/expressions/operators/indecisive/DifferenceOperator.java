@@ -41,6 +41,11 @@ public class DifferenceOperator implements Indecisive {
   }
 
   @Override
+  public int getUnaryPrecedence() {
+    return 2;
+  }
+
+  @Override
   public Associativity getAssociativity() {
     return Associativity.RightToLeft;
   }
@@ -59,5 +64,4 @@ public class DifferenceOperator implements Indecisive {
   public ExpressionFactory getFactory() {
     return new DifferenceFactory();
   }
-
 }

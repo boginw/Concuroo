@@ -35,12 +35,14 @@ public class Parselets {
 
   public static <T extends Indecisive> Expression parse(T expr, Parser parser, Expression pre,
       Node in, Expression post) {
+    int precedence = pre == null ? expr.getUnaryPrecedence() : expr.getPrecedence();
+
     expr.setOperand(pre);
 
     if (post != null) {
       expr.setSecondOperand(post);
     } else {
-      expr.setSecondOperand(parser.parseExpression(expr.getPrecedence()));
+      expr.setSecondOperand(parser.parseExpression(precedence));
     }
 
     return expr;
