@@ -3,8 +3,7 @@ package concuroo.factories.statement;
 import concuroo.factories.Factory;
 import concuroo.nodes.Node;
 import concuroo.nodes.statements.Statement;
-import concuroo.symbol.SymbolTable;
-import java.util.List;
+import concuroo.parser.Parser;
 
 /**
  * Factory that creates Statement Nodes
@@ -13,13 +12,5 @@ import java.util.List;
  */
 public interface StatementFactory<T extends Statement> extends Factory {
 
-  /**
-   * Creates an populated instance of the given Node, given the arguments to do so.
-   *
-   * @param symbols Symbols that recognized the node
-   * @param arguments Arguments for instantiating.
-   * @param symbolTable current SymbolTable at node's scope
-   * @return Instance of the given statement node.
-   */
-  T makeInstance(Node[] symbols, List<Node> arguments, SymbolTable symbolTable);
+  T parse(Parser parser, Node token);
 }

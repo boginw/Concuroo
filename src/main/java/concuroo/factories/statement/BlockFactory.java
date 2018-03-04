@@ -2,19 +2,18 @@ package concuroo.factories.statement;
 
 import concuroo.nodes.Node;
 import concuroo.nodes.statements.BlockStatement;
-import concuroo.nodes.statements.Statement;
-import concuroo.symbol.SymbolTable;
-import java.util.List;
+import concuroo.parser.Parser;
 
 public class BlockFactory implements StatementFactory<BlockStatement> {
 
   @Override
-  public BlockStatement makeInstance(Node[] symbols, List<Node> arguments,
-      SymbolTable symbolTable) {
-    BlockStatement stat = new BlockStatement();
-    for (Node t : arguments) {
-      stat.addStatement((Statement) t);
+  public BlockStatement parse(Parser parser, Node token) {
+    BlockStatement stat = (BlockStatement) token;
+
+    while (!parser.match("}")) {
+      stat.addStatement(parser.parseStatement());
     }
+
     return stat;
   }
 
@@ -31,6 +30,6 @@ public class BlockFactory implements StatementFactory<BlockStatement> {
 
   @Override
   public Node makeNode(String literal) {
-    return new BlockStatement();
+    return new BlockStatement(literal);
   }
 }

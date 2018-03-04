@@ -5,8 +5,8 @@ import java.util.Hashtable;
 
 public class SymbolTable {
 
-  private SymbolTable parent;
   private final Hashtable<String, Node> symbols;
+  private SymbolTable parent;
 
   /**
    * Default constructor

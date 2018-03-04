@@ -1,10 +1,13 @@
 package concuroo.nodes.statements;
 
+import concuroo.factories.statement.IfFactory;
+import concuroo.factories.statement.StatementFactory;
 import concuroo.nodes.Node;
+import concuroo.nodes.expressions.Expression;
 
 public class IfStatement implements Statement {
 
-  private Node condition;
+  private Expression condition;
   private Statement consequence;
   private Statement alternative;
 
@@ -15,7 +18,7 @@ public class IfStatement implements Statement {
     return condition;
   }
 
-  public void setCondition(Node condition) {
+  public void setCondition(Expression condition) {
     this.condition = condition;
   }
 
@@ -52,4 +55,10 @@ public class IfStatement implements Statement {
 
     return 0;
   }
+
+  @Override
+  public StatementFactory getFactory() {
+    return new IfFactory();
+  }
+
 }

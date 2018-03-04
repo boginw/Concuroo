@@ -1,5 +1,7 @@
 package concuroo.nodes.expressions.operators.groups;
 
+import concuroo.factories.expression.ExpressionFactory;
+import concuroo.factories.expression.GroupFactory;
 import concuroo.language.Associativity;
 
 public class Square implements Group {
@@ -9,7 +11,7 @@ public class Square implements Group {
 
   @Override
   public int getPrecedence() {
-    return 0;
+    return 1;
   }
 
   @Override
@@ -42,4 +44,11 @@ public class Square implements Group {
   public void setStart(boolean start) {
     isStart = start;
   }
+
+  @Override
+  public ExpressionFactory getFactory() {
+    return new GroupFactory<>(getLiteral().charAt(0), Square::new);
+
+  }
+
 }

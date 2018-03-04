@@ -19,4 +19,5 @@ public interface Operator extends Expression {
    * @return Associativity
    */
   Associativity getAssociativity();
+
 }

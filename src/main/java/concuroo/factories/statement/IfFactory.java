@@ -1,10 +1,9 @@
 package concuroo.factories.statement;
 
 import concuroo.nodes.Node;
+import concuroo.nodes.expressions.operators.groups.Parenthesis;
 import concuroo.nodes.statements.IfStatement;
-import concuroo.nodes.statements.Statement;
-import concuroo.symbol.SymbolTable;
-import java.util.List;
+import concuroo.parser.Parser;
 
 public class IfFactory implements StatementFactory<IfStatement> {
 
@@ -24,18 +23,22 @@ public class IfFactory implements StatementFactory<IfStatement> {
   }
 
   @Override
-  public IfStatement makeInstance(Node[] symbols, List<Node> arguments,
-      SymbolTable symbolTable) {
+  public IfStatement parse(Parser parser, Node token) {
+    IfStatement stat = (IfStatement) token;
 
-    IfStatement stat = new IfStatement();
-    if (arguments.size() > 0) {
-      stat.setCondition(arguments.get(0));
+    if (!parser.match(Parenthesis.class)) {
+      throw new RuntimeException("Missing parenthesis after If statement");
     }
-    if (arguments.size() > 1) {
-      stat.setConsequence((Statement) arguments.get(1));
+    stat.setCondition(parser.parseExpression());
+
+    if (!parser.match(Parenthesis.class)) {
+      throw new RuntimeException("Missing closing parenthesis after condition in If statement");
     }
-    if (arguments.size() > 2) {
-      stat.setAlternative((Statement) arguments.get(2));
+
+    stat.setConsequence(parser.parseStatement());
+
+    if (parser.match("else")) {
+      stat.setAlternative(parser.parseStatement());
     }
 
     return stat;

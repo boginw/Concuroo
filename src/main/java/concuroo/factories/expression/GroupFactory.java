@@ -1,7 +1,10 @@
 package concuroo.factories.expression;
 
 import concuroo.nodes.Node;
+import concuroo.nodes.expressions.Expression;
 import concuroo.nodes.expressions.operators.groups.Group;
+import concuroo.nodes.expressions.operators.groups.Parenthesis;
+import concuroo.parser.Parser;
 import java.util.function.Supplier;
 
 public class GroupFactory<T extends Group> implements ExpressionFactory<T> {
@@ -36,5 +39,12 @@ public class GroupFactory<T extends Group> implements ExpressionFactory<T> {
     T t = supplier.get();
     t.setLiteral(literal);
     return t;
+  }
+
+  @Override
+  public Expression parse(Parser parser, Expression pre, Node in, Expression post) {
+    Expression expression = parser.parseExpression();
+    parser.consume(Parenthesis.class);
+    return expression;
   }
 }

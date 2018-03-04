@@ -9,16 +9,23 @@ import concuroo.nodes.expressions.operators.Operator;
 public interface UnaryOperator extends Operator {
 
   /**
-   * Gets the left side of the expression
+   * Gets the operand of the expression
    *
    * @return Expression
    */
-  Expression getLeft();
+  Expression getOperand();
 
   /**
-   * Sets the left side of the expression
+   * Sets the operand of the expression
    *
    * @param e Expression
    */
-  void setLeft(Expression e);
+  void setOperand(Expression e);
+
+  /**
+   * Checks whether this operator is prefix or postfix
+   *
+   * @return True or False
+   */
+  boolean isPrefix();
 }
