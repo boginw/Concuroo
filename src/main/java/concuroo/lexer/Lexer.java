@@ -28,11 +28,17 @@ public class Lexer implements Iterator<Node> {
     this.lg = lg;
   }
 
+  /**
+   * Resets the lexer to a new input
+   *
+   * @param input String to be lexed
+   */
   public void reset(String input) {
     this.input = input;
     pos = 0;
     readPos = 0;
     ch = 0;
+    readChar();
   }
 
   /**

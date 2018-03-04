@@ -24,7 +24,12 @@ public class ParseExpressions {
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[][]{
         {
-            "Handles Parselets",
+            "Handles whitespace",
+            " - 1 + 1 ",
+            "((-1)+1)"
+        },
+        {
+            "Handles Unary",
             "-1+1",
             "((-1)+1)"
         },

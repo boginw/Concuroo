@@ -27,12 +27,12 @@ public class IfFactory implements StatementFactory<IfStatement> {
     IfStatement stat = (IfStatement) token;
 
     if (!parser.match(Parenthesis.class)) {
-      throw new RuntimeException("Wtf?");
+      throw new RuntimeException("Missing parenthesis after If statement");
     }
     stat.setCondition(parser.parseExpression());
 
     if (!parser.match(Parenthesis.class)) {
-      throw new RuntimeException("Wtf?");
+      throw new RuntimeException("Missing closing parenthesis after condition in If statement");
     }
 
     stat.setConsequence(parser.parseStatement());
