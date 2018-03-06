@@ -1,13 +1,14 @@
-import junit.framework.*;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 
-public class RunnerTest extends TestCase {
+public class RunnerTest {
 
   @Test
-  public void testAdd(){
+  public void testAdd() {
     Runner printer = new Runner();
-    java.lang.String result = printer.printed();
-    assertTrue(result == "yes");
+    String result = printer.printed();
+    assertTrue(result.equals("yes"));
   }
 }

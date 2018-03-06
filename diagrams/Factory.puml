@@ -1,0 +1,10 @@
+@startuml
+class Lexer
+class Parser
+class Token {
+    String literal
+}
+class Factory {
+
+}
+@enduml

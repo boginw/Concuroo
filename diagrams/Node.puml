@@ -1,0 +1,65 @@
+@startuml
+' Abstract classes
+abstract class Node {
+    +String eval()
+}
+abstract class Statement
+abstract class Expression
+abstract class Atom
+abstract class Operator {
+    +bool association
+    +int precedence
+}
+abstract class FunctionCall
+abstract class Binary {
+    +Expression left
+    +Expression right
+}
+abstract class Unary {
+    +Expression left
+}
+class Brace {
+    BraceType type
+}
+
+' Concrete classes
+class IfStatement
+class BlockStatement
+class AssignStatement
+class IntegerLiteral
+class IdentifierLiteral
+class NegateOperator
+class SumOperator
+class SymbolTable
+
+' Node specialization
+Node <|-- Statement
+Node <|-- Expression
+
+' Statement specialization
+Statement <|-- IfStatement
+Statement <|-- BlockStatement
+Statement <|-- AssignStatement
+
+' Expression specialization
+Expression <|-- Atom
+Expression <|-- Operator
+Expression <|-- FunctionCall
+Expression <|-- Brace
+
+' Atom specialization
+Atom <|-- IntegerLiteral
+Atom <|-- IdentifierLiteral
+
+' Operator specialization
+Operator <|-- Binary
+Operator <|-- Unary
+
+' Operators
+Unary <|-- NegateOperator
+Binary <|-- SumOperator
+
+BlockStatement o-- SymbolTable
+
+SymbolTable o-- SymbolTable : Parent
+@enduml
