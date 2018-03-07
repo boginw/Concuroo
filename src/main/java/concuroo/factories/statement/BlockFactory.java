@@ -10,9 +10,15 @@ public class BlockFactory implements StatementFactory<BlockStatement> {
   public BlockStatement parse(Parser parser, Node token) {
     BlockStatement stat = (BlockStatement) token;
 
+    // Branch into block
+    parser.branchIn(stat.getSymbolTable());
+
     while (!parser.match("}")) {
       stat.addStatement(parser.parseStatement());
     }
+
+    // Branch out again
+    parser.branchOut();
 
     return stat;
   }
