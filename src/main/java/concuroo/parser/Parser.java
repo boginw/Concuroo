@@ -18,7 +18,7 @@ public class Parser {
   private final int initialPrecedence = Integer.MAX_VALUE;
   private final Iterator<Node> tokens;
   private final List<Node> mRead;
-  private final SymbolTable symbolTable;
+  private SymbolTable symbolTable;
 
   /**
    * Default constructor
@@ -149,6 +149,37 @@ public class Parser {
 
     consume();
     return true;
+  }
+
+  /**
+   * Branch to a new symbol table
+   *
+   * @return the new symbol table
+   */
+  public SymbolTable branchIn() {
+    return branchIn(new SymbolTable());
+  }
+
+  /**
+   * Branch to a new symbol table
+   *
+   * @param newtable the new table
+   * @return the new symbol table
+   */
+  public SymbolTable branchIn(SymbolTable newtable) {
+    newtable.setParent(symbolTable);
+    symbolTable = newtable;
+    return symbolTable;
+  }
+
+  /**
+   * Branch the symbol table back one step
+   *
+   * @return The old symbol table
+   */
+  public SymbolTable branchOut() {
+    symbolTable = symbolTable.getParent();
+    return symbolTable;
   }
 
   /**
