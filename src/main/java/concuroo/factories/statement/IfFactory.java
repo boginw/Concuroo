@@ -1,7 +1,8 @@
 package concuroo.factories.statement;
 
 import concuroo.nodes.Node;
-import concuroo.nodes.expressions.operators.groups.Parenthesis;
+import concuroo.nodes.expressions.operators.groups.helpers.EndParenthesis;
+import concuroo.nodes.expressions.operators.groups.helpers.StartParenthesis;
 import concuroo.nodes.statements.IfStatement;
 import concuroo.parser.Parser;
 
@@ -26,12 +27,12 @@ public class IfFactory implements StatementFactory<IfStatement> {
   public IfStatement parse(Parser parser, Node token) {
     IfStatement stat = (IfStatement) token;
 
-    if (!parser.match(Parenthesis.class)) {
+    if (!parser.match(StartParenthesis.class)) {
       throw new RuntimeException("Missing parenthesis after If statement");
     }
     stat.setCondition(parser.parseExpression());
 
-    if (!parser.match(Parenthesis.class)) {
+    if (!parser.match(EndParenthesis.class)) {
       throw new RuntimeException("Missing closing parenthesis after condition in If statement");
     }
 

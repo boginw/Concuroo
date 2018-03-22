@@ -2,12 +2,11 @@ package concuroo.nodes.expressions.operators.groups;
 
 
 import concuroo.factories.expression.ExpressionFactory;
-import concuroo.factories.expression.GroupFactory;
+import concuroo.factories.expression.ParenthesisFactory;
 import concuroo.language.Associativity;
 
-public class Parenthesis implements Group {
+public abstract class Parenthesis implements Group {
 
-  private boolean isStart;
   private String literal;
 
   @Override
@@ -28,7 +27,6 @@ public class Parenthesis implements Group {
   @Override
   public void setLiteral(String literal) {
     this.literal = literal;
-    isStart = literal.equals("(");
   }
 
   @Override
@@ -37,18 +35,8 @@ public class Parenthesis implements Group {
   }
 
   @Override
-  public boolean isStart() {
-    return isStart;
-  }
-
-  @Override
-  public void setStart(boolean start) {
-    isStart = start;
-  }
-
-  @Override
   public ExpressionFactory getFactory() {
-    return new GroupFactory<>(getLiteral().charAt(0), Parenthesis::new);
+    return new ParenthesisFactory();
   }
 
 }

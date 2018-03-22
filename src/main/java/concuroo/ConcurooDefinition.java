@@ -4,17 +4,17 @@ import static concuroo.language.TokenType.SEMICOLON;
 import static concuroo.language.TokenType.STATEMENT;
 import static concuroo.language.TokenType.TYPE;
 
+import concuroo.factories.expression.CurlyFactory;
 import concuroo.factories.expression.DifferenceFactory;
-import concuroo.factories.expression.GroupFactory;
 import concuroo.factories.expression.IntFactory;
+import concuroo.factories.expression.ParenthesisFactory;
 import concuroo.factories.expression.ProductFactory;
+import concuroo.factories.expression.SquareFactory;
 import concuroo.factories.expression.SumFactory;
 import concuroo.factories.statement.BlockFactory;
 import concuroo.factories.statement.IfFactory;
 import concuroo.language.LG;
 import concuroo.language.LanguageDefinition;
-import concuroo.nodes.expressions.operators.groups.Parenthesis;
-import concuroo.nodes.expressions.operators.groups.Square;
 
 @SuppressWarnings("SpellCheckingInspection")
 public class ConcurooDefinition extends LanguageDefinition {
@@ -26,12 +26,12 @@ public class ConcurooDefinition extends LanguageDefinition {
     g.registerToken("+", new SumFactory());
     g.registerToken("-", new DifferenceFactory());
     // Braces
-    g.registerToken("(", new GroupFactory<>('(', Parenthesis::new));
-    g.registerToken(")", new GroupFactory<>(')', Parenthesis::new));
-    g.registerToken("[", new GroupFactory<>('[', Square::new));
-    g.registerToken("]", new GroupFactory<>(']', Square::new));
-    g.registerToken("{", new BlockFactory());
-    g.registerToken("}", new BlockFactory());
+    g.registerToken("(", new ParenthesisFactory());
+    g.registerToken(")", new ParenthesisFactory());
+    g.registerToken("[", new SquareFactory());
+    g.registerToken("]", new SquareFactory());
+    g.registerToken("{", new CurlyFactory());
+    g.registerToken("}", new CurlyFactory());
     // Separators
     g.registerToken(";", "^\\;", SEMICOLON);
     // Statements

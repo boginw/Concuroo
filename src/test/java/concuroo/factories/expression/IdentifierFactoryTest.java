@@ -69,7 +69,7 @@ public class IdentifierFactoryTest {
           {"naem!", 4},
           {"x", 1},
           {"a12345678910111213141516171812", 30}, // 30 characters should return 30
-          {"a12345678910111213141516171812x", 30} // 31 characters should return 30
+          {"a12345678910111213141516171812x", 31} // 31 characters should return 31
       });
     }
     

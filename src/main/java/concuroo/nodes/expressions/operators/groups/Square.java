@@ -1,12 +1,10 @@
 package concuroo.nodes.expressions.operators.groups;
 
 import concuroo.factories.expression.ExpressionFactory;
-import concuroo.factories.expression.GroupFactory;
+import concuroo.factories.expression.SquareFactory;
 import concuroo.language.Associativity;
 
-public class Square implements Group {
-
-  private boolean isStart;
+public abstract class Square implements Group {
   private String literal;
 
   @Override
@@ -27,7 +25,6 @@ public class Square implements Group {
   @Override
   public void setLiteral(String literal) {
     this.literal = literal;
-    isStart = literal.equals("[");
   }
 
   @Override
@@ -36,18 +33,8 @@ public class Square implements Group {
   }
 
   @Override
-  public boolean isStart() {
-    return isStart;
-  }
-
-  @Override
-  public void setStart(boolean start) {
-    isStart = start;
-  }
-
-  @Override
   public ExpressionFactory getFactory() {
-    return new GroupFactory<>(getLiteral().charAt(0), Square::new);
+    return new SquareFactory();
 
   }
 
