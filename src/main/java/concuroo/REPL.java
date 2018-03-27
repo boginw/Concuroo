@@ -1,5 +1,6 @@
 package concuroo;
 
+import CuncurroParser.ConcurroParser;
 import concuroo.language.LG;
 import concuroo.lexer.Lexer;
 import concuroo.nodes.statements.Statement;
