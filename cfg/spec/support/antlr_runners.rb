@@ -12,7 +12,7 @@ end
 
 def grun_valid?(fixture, rule='')
   ret = ""
-  Open3.popen3(file_piping(fixture) + " | java org.antlr.v4.gui.TestRig Concurro #{rule}") do |i, o, e, w|
+  Open3.popen3(file_piping(fixture) + " | java org.antlr.v4.gui.TestRig Concuroo #{rule}") do |i, o, e, w|
     ret = e.read
   end
 
@@ -23,7 +23,7 @@ end
 def grun_tree(fixture, rule='')
   ret = ""
   err = ""
-  Open3.popen3(file_piping(fixture) + " | java org.antlr.v4.gui.TestRig Concurro #{rule} -tree") do |i, o, e, w|
+  Open3.popen3(file_piping(fixture) + " | java org.antlr.v4.gui.TestRig Concuroo #{rule} -tree") do |i, o, e, w|
     ret = o.read
     err = e.read
   end
@@ -35,7 +35,7 @@ end
 
 def grun_open(fixture, rule='', &block)
   ret = ""
-  Open3.popen3(file_piping(fixture) + " | java org.antlr.v4.gui.TestRig Concurro #{rule}") do |i, o, e, w|
+  Open3.popen3(file_piping(fixture) + " | java org.antlr.v4.gui.TestRig Concuroo #{rule}") do |i, o, e, w|
     ret = e.read
   end
 
