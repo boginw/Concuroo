@@ -9,9 +9,4 @@ public class EOF implements Node {
   public String getLiteral() {
     return "EOF";
   }
-
-  @Override
-  public int getVal() {
-    return 0;
-  }
 }

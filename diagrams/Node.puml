@@ -1,65 +1,146 @@
 @startuml
-' Abstract classes
-abstract class Node {
-    +String eval()
+
+interface node {
+  String getLiteral()
 }
-abstract class Statement
-abstract class Expression
-abstract class Atom
-abstract class Operator {
-    +bool association
-    +int precedence
+interface expression
+interface binaryExpression
+interface unaryExpression
+interface arithmeticBinaryExpression
+interface logicalBinaryExpression
+interface prefixExpression
+interface postfixExpression
+interface statement
+interface selectionStatement
+interface literalExpression
+interface jumpStatement
+interface iterationStatement
+interface LHSExpression
+
+interface unaryExpression {
+  expression firstOperand
+  String operator
 }
-abstract class FunctionCall
-abstract class Binary {
-    +Expression left
-    +Expression right
-}
-abstract class Unary {
-    +Expression left
-}
-class Brace {
-    BraceType type
+
+interface binaryExpression {
+  expression firstOperand
+  expression secondOperand
+  String operator
 }
 
-' Concrete classes
-class IfStatement
-class BlockStatement
-class AssignStatement
-class IntegerLiteral
-class IdentifierLiteral
-class NegateOperator
-class SumOperator
-class SymbolTable
+interface literalExpression {
+  Object value
+}
 
-' Node specialization
-Node <|-- Statement
-Node <|-- Expression
+interface incrementDecrementExpression {
+  LHSExpression firstOperand
+}
 
-' Statement specialization
-Statement <|-- IfStatement
-Statement <|-- BlockStatement
-Statement <|-- AssignStatement
+class addressOfExpression {
+  LHSExpression firstOperand
+}
 
-' Expression specialization
-Expression <|-- Atom
-Expression <|-- Operator
-Expression <|-- FunctionCall
-Expression <|-- Brace
+class expressionStatement {
+  expression expression
+}
 
-' Atom specialization
-Atom <|-- IntegerLiteral
-Atom <|-- IdentifierLiteral
+class compoundStatement {
+  List<statement> statements
+  SymbolTable scope
+}
 
-' Operator specialization
-Operator <|-- Binary
-Operator <|-- Unary
+class whileStatement {
+  expression condition
+  statement consequence
+}
 
-' Operators
-Unary <|-- NegateOperator
-Binary <|-- SumOperator
+class declarationStatement {
+  List<declarationSpecifier> specifiers
+  declarator declarator
+  initializer initializer
+}
 
-BlockStatement o-- SymbolTable
+class returnStatement {
+  expression returnValue
+}
 
-SymbolTable o-- SymbolTable : Parent
+class ifStatement{
+  expression condition
+  statement consequence
+  statement alternative
+}
+
+class stringLiteral{
+  String value
+}
+
+class intLiteral{
+  int value
+}
+
+class floatLiteral{
+  double value
+}
+
+class assignmentExpression {
+  LHSExpression firstOperand
+  initializer secondOperand
+}
+
+node <|-- expression
+node <|-- statement
+
+expression <|-- binaryExpression
+expression <|-- unaryExpression
+expression <|-- literalExpression
+expression <|-- LHSExpression
+
+literalExpression <|-- intLiteral
+literalExpression <|-- floatLiteral
+literalExpression <|-- stringLiteral
+
+unaryExpression <|-- prefixExpression
+unaryExpression <|-- postfixExpression
+
+postfixExpression <|-- incrementDecrementExpression
+
+prefixExpression <|-- castExpression
+prefixExpression <|-- addressOfExpression
+prefixExpression <|-- additivePrefixExpression
+prefixExpression <|-- incrementDecrementExpression
+
+LHSExpression <|-- referencePrefixExpression
+LHSExpression <|-- variableExpression
+LHSExpression <|-- variablePointerExpression
+LHSExpression <|-- dereferenceExpression
+
+incrementDecrementExpression <|-- incrementExpression
+incrementDecrementExpression <|-- decrementExpression
+
+binaryExpression <|-- arithmeticBinaryExpression
+binaryExpression <|-- logicalBinaryExpression
+binaryExpression <|-- assignmentExpression
+
+arithmeticBinaryExpression <|-- additiveExpression
+arithmeticBinaryExpression <|-- multiplicativeExpression
+
+logicalBinaryExpression <|-- logicalEqualityExpression
+logicalBinaryExpression <|-- logicalAndExpression
+logicalBinaryExpression <|-- logicalOrExpression
+
+statement <|-- declarationStatement
+statement <|-- compoundStatement
+statement <|-- expressionStatement
+statement <|-- selectionStatement
+statement <|-- iterationStatement
+statement <|-- jumpStatement
+
+jumpStatement <|-- returnStatement
+jumpStatement <|-- breakStatement
+jumpStatement <|-- continueStatement
+
+iterationStatement <|-- whileStatement
+
+selectionStatement <|-- ifStatement
+
 @enduml
