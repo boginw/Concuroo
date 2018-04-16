@@ -1,0 +1,11 @@
+package concuroo.nodes.declaration;
+
+import concuroo.nodes.Node;
+
+public class declarationSpecifiers implements Node {
+
+  @Override
+  public String getLiteral() {
+    return null;
+  }
+}

@@ -1,37 +1,39 @@
 package concuroo;
 
-import concuroo.language.LG;
-import concuroo.lexer.Lexer;
-import concuroo.nodes.statements.Statement;
-import concuroo.parser.Parser;
+import ConcurooParser.ConcurooLexer;
+import ConcurooParser.ConcurooParser;
+import ConcurooParser.ConcurooParser.StartContext;
 import concuroo.symbol.SymbolTable;
 import java.util.Scanner;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 
 public class REPL {
 
   @SuppressWarnings("InfiniteLoopStatement")
   public static void start() {
-    SymbolTable st = new SymbolTable();
-    LG lg = new ConcurooDefinition().getGrammar();
-    Lexer l = new Lexer(st, lg);
-    Parser p = new Parser(l, st);
 
     while (true) {
       System.out.print(">> ");
       Scanner scanner = new Scanner(System.in);
       String line = scanner.nextLine();
-      l.reset(line);
 
       try {
-        Statement n = p.parseStatement();
+        ConcurooLexer lex = new ConcurooLexer(CharStreams.fromString(line));
+        ConcurooParser parser = new ConcurooParser(new CommonTokenStream(lex));
+        parser.setBuildParseTree(true);
 
-        // Empty the remaining EOF in the parser's mRead
-        p.consume();
+        SymbolTable st = new SymbolTable();
 
-        System.out.println(n.toString());
+        StartContext ctx = parser.start();
+
+        new ASTVisitor().visit(ctx);
       } catch (Exception e) {
-        System.out.println();
-        e.printStackTrace();
+        if (e.getMessage() != null) {
+          System.err.println(e.getMessage());
+        } else {
+          e.printStackTrace();
+        }
       }
     }
   }
