@@ -24,6 +24,7 @@ jobs:
       - run: gradle dependencies
       - run:
           command: |
+            sudo apt-get update
             sudo apt-get install libgdbm-dev libncurses5-dev libyaml-dev automake libtool bison libffi-dev
             for server in $(shuf -e ha.pool.sks-keyservers.net \
                             hkp://p80.pool.sks-keyservers.net:80 \
