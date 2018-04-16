@@ -67,8 +67,8 @@ jobs:
           name: Compile ANTLR4
           working_directory: ~/code/cfg
           command: |
-            java -Xmx500M -jar ../antlr-4.7.1-complete.jar Concurroo.g4
-            javac -cp ../antlr-4.7.1-complete.jar Concurroo*.java
+            java -Xmx500M -jar ../antlr-4.7.1-complete.jar Concuroo.g4
+            javac -cp ../antlr-4.7.1-complete.jar Concuroo*.java
 
       - run:
           name: Run ANTLR4 tests
