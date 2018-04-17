@@ -2,12 +2,31 @@ package concuroo.nodes.expression.binaryExpression;
 
 import concuroo.nodes.expression.Expression;
 
-public interface BinaryExpression extends Expression {
-  void setFirstOperand(Expression left);
-  Expression getFirstOperand();
+public abstract class BinaryExpression implements Expression {
 
-  void setSecondOperand(Expression right);
-  Expression getSecondOperand();
+  private Expression firstOperand;
+  private Expression secondOperand;
 
-  String getOperator();
+  public void setFirstOperand(Expression firstOperand) {
+    this.firstOperand = firstOperand;
+  }
+
+  public Expression getFirstOperand() {
+    return this.firstOperand;
+  }
+
+  public void setSecondOperand(Expression secondOperand) {
+    this.secondOperand = secondOperand;
+  }
+
+  public Expression getSecondOperand() {
+    return this.secondOperand;
+  }
+
+  @Override
+  public String getLiteral() {
+    return this.getFirstOperand().getLiteral() + this.getLiteral() + this.getSecondOperand();
+  }
+
+  public abstract String getOperator();
 }

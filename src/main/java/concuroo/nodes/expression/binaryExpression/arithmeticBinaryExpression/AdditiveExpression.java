@@ -1,37 +1,11 @@
 package concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression;
 
-import concuroo.nodes.expression.Expression;
-import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.ArithmeticBinaryExpression;
+import concuroo.nodes.expression.binaryExpression.ArithmeticBinaryExpression;
 
-public class AdditiveExpression implements ArithmeticBinaryExpression {
-
-  @Override
-  public void setFirstOperand(Expression left) {
-
-  }
-
-  @Override
-  public Expression getFirstOperand() {
-    return null;
-  }
-
-  @Override
-  public void setSecondOperand(Expression right) {
-
-  }
-
-  @Override
-  public Expression getSecondOperand() {
-    return null;
-  }
+public class AdditiveExpression extends ArithmeticBinaryExpression {
 
   @Override
   public String getOperator() {
-    return null;
-  }
-
-  @Override
-  public String getLiteral() {
     return null;
   }
 }
