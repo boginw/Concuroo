@@ -3,10 +3,10 @@ package concuroo.nodes.expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.typeSpecifier;
 
-public class castExpression implements Node {
+public class CastExpression implements Node {
 
   private typeSpecifier specifier;
-  private primaryExpression value;
+  private PrimaryExpression value;
 
   public typeSpecifier getSpecifier() {
     return specifier;
@@ -16,11 +16,11 @@ public class castExpression implements Node {
     this.specifier = specifier;
   }
 
-  public primaryExpression getValue() {
+  public PrimaryExpression getValue() {
     return value;
   }
 
-  public void setValue(primaryExpression value) {
+  public void setValue(PrimaryExpression value) {
     this.value = value;
   }
 

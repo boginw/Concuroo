@@ -44,7 +44,7 @@ public class ConcurooParser extends Parser {
 	public static final String[] ruleNames = {
 		"primaryExpression", "postfixExpression", "argumentExpressionList", "unaryExpression",
 		"unaryOperator", "castExpression", "multiplicativeExpression", "additiveExpression", 
-		"relationalExpression", "equalityExpression", "logicalAndExpression", 
+		"relationalExpression", "equalityExpression", "logicalAndExpression",
 		"logicalOrExpression", "assignmentExpression", "expression", "declarationStatement",
 		"functionDefinition", "declarationList", "initDeclarator", "declarator", 
 		"directDeclarator", "parameterTypeList", "parameterList", "parameterDeclaration", 
