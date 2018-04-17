@@ -1,4 +1,6 @@
-package concuroo.nodes.expression;
+package concuroo.nodes.expression.binaryExpression;
+
+import concuroo.nodes.expression.Expression;
 
 public interface BinaryExpression extends Expression {
   void setFirstOperand(Expression left);

@@ -1,6 +1,9 @@
-package concuroo.nodes.expression;
+package concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression;
 
-public class EqualityExpression implements LogicalBinaryExpression {
+import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.ArithmeticBinaryExpression;
+
+public class MultiplicativeExpression implements ArithmeticBinaryExpression {
 
   @Override
   public void setFirstOperand(Expression left) {

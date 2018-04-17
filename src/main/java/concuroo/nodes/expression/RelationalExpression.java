@@ -1,5 +1,7 @@
 package concuroo.nodes.expression;
 
+import concuroo.nodes.expression.binaryExpression.BinaryExpression;
+
 public class RelationalExpression implements BinaryExpression {
 
   @Override
