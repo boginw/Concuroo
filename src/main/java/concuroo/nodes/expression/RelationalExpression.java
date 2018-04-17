@@ -7,11 +7,12 @@ public class RelationalExpression extends BinaryExpression implements CanSetOper
   private String operator;
 
   @Override
-  public void setOperator(String operator) {
-    this.operator = operator;
-  }
-  @Override
   public String getOperator() {
     return this.operator;
+  }
+
+  @Override
+  public void setOperator(String operator) {
+    this.operator = operator;
   }
 }

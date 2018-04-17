@@ -1,7 +1,6 @@
 package concuroo.nodes.expression.binaryExpression;
 
 import concuroo.nodes.expression.CanSetOperator;
-import concuroo.nodes.expression.binaryExpression.BinaryExpression;
 
 public abstract class ArithmeticBinaryExpression extends BinaryExpression implements
     CanSetOperator {
