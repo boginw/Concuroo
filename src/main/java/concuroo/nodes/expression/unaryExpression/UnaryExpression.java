@@ -1,4 +1,6 @@
-package concuroo.nodes.expression;
+package concuroo.nodes.expression.unaryExpression;
+
+import concuroo.nodes.expression.Expression;
 
 public interface UnaryExpression extends Expression {
   Expression getFirstOperand();

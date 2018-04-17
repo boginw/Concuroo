@@ -1,4 +1,7 @@
-package concuroo.nodes.expression;
+package concuroo.nodes.expression.binaryExpression;
+
+import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.binaryExpression.BinaryExpression;
 
 public class AssignmentExpression implements BinaryExpression {
   private Expression first;
