@@ -4,8 +4,12 @@
 .class
 .gradle/
 gradle/
+gradlew
+gradlew.bat
 build/
 out/
 .idea/**/*
 .DS_Store
 */**/.DS_Store
+.idea
+.idea/misc.xml
