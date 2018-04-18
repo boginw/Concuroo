@@ -1,6 +1,7 @@
 package concuroo.nodes;
 
 public class typeSpecifier implements Node {
+
   private String specifier;
 
   public String getSpecifier() {

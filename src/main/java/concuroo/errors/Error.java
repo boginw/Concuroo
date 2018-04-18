@@ -10,11 +10,11 @@ public class Error {
     this.severity = severity;
   }
 
-  public String getMessage(){
+  public String getMessage() {
     return msg;
   }
 
   public ErrorType getError() {
-      return severity;
+    return severity;
   }
 }

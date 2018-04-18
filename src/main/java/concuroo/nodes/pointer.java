@@ -1,6 +1,7 @@
 package concuroo.nodes;
 
 public class pointer implements Node {
+
   private typeQualifierList typeQualifierList;
 
   @Override

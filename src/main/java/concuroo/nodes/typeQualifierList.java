@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class typeQualifierList implements Node, List<typeQualifier> {
+
   private List<typeQualifier> list = new ArrayList<>();
 
   @Override
   public String getLiteral() {
     StringBuilder sb = new StringBuilder();
-    for (typeQualifier qualifier: list) {
+    for (typeQualifier qualifier : list) {
       sb.append(qualifier.getLiteral());
       sb.append(" ");
     }

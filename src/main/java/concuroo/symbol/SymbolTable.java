@@ -99,6 +99,7 @@ public class SymbolTable {
 
   /**
    * Serializes the SymbolTable without it's parent
+   *
    * @return Serialized SymbolTable
    */
   @Override

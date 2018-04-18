@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class identifierList implements Node, List<String> {
+
   private List<String> list = new ArrayList<>();
 
   @Override
   public String getLiteral() {
     StringBuilder sb = new StringBuilder();
-    for (String identifier: list) {
+    for (String identifier : list) {
       sb.append(identifier);
       sb.append(" ");
     }

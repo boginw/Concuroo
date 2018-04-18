@@ -10,7 +10,7 @@ public class ErrorContainerTest {
   private ErrorCollection errors;
 
   @Before
-  public void BeforeEachTest(){
+  public void BeforeEachTest() {
     errors = new ErrorCollection();
   }
 
@@ -33,16 +33,17 @@ public class ErrorContainerTest {
 
     String expectedString = "Invalid Operator";
     int size = 5;
-    for (int i = 1; i <= size; i++){
-      errors.reportError(new Error(expectedString+ i, ErrorType.error));
+    for (int i = 1; i <= size; i++) {
+      errors.reportError(new Error(expectedString + i, ErrorType.error));
     }
-    Error expected = new Error(expectedString+ size, ErrorType.error);
+    Error expected = new Error(expectedString + size, ErrorType.error);
 
     assertEquals(errors.getErrorCount(), size);
     assertTrue(errors.isAnyErrorsOfType(ErrorType.error));
     assertFalse(errors.isAnyErrorsOfType(ErrorType.warning));
     assertFalse(errors.isAnyErrorsOfType(ErrorType.notice));
-    assertEquals(errors.getErrorsOfType(ErrorType.error).get(size-1).getError(), expected.getError());
+    assertEquals(errors.getErrorsOfType(ErrorType.error).get(size - 1).getError(),
+        expected.getError());
   }
 
   @Test
