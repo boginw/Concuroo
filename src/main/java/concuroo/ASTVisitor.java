@@ -9,8 +9,39 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.statement.jumpStatement.BreakStatement;
+import concuroo.nodes.statement.jumpStatement.ContinueStatement;
+import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
+
+  @Override
+  public Node visitJumpStatement(ConcurooParser.JumpStatementContext ctx) {
+    String terminal = ctx.getChild(0).getText();
+    Node node;
+
+    switch (terminal) {
+      case "return":
+        node = new ReturnStatement();
+        // We expect expr to be second argument, and semicolon to be third.
+        if(ctx.children.size() == 3){
+          ((ReturnStatement) node).setReturnValue((Expression) visit(ctx.getChild(2)));
+        }
+        break;
+
+      case "continue":
+        node = new ContinueStatement();
+        break;
+
+      case "break":
+        node = new BreakStatement();
+        break;
+
+      default:
+        throw new RuntimeException("Such jump statement does NOT exist");
+    }
+    return node;
+  }
 
   @Override
   public Node visitAdditiveExpression(ConcurooParser.AdditiveExpressionContext ctx) {
@@ -42,7 +73,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitLogicalAndExpression(ConcurooParser.LogicalAndExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.EqualityExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.EqualityExpressionContext) {
       return visitEqualityExpression(ctx.equalityExpression());
     }
 
@@ -55,7 +86,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitLogicalOrExpression(ConcurooParser.LogicalOrExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.LogicalAndExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.LogicalAndExpressionContext) {
       return visitLogicalAndExpression(ctx.logicalAndExpression());
     }
 
@@ -68,7 +99,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitEqualityExpression(ConcurooParser.EqualityExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.RelationalExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.RelationalExpressionContext) {
       return visitRelationalExpression(ctx.relationalExpression());
     }
 
