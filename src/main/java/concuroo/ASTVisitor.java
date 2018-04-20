@@ -18,16 +18,24 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
-  if(ctx.StringLiteral().toString().indexOf(0) == '"') {
-    LiteralExpression exp = new StringLiteral(ctx.StringLiteral().toString());
+  if(ctx.children.size() == 3) {
+    return null;
+  }
 
-  }
-  else if(StringUtils.isNumeric(ctx.StringLiteral().toString())) {
-    LiteralExpression exp = new IntLiteral(Integer.parseInt(ctx.StringLiteral().toString()));
-  }
+  String lit = visit(ctx.getChild(0)).toString();
+
+//  if (visit(ctx.getChild(0)).getLiteral().indexOf(0) == '"'){
+//    StringLiteral lit = new StringLiteral(ctx.getChild(0).getText());
+//    return lit;
+//  }
+//  else if (Character.isDigit(visit(ctx.getChild(0)).toString().indexOf(0))){
+//    IntLiteral lit = new IntLiteral(Integer.parseInt(ctx.getChild(0).getText()));
+//    return lit;
+//  }
+    if(1==1);
+    if(1==1);
+
     return super.visitPrimaryExpression(ctx);
-
-
   }
 
   @Override
