@@ -10,12 +10,21 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.statement.iterationStatement.WhileStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
+
+  @Override
+  public Node visitIterationStatement(ConcurooParser.IterationStatementContext ctx) {
+    WhileStatement wh = new WhileStatement();
+    wh.setCondition((Expression) visit(ctx.getChild(2)));
+    wh.setConsequence((Statement) visit(ctx.getChild(4)));
+    return wh;
+  }
 
   @Override
   public Node visitIfStatement(ConcurooParser.IfStatementContext ctx) {
