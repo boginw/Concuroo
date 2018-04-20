@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
  * @param <T> The return type of the visit operation. Use {@link Void} for
  * operations with no return type.
  */
-public class ConcurooBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ConcurooVisitor<T> {
+public class  ConcurooBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements ConcurooVisitor<T> {
 	/**
 	 * {@inheritDoc}
 	 *
