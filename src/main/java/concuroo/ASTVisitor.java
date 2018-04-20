@@ -3,17 +3,34 @@ package concuroo;
 import ConcurooParser.ConcurooBaseVisitor;
 import ConcurooParser.ConcurooParser;
 import concuroo.nodes.Node;
+import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.MultiplicativeExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.statement.selectionStatement.IfStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
+
+  @Override
+  public Node visitIfStatement(ConcurooParser.IfStatementContext ctx) {
+    if(ctx.children.size() == 3) {
+      IfStatement st = (IfStatement) visit(ctx.getChild(0));
+      st.setAlternative((Statement) visit(ctx.getChild(2)));
+      return st;
+    }
+
+    IfStatement st = new IfStatement();
+    st.setCondition((Expression) visit(ctx.getChild(2)));
+    st.setConsequence((Statement) visit(ctx.getChild(4)));
+
+    return st;
+  }
 
   @Override
   public Node visitJumpStatement(ConcurooParser.JumpStatementContext ctx) {
