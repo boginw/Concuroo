@@ -2,6 +2,7 @@ package concuroo;
 
 import ConcurooParser.ConcurooBaseVisitor;
 import ConcurooParser.ConcurooParser;
+import ConcurooParser.ConcurooParser.StatementListContext;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
@@ -10,14 +11,44 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.iterationStatement.WhileStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
+  @Override
+  public Node visitCompoundStatement(ConcurooParser.CompoundStatementContext ctx){
+    CompoundStatement cs = new CompoundStatement();
+
+    // Compound statement contains statements
+    if(ctx.children.size() == 3){
+      ParseTree child = ctx.getChild(1);
+
+      // Go down the rabbit hole
+      while (child instanceof StatementListContext){
+        StatementListContext castedChild = (StatementListContext) child;
+
+        // If there are more siblings
+        if(castedChild.children.size() == 2){
+          cs.addStatement((Statement) visit(castedChild.getChild(1)));
+        }
+
+        // Go down
+        child = castedChild.getChild(0);
+      }
+
+      // Add the last statement (or first, if we never went down the rabbit hole)
+      cs.addStatement((Statement) visit(child));
+    }
+
+    return cs;
+  }
+  
   @Override
   public Node visitIterationStatement(ConcurooParser.IterationStatementContext ctx) {
     WhileStatement wh = new WhileStatement();

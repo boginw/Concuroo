@@ -173,16 +173,12 @@ statement
   ;
 
 compoundStatement
-  : '{' blockItemList? '}'
+  : '{' statementList? '}'
   ;
 
-blockItemList
-  : blockItem
-  | blockItemList blockItem
-  ;
-
-blockItem
+statementList
   : statement
+  | statementList statement
   ;
 
 expressionStatement
