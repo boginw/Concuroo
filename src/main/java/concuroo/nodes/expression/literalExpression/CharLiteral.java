@@ -25,6 +25,6 @@ public class CharLiteral implements LiteralExpression {
 
     @Override
     public String getLiteral() {
-        return String.valueOf(this.value);
+        return "\"" + String.valueOf(this.value) + "\"";
     }
 }
