@@ -50,7 +50,7 @@ public class ConcurooParser extends Parser {
 		"identifierList", "declarationSpecifiers", "declarationSpecifier", "initializer", 
 		"initializerList", "statement", "compoundStatement", "statementList", 
 		"expressionStatement", "selectionStatement", "ifStatement", "iterationStatement", 
-		"jumpStatement", "typeSpecifier", "pointer", "typeModifier", "typeQualifierList", 
+		"jumpStatement", "typeSpecifier", "pointer", "typeModifier", "typeQualifierList",
 		"typeQualifier", "start", "translationUnit", "externalDeclaration"
 	};
 

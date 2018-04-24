@@ -1,6 +1,6 @@
 package concuroo.nodes;
 
-public class typeModifier implements Node {
+public class TypeModifier implements Node {
 
   @Override
   public String getLiteral() {
