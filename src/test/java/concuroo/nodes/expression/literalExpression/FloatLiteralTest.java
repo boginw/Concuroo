@@ -7,7 +7,7 @@ import static org.junit.Assert.*;
 
 public class FloatLiteralTest {
 
-    private double delta = 0.0000000000d;
+    private double delta = 0;
 
     @Test
     public void FloatLiteralDirectMethodTest(){
