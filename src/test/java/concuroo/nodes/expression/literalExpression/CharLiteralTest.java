@@ -7,21 +7,21 @@ import static org.junit.Assert.*;
 
 public class CharLiteralTest {
 
-    @Test
-    public void charLiteralDirectMethodTest(){
-        char literalChar = 'a';
-        char otherLiteralChar = 'c';
+  @Test
+  public void charLiteralDirectMethodTest() {
+    String literalString = "a";
+    String otherLiteralString = "c";
 
-        LiteralExpression node = new CharLiteral(literalChar);
+    LiteralExpression node = new CharLiteral(literalString);
 
-        assertEquals(literalChar, (node.getLiteral().charAt(1)));
-        assertEquals(literalChar, node.getValue());
+    assertEquals("\'" + literalString + "\'", (node.getLiteral()));
+    assertEquals(literalString, node.getValue());
 
-        node.setValue(otherLiteralChar);
+    node.setValue(otherLiteralString);
 
-        assertEquals(otherLiteralChar, (node.getLiteral().charAt(1)));
-        assertEquals(otherLiteralChar, node.getValue());
-    }
+    assertEquals("\'" + otherLiteralString + "\'", (node.getLiteral()));
+    assertEquals(otherLiteralString, node.getValue());
+  }
 
 
 }

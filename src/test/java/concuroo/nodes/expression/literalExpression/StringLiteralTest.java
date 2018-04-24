@@ -7,20 +7,20 @@ import static org.junit.Assert.*;
 
 public class StringLiteralTest {
 
-    @Test
-    public void stringLiteralDirectMethodTest() {
-        String literalString = "Test";
-        String otherLiteralString = "Other Test";
+  @Test
+  public void stringLiteralDirectMethodTest() {
+    String literalString = "Test";
+    String otherLiteralString = "Other Test";
 
-        LiteralExpression node = new StringLiteral(literalString);
+    LiteralExpression node = new StringLiteral(literalString);
 
-        assertEquals(literalString, node.getLiteral());
-        assertEquals(literalString, node.getValue());
+    assertEquals(literalString, node.getLiteral());
+    assertEquals(literalString, node.getValue());
 
-        node.setValue(otherLiteralString);
+    node.setValue(otherLiteralString);
 
-        assertEquals(otherLiteralString, node.getLiteral());
-        assertEquals(otherLiteralString, node.getValue());
-    }
+    assertEquals(otherLiteralString, node.getLiteral());
+    assertEquals(otherLiteralString, node.getValue());
+  }
 
 }

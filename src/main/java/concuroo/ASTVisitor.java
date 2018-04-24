@@ -26,10 +26,10 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       } else if (ctx.ConstantLiteral().getSymbol().getType() == ConcurooParser.ConstantLiteral) {
         String token = ctx.ConstantLiteral().toString();
         if (token.charAt(0) == '\'') {
-          if (token.length() > 2) {
-            return new CharLiteral(token.charAt(1));
+          if (token.length() > 2) { // Check of it contains more than ''
+            return new CharLiteral(token);
           }
-        } else if (Character.isDigit(token.charAt(0))) {
+        } else if (Character.isDigit(token.charAt(0)) || token.charAt(0) == '.') {
           if (token.contains(".")) {
             return new FloatLiteral(Double.valueOf(token));
           }
@@ -41,7 +41,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         }
       }
     }
-    throw new RuntimeException("No recognized primary express");
+    throw new RuntimeException("No recognized primary expression");
   }
 
   @Override
