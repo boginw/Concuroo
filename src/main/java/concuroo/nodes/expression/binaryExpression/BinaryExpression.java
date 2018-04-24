@@ -2,6 +2,7 @@ package concuroo.nodes.expression.binaryExpression;
 
 import concuroo.nodes.expression.Expression;
 
+
 public abstract class BinaryExpression implements Expression {
 
   private Expression firstOperand;

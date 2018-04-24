@@ -4,7 +4,5 @@ import concuroo.nodes.expression.binaryExpression.ArithmeticBinaryExpression;
 
 public class MultiplicativeExpression extends ArithmeticBinaryExpression {
 
-  public String getOperator() {
-    return "*";
-  }
+
 }

@@ -11,4 +11,9 @@ public abstract class ArithmeticBinaryExpression extends BinaryExpression implem
   public void setOperator(String operator) {
     this.operator = operator;
   }
+
+  @Override
+  public String getOperator() {
+    return this.operator;
+  }
 }

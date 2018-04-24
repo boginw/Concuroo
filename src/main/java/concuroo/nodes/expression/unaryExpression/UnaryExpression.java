@@ -9,6 +9,4 @@ public interface UnaryExpression extends Expression {
   void setFirstOperand(Expression firstOperand);
 
   String getOperator();
-
-  void setOperator(String operator);
 }
