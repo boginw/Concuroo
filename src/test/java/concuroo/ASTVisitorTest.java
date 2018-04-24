@@ -36,7 +36,7 @@ public class ASTVisitorTest {
 
   @Test
   public void visitIterationStatement() {
-    ConcurooParser parser = parse("while(true) return");
+    ConcurooParser parser = parse("while(true) return;");
     IterationStatementContext ctx = parser.iterationStatement();
 
     Node n = new ASTVisitor().visit(ctx);
