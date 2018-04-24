@@ -23,11 +23,10 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         return visit(ctx.getChild(0));
       }
 
-      if (!ctx.StringLiteral().isEmpty()) {
-        return new StringLiteral(ctx.StringLiteral().toString());
-      }
       TerminalNode n;
-      if ((n = ctx.CharLiteral()) != null) {
+      if ((ctx.StringLiteral().size()) != 0) {
+        return new StringLiteral(ctx.StringLiteral().toString());
+      } else if ((n = ctx.CharLiteral()) != null) {
         return new CharLiteral(ctx.CharLiteral().getSymbol().getText());
       } else if ((n = ctx.DoubleLiteral()) != null) {
         return new FloatLiteral(Double.valueOf(ctx.DoubleLiteral().getSymbol().getText()));
