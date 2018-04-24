@@ -16,39 +16,32 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
-  if (ctx.children.size() != 0) {
-    if (ctx.children.size() == 3) {
-      return null;
-    }
+    if (ctx.children.size() != 0) {
+      if (ctx.children.size() == 3) {
+        return visit(ctx.getChild(0));
+      }
 
-    if (!ctx.StringLiteral().isEmpty()){
-      return new StringLiteral(ctx.StringLiteral().toString());
-    }
-
-    else if (ctx.ConstantLiteral().getSymbol().getType() == ConcurooParser.ConstantLiteral) {
-      String token = ctx.ConstantLiteral().toString();
-      if (token.charAt(0) == '\'')
-      {
-        if (token.length() > 2) {
-          return new CharLiteral(token.charAt(1));
+      if (!ctx.StringLiteral().isEmpty()) {
+        return new StringLiteral(ctx.StringLiteral().toString());
+      } else if (ctx.ConstantLiteral().getSymbol().getType() == ConcurooParser.ConstantLiteral) {
+        String token = ctx.ConstantLiteral().toString();
+        if (token.charAt(0) == '\'') {
+          if (token.length() > 2) {
+            return new CharLiteral(token.charAt(1));
+          }
+        } else if (Character.isDigit(token.charAt(0))) {
+          if (token.contains(".")) {
+            return new FloatLiteral(Double.valueOf(token));
+          }
+          return new IntLiteral(Integer.valueOf(token));
+        } else if (token.equals("false")) {
+          return new BoolLiteral(false);
+        } else {
+          return new BoolLiteral(true);
         }
       }
-
-      else if (Character.isDigit(token.charAt(0))) {
-        if (token.contains(".")) {
-          return new FloatLiteral(Double.valueOf(token));
-        }
-        return new IntLiteral(Integer.valueOf(token));
-      }
-
-      else if (token.equals("false")){
-        return new BoolLiteral(false);
-      }
-
-      else return new BoolLiteral(true);
-      }
     }
-    return null;
+    throw new RuntimeException("No recognized primary express");
   }
 
   @Override
@@ -81,7 +74,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitLogicalAndExpression(ConcurooParser.LogicalAndExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.EqualityExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.EqualityExpressionContext) {
       return visitEqualityExpression(ctx.equalityExpression());
     }
 
@@ -94,7 +87,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitLogicalOrExpression(ConcurooParser.LogicalOrExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.LogicalAndExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.LogicalAndExpressionContext) {
       return visitLogicalAndExpression(ctx.logicalAndExpression());
     }
 
@@ -107,7 +100,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitEqualityExpression(ConcurooParser.EqualityExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.RelationalExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.RelationalExpressionContext) {
       return visitRelationalExpression(ctx.relationalExpression());
     }
 
