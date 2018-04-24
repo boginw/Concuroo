@@ -17,7 +17,10 @@ public class StringLiteral implements LiteralExpression {
 
     @Override
     public void setValue(Object value) {
-        this.value = value.toString();
+        if (value instanceof String) {
+            this.value = value.toString();
+        }
+        else throw new IllegalArgumentException("Wrong data type passed");
     }
 
     @Override

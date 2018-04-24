@@ -20,7 +20,7 @@ public class BoolLiteral implements LiteralExpression {
         if (value instanceof Boolean) {
             this.value = (boolean) value;
         }
-        else throw new IllegalStateException("Wrong dataType");
+        else throw new IllegalArgumentException("Wrong data type passed");
     }
 
     @Override

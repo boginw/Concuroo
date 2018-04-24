@@ -17,7 +17,10 @@ public class IntLiteral implements LiteralExpression {
 
     @Override
     public void setValue(Object value) {
-        this.value = Integer.valueOf(value.toString());
+        if (value instanceof Integer){
+            this.value = Integer.valueOf(value.toString());
+        }
+        else throw new IllegalArgumentException("Wrong data type passed");
     }
 
     @Override

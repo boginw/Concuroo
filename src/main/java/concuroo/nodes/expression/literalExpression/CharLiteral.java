@@ -20,11 +20,11 @@ public class CharLiteral implements LiteralExpression {
         if (value instanceof Character) {
             this.value = (char) value;
         }
-        else throw new IllegalStateException("Wrong dataType");
+        else throw new IllegalArgumentException("Wrong data type passed");
     }
 
     @Override
     public String getLiteral() {
-        return "\"" + String.valueOf(this.value) + "\"";
+        return "\'" + String.valueOf(this.value) + "\'";
     }
 }

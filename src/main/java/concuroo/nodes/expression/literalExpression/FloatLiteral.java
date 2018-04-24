@@ -17,8 +17,10 @@ public class FloatLiteral implements LiteralExpression {
 
     @Override
     public void setValue(Object value) {
-        this.value = Double.valueOf(value.toString());
-
+        if (value instanceof Double) {
+            this.value = Double.valueOf(value.toString());
+        }
+        else throw new IllegalArgumentException("Wrong data type passed");
     }
 
     @Override

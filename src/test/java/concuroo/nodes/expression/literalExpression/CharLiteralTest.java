@@ -14,12 +14,12 @@ public class CharLiteralTest {
 
         LiteralExpression node = new CharLiteral(literalChar);
 
-        assertEquals(literalChar, (node.getLiteral().charAt(0)));
+        assertEquals(literalChar, (node.getLiteral().charAt(1)));
         assertEquals(literalChar, node.getValue());
 
         node.setValue(otherLiteralChar);
 
-        assertEquals(otherLiteralChar, (node.getLiteral().charAt(0)));
+        assertEquals(otherLiteralChar, (node.getLiteral().charAt(1)));
         assertEquals(otherLiteralChar, node.getValue());
     }
 
