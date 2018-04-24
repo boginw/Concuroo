@@ -1,4 +1,4 @@
-// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from /home/scarress/Documents/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -515,6 +515,18 @@ public class ConcurooBaseListener implements ConcurooListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTypeQualifier(ConcurooParser.TypeQualifierContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBoolLiteral(ConcurooParser.BoolLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBoolLiteral(ConcurooParser.BoolLiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

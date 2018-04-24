@@ -1,4 +1,4 @@
-// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from /home/scarress/Documents/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -427,6 +427,16 @@ public interface ConcurooListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeQualifier(ConcurooParser.TypeQualifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ConcurooParser#boolLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterBoolLiteral(ConcurooParser.BoolLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ConcurooParser#boolLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitBoolLiteral(ConcurooParser.BoolLiteralContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#start}.
 	 * @param ctx the parse tree

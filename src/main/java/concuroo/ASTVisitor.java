@@ -4,12 +4,14 @@ import ConcurooParser.ConcurooBaseVisitor;
 import ConcurooParser.ConcurooParser;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.PrimaryExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.MultiplicativeExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
 import concuroo.nodes.expression.literalExpression.*;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
@@ -23,26 +25,24 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
       if (!ctx.StringLiteral().isEmpty()) {
         return new StringLiteral(ctx.StringLiteral().toString());
-      } else if (ctx.ConstantLiteral().getSymbol().getType() == ConcurooParser.ConstantLiteral) {
-        String token = ctx.ConstantLiteral().toString();
-        if (token.charAt(0) == '\'') {
-          if (token.length() > 2) { // Check of it contains more than ''
-            return new CharLiteral(token);
-          }
-        } else if (Character.isDigit(token.charAt(0)) || token.charAt(0) == '.') {
-          if (token.contains(".")) {
-            return new FloatLiteral(Double.valueOf(token));
-          }
-          return new IntLiteral(Integer.valueOf(token));
-        } else if (token.equals("false")) {
-          return new BoolLiteral(false);
-        } else {
+      }
+      TerminalNode n;
+      if ((n = ctx.CharLiteral()) != null) {
+        return new CharLiteral(ctx.CharLiteral().getSymbol().getText());
+      } else if ((n = ctx.DoubleLiteral()) != null) {
+        return new FloatLiteral(Double.valueOf(ctx.DoubleLiteral().getSymbol().getText()));
+      } else if ((n = ctx.Number()) != null) {
+        return new IntLiteral(Integer.valueOf(ctx.Number().getSymbol().getText()));
+      } else if (!ctx.boolLiteral().isEmpty()) {
+        if (ctx.boolLiteral().getChild(0).toString().equals("true")) {
           return new BoolLiteral(true);
         }
+        return new BoolLiteral(false);
       }
     }
     throw new RuntimeException("No recognized primary expression");
   }
+
 
   @Override
   public Node visitAdditiveExpression(ConcurooParser.AdditiveExpressionContext ctx) {
