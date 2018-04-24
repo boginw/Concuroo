@@ -82,7 +82,6 @@ logicalOrExpression
 assignmentExpression
     :   logicalOrExpression
     |   unaryExpression '=' assignmentExpression
-    |   Number // for
     ;
 
 expression

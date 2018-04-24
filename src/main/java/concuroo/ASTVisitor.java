@@ -6,35 +6,37 @@ import ConcurooParser.ConcurooParser.StatementListContext;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.MultiplicativeExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.expression.lhsExpression.LHSExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.iterationStatement.WhileStatement;
-import concuroo.nodes.statement.selectionStatement.IfStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
+import concuroo.nodes.statement.selectionStatement.IfStatement;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
-  public Node visitCompoundStatement(ConcurooParser.CompoundStatementContext ctx){
+  public Node visitCompoundStatement(ConcurooParser.CompoundStatementContext ctx) {
     CompoundStatement cs = new CompoundStatement();
 
     // Compound statement contains statements
-    if(ctx.children.size() == 3){
+    if (ctx.children.size() == 3) {
       ParseTree child = ctx.getChild(1);
 
       // Go down the rabbit hole
-      while (child instanceof StatementListContext){
+      while (child instanceof StatementListContext) {
         StatementListContext castedChild = (StatementListContext) child;
 
         // If there are more siblings
-        if(castedChild.children.size() == 2){
+        if (castedChild.children.size() == 2) {
           cs.addStatement((Statement) visit(castedChild.getChild(1)));
         }
 
@@ -48,7 +50,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
     return cs;
   }
-  
+
   @Override
   public Node visitIterationStatement(ConcurooParser.IterationStatementContext ctx) {
     WhileStatement wh = new WhileStatement();
@@ -59,7 +61,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitIfStatement(ConcurooParser.IfStatementContext ctx) {
-    if(ctx.children.size() == 3) {
+    if (ctx.children.size() == 3) {
       IfStatement st = (IfStatement) visit(ctx.getChild(0));
       st.setAlternative((Statement) visit(ctx.getChild(2)));
       return st;
@@ -81,7 +83,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       case "return":
         node = new ReturnStatement();
         // We expect expr to be second argument, and semicolon to be third.
-        if(ctx.children.size() == 3){
+        if (ctx.children.size() == 3) {
           ((ReturnStatement) node).setReturnValue((Expression) visit(ctx.getChild(2)));
         }
         break;
@@ -98,6 +100,24 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         throw new RuntimeException("Such jump statement does NOT exist");
     }
     return node;
+  }
+
+  public Node visitAssignmentExpression(ConcurooParser.AssignmentExpressionContext ctx) {
+    if (ctx.getChild(0) instanceof ConcurooParser.LogicalOrExpressionContext) {
+      return visitLogicalOrExpression(ctx.logicalOrExpression());
+    }
+
+    LHSExpression left = (LHSExpression) visit(ctx.getChild(0));
+
+    if (left == null) {
+      throw new RuntimeException("Left side of assignment is not LHS expression");
+    }
+
+    AssignmentExpression expr = new AssignmentExpression();
+    expr.setFirstOperand(left);
+    expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
+
+    return expr;
   }
 
   @Override
