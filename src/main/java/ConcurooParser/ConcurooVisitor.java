@@ -1,4 +1,4 @@
-// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from /home/scarress/Documents/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -256,6 +256,12 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTypeQualifier(ConcurooParser.TypeQualifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ConcurooParser#boolLiteral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBoolLiteral(ConcurooParser.BoolLiteralContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#start}.
 	 * @param ctx the parse tree

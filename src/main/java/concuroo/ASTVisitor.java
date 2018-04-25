@@ -13,6 +13,8 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.expression.literalExpression.*;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
 import concuroo.nodes.statement.CompoundStatement;
@@ -22,10 +24,39 @@ import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.apache.commons.lang3.NotImplementedException;
+
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
+  public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
+    if (ctx.children.size() != 0) {
+      if (ctx.children.size() == 3) {
+        return visit(ctx.getChild(0));
+      }
+
+      TerminalNode n;
+      if ((ctx.StringLiteral().size()) != 0) {
+        return new StringLiteral(ctx.StringLiteral().toString());
+      } else if ((n = ctx.CharLiteral()) != null) {
+        return new CharLiteral(ctx.CharLiteral().getSymbol().getText());
+      } else if ((n = ctx.DoubleLiteral()) != null) {
+        return new FloatLiteral(Double.valueOf(ctx.DoubleLiteral().getSymbol().getText()));
+      } else if ((n = ctx.Number()) != null) {
+        return new IntLiteral(Integer.valueOf(ctx.Number().getSymbol().getText()));
+      } else if (ctx.boolLiteral() != null) {
+        if (ctx.boolLiteral().getChild(0).toString().equals("true")) {
+          return new BoolLiteral(true);
+        }
+        return new BoolLiteral(false);
+      } else if ((n = ctx.Identifier()) != null) {
+        throw new NotImplementedException("Fix me"); //Todo implement dis :)
+      }
+    }
+    throw new RuntimeException("No recognized primary expression");
+  }
+
   public Node visitCompoundStatement(ConcurooParser.CompoundStatementContext ctx) {
     CompoundStatement cs = new CompoundStatement();
 
@@ -87,7 +118,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         // We expect expr to be second argument, and semicolon to be third.
         if (ctx.children.size() == 3) {
           ((ReturnStatement) node).setReturnValue((Expression) visit(ctx.getChild(2)));
-        } else if(ctx.children.size() == 1) {
+        } else if (ctx.children.size() == 1) {
           throw new RuntimeException("Missing semicolon");
         }
         break;
@@ -193,7 +224,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitCastExpression(ConcurooParser.CastExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.UnaryExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.UnaryExpressionContext) {
       return visitUnaryExpression(ctx.unaryExpression());
     }
 
