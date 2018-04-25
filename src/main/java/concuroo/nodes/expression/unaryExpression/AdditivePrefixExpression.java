@@ -1,6 +1,5 @@
 package concuroo.nodes.expression.unaryExpression;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import concuroo.nodes.expression.CanSetOperator;
 import concuroo.nodes.expression.Expression;
 
