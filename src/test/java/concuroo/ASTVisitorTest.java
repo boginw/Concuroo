@@ -75,7 +75,7 @@ public class ASTVisitorTest {
 
   @Test
   public void visitIfStatementWithElse() {
-    ConcurooParser parser = parse("if(1 == 1) return else return;");
+    ConcurooParser parser = parse("if(true) return else return;");
     SelectionStatementContext ctx = parser.selectionStatement();
 
     Node n = new ASTVisitor().visit(ctx);
@@ -114,7 +114,7 @@ public class ASTVisitorTest {
   }
 
   @Test
-  public void visitJumpStatementReturnWithValue() {
+  public void visitJumpStatementReturnWithIntValue() {
     ConcurooParser parser = parse("return 1;");
     JumpStatementContext ctx = parser.jumpStatement();
 
@@ -124,8 +124,29 @@ public class ASTVisitorTest {
   }
 
   @Test
-  public void visitAssignmentExpression() {
+  public void visitJumpStatementReturnWithBoolValue() {
+    ConcurooParser parser = parse("return true;");
+    JumpStatementContext ctx = parser.jumpStatement();
+
+    Node n = new ASTVisitor().visit(ctx);
+    assertTrue(n instanceof ReturnStatement);
+    assertTrue(((ReturnStatement) n).getReturnValue() instanceof BoolLiteral);
+  }
+
+  @Test
+  public void visitAssignmentExpressionInt() {
     ConcurooParser parser = parse("int a = 1");
+    AssignmentExpressionContext ctx = parser.assignmentExpression();
+
+    Node n = new ASTVisitor().visit(ctx);
+    assertTrue(n instanceof AssignmentExpression);
+    assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof UnaryExpression);
+    assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof AssignmentExpression);
+  }
+
+  @Test
+  public void visitAssignmentExpressionBool() {
+    ConcurooParser parser = parse("bool a = true");
     AssignmentExpressionContext ctx = parser.assignmentExpression();
 
     Node n = new ASTVisitor().visit(ctx);
