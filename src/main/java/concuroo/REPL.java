@@ -27,7 +27,7 @@ public class REPL {
 
         StartContext ctx = parser.start();
 
-        new ASTVisitor().visit(ctx);
+        new ASTVisitor(st).visit(ctx);
       } catch (Exception e) {
         if (e.getMessage() != null) {
           System.err.println(e.getMessage());

@@ -23,11 +23,17 @@ import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
+import concuroo.symbol.SymbolTable;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.NotImplementedException;
 
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
+  private SymbolTable global;
+
+  public ASTVisitor(SymbolTable st){
+    global = st;
+  }
 
   @Override
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
@@ -60,6 +66,10 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   public Node visitCompoundStatement(ConcurooParser.CompoundStatementContext ctx) {
     CompoundStatement cs = new CompoundStatement();
 
+    // scope in
+    cs.getScope().setParent(this.global);
+    global = cs.getScope();
+
     // Compound statement contains statements
     if (ctx.children.size() == 3) {
       ParseTree child = ctx.getChild(1);
@@ -80,6 +90,9 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       // Add the last statement (or first, if we never went down the rabbit hole)
       cs.addStatement((Statement) visit(child));
     }
+
+    // scope out
+    global = cs.getScope().getParent();
 
     return cs;
   }
