@@ -15,7 +15,6 @@ import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.Logica
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
 import concuroo.nodes.expression.literalExpression.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
-
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
 import concuroo.nodes.statement.CompoundStatement;
@@ -25,7 +24,8 @@ import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
 import org.antlr.v4.runtime.tree.ParseTree;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
+
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
@@ -51,7 +51,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         }
         return new BoolLiteral(false);
       } else if ((n = ctx.Identifier()) != null) {
-        throw new NotImplementedException(); //Todo implement dis :)
+        throw new NotImplementedException("Fix me"); //Todo implement dis :)
       }
     }
     throw new RuntimeException("No recognized primary expression");
