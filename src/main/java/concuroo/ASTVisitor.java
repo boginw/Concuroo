@@ -25,6 +25,7 @@ import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
 import org.antlr.v4.runtime.tree.ParseTree;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
@@ -44,11 +45,13 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         return new FloatLiteral(Double.valueOf(ctx.DoubleLiteral().getSymbol().getText()));
       } else if ((n = ctx.Number()) != null) {
         return new IntLiteral(Integer.valueOf(ctx.Number().getSymbol().getText()));
-      } else if (!ctx.boolLiteral().isEmpty()) {
+      } else if (ctx.boolLiteral() != null) {
         if (ctx.boolLiteral().getChild(0).toString().equals("true")) {
           return new BoolLiteral(true);
         }
         return new BoolLiteral(false);
+      } else if ((n = ctx.Identifier()) != null) {
+        throw new NotImplementedException(); //Todo implement dis :)
       }
     }
     throw new RuntimeException("No recognized primary expression");
@@ -115,7 +118,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         // We expect expr to be second argument, and semicolon to be third.
         if (ctx.children.size() == 3) {
           ((ReturnStatement) node).setReturnValue((Expression) visit(ctx.getChild(2)));
-        } else if(ctx.children.size() == 1) {
+        } else if (ctx.children.size() == 1) {
           throw new RuntimeException("Missing semicolon");
         }
         break;
@@ -151,6 +154,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
     return expr;
   }
+
   @Override
   public Node visitAdditiveExpression(ConcurooParser.AdditiveExpressionContext ctx) {
     if (ctx.children.size() == 1) {
@@ -220,7 +224,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitCastExpression(ConcurooParser.CastExpressionContext ctx) {
-    if(ctx.getChild(0) instanceof ConcurooParser.UnaryExpressionContext) {
+    if (ctx.getChild(0) instanceof ConcurooParser.UnaryExpressionContext) {
       return visitUnaryExpression(ctx.unaryExpression());
     }
 
