@@ -2,11 +2,15 @@ grammar Concuroo;
 
 // Expressions
 primaryExpression
-    :   Identifier
-    |   ConstantLiteral
+    :   boolLiteral
+    |   CharLiteral
+    |   Number
+    |   DoubleLiteral
     |   StringLiteral+
+    |   Identifier
     |   '(' expression ')'
     ;
+
 
 postfixExpression
     :   primaryExpression
@@ -229,6 +233,8 @@ typeQualifier
   : 'const'
   ;
 
+boolLiteral : 'true' | 'false';
+
 
 
 
@@ -255,15 +261,6 @@ externalDeclaration
 
 /* Literals */
 StringLiteral : '"' SCharSeq? '"';
-
-
-
-ConstantLiteral
-  : BoolLiteral
-  | CharLiteral
-  | IntLiteral
-  | DoubleLiteral
-  ;
 
 ComparisonOperator
   : '!='
@@ -320,19 +317,12 @@ fragment
 Digit: [0-9];
 
 
-
-fragment
 IntLiteral : Number;
 
-fragment
 DoubleLiteral
   : Number '.' Number
   | Number '.'
   | '.' Number
   ;
 
-fragment
-BoolLiteral : 'true' | 'false';
-
-fragment
 CharLiteral : '\'' SChar? '\'';
