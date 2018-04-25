@@ -193,7 +193,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     expr.setFirstOperand((Expression) visit(ctx.getChild(0)));
     expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
 
-    return visitChildren(ctx);
+    return expr;
   }
 
   @Override
@@ -206,7 +206,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     expr.setFirstOperand((Expression) visit(ctx.getChild(0)));
     expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
 
-    return visitChildren(ctx);
+    return expr;
   }
 
   @Override
@@ -219,7 +219,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     expr.setFirstOperand((Expression) visit(ctx.getChild(0)));
     expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
 
-    return visitChildren(ctx);
+    return expr;
   }
 
   @Override
