@@ -13,6 +13,7 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.expression.lhsExpression.VariableExpression;
 import concuroo.nodes.expression.literalExpression.BoolLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.unaryExpression.UnaryExpression;
@@ -132,24 +133,24 @@ public class ASTVisitorTest {
 
   @Test
   public void visitAssignmentExpressionInt() {
-    ConcurooParser parser = parse("int a = 1");
+    ConcurooParser parser = parse("a = 1");
     AssignmentExpressionContext ctx = parser.assignmentExpression();
 
     Node n = new ASTVisitor().visit(ctx);
     assertTrue(n instanceof AssignmentExpression);
-    assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof UnaryExpression);
-    assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof AssignmentExpression);
+    assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof VariableExpression);
+    assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof IntLiteral);
   }
 
   @Test
   public void visitAssignmentExpressionBool() {
-    ConcurooParser parser = parse("bool a = true");
+    ConcurooParser parser = parse("a = true");
     AssignmentExpressionContext ctx = parser.assignmentExpression();
 
     Node n = new ASTVisitor().visit(ctx);
     assertTrue(n instanceof AssignmentExpression);
-    assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof UnaryExpression);
-    assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof AssignmentExpression);
+    assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof VariableExpression);
+    assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof BoolLiteral);
   }
 
   @Test

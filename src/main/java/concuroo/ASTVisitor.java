@@ -13,6 +13,7 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.expression.lhsExpression.VariableExpression;
 import concuroo.nodes.expression.literalExpression.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
@@ -51,7 +52,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         }
         return new BoolLiteral(false);
       } else if ((n = ctx.Identifier()) != null) {
-        throw new NotImplementedException("Fix me"); //Todo implement dis :)
+        return new VariableExpression(ctx.Identifier().getText());
       }
     }
     throw new RuntimeException("No recognized primary expression");
