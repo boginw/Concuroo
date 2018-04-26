@@ -68,8 +68,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     CompoundStatement cs = new CompoundStatement();
 
     // scope in
-    cs.getScope().setParent(this.global);
-    global = cs.getScope();
+    scopeIn(cs.getScope());
 
     // Compound statement contains statements
     if (ctx.children.size() == 3) {
@@ -93,7 +92,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // scope out
-    global = cs.getScope().getParent();
+    scopeOut();
 
     return cs;
   }
@@ -263,5 +262,14 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     return aggregate;
+  }
+
+  private void scopeIn(SymbolTable scope){
+    scope.setParent(global);
+    global = scope;
+  }
+
+  private void scopeOut() {
+    global = global.getParent();
   }
 }
