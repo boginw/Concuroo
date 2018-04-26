@@ -13,6 +13,7 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.expression.lhsExpression.VariableExpression;
 import concuroo.nodes.expression.literalExpression.*;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
@@ -57,7 +58,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         }
         return new BoolLiteral(false);
       } else if ((n = ctx.Identifier()) != null) {
-        throw new NotImplementedException("Fix me"); //Todo implement dis :)
+        return new VariableExpression(ctx.Identifier().getText());
       }
     }
     throw new RuntimeException("No recognized primary expression");
@@ -67,8 +68,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     CompoundStatement cs = new CompoundStatement();
 
     // scope in
-    cs.getScope().setParent(this.global);
-    global = cs.getScope();
+    scopeIn(cs.getScope());
 
     // Compound statement contains statements
     if (ctx.children.size() == 3) {
@@ -92,7 +92,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // scope out
-    global = cs.getScope().getParent();
+    scopeOut();
 
     return cs;
   }
@@ -130,7 +130,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         node = new ReturnStatement();
         // We expect expr to be second argument, and semicolon to be third.
         if (ctx.children.size() == 3) {
-          ((ReturnStatement) node).setReturnValue((Expression) visit(ctx.getChild(2)));
+          ((ReturnStatement) node).setReturnValue((Expression) visitExpression(ctx.expression()));
         } else if (ctx.children.size() == 1) {
           throw new RuntimeException("Missing semicolon");
         }
@@ -206,7 +206,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     expr.setFirstOperand((Expression) visit(ctx.getChild(0)));
     expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
 
-    return visitChildren(ctx);
+    return expr;
   }
 
   @Override
@@ -219,7 +219,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     expr.setFirstOperand((Expression) visit(ctx.getChild(0)));
     expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
 
-    return visitChildren(ctx);
+    return expr;
   }
 
   @Override
@@ -232,7 +232,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     expr.setFirstOperand((Expression) visit(ctx.getChild(0)));
     expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
 
-    return visitChildren(ctx);
+    return expr;
   }
 
   @Override
@@ -262,5 +262,14 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     return aggregate;
+  }
+
+  private void scopeIn(SymbolTable scope){
+    scope.setParent(global);
+    global = scope;
+  }
+
+  private void scopeOut() {
+    global = global.getParent();
   }
 }
