@@ -117,7 +117,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         node = new ReturnStatement();
         // We expect expr to be second argument, and semicolon to be third.
         if (ctx.children.size() == 3) {
-          ((ReturnStatement) node).setReturnValue((Expression) visit(ctx.getChild(2)));
+          ((ReturnStatement) node).setReturnValue((Expression) visitExpression(ctx.expression()));
         } else if (ctx.children.size() == 1) {
           throw new RuntimeException("Missing semicolon");
         }

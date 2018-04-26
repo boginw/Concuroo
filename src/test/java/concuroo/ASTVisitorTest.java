@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import ConcurooParser.ConcurooLexer;
 import ConcurooParser.ConcurooParser;
 import ConcurooParser.ConcurooParser.*;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
@@ -19,8 +18,6 @@ import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.unaryExpression.UnaryExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.IterationStatement;
-import concuroo.nodes.statement.JumpStatement;
-import concuroo.nodes.statement.SelectionStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
@@ -75,12 +72,12 @@ public class ASTVisitorTest {
 
   @Test
   public void visitIfStatementWithElse() {
-    ConcurooParser parser = parse("if(true) return else return;");
+    ConcurooParser parser = parse("if(true) return; else return;");
     SelectionStatementContext ctx = parser.selectionStatement();
 
     Node n = new ASTVisitor().visit(ctx);
     assertTrue(n instanceof IfStatement);
-    assertTrue(((IfStatement) n).getCondition() instanceof LogicalEqualityExpression);
+    assertTrue(((IfStatement) n).getCondition() instanceof BoolLiteral);
     assertTrue(((IfStatement) n).getConsequence() instanceof ReturnStatement);
     assertTrue(((IfStatement) n).getAlternative() instanceof ReturnStatement);
   }
