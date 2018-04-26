@@ -2,7 +2,7 @@ package concuroo.nodes.declaration;
 
 import concuroo.nodes.Node;
 
-public class declarator implements Node {
+public class DirectDeclarator implements Node {
 
   @Override
   public String getLiteral() {

@@ -1,19 +1,19 @@
 package concuroo.nodes.expression.unaryExpression;
 
 import concuroo.nodes.Node;
+import concuroo.nodes.TypeSpecifier;
 import concuroo.nodes.expression.PrimaryExpression;
-import concuroo.nodes.typeSpecifier;
 
 public class CastExpression implements Node {
 
-  private typeSpecifier specifier;
+  private TypeSpecifier specifier;
   private PrimaryExpression value;
 
-  public typeSpecifier getSpecifier() {
+  public TypeSpecifier getSpecifier() {
     return specifier;
   }
 
-  public void setSpecifier(typeSpecifier specifier) {
+  public void setSpecifier(TypeSpecifier specifier) {
     this.specifier = specifier;
   }
 

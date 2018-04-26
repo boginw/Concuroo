@@ -7,14 +7,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class initializerList implements Node, List<initializer> {
+public class initializerList implements Node, List<Initializer> {
 
-  private List<initializer> list = new ArrayList<>();
+  private List<Initializer> list = new ArrayList<>();
 
   @Override
   public String getLiteral() {
     StringBuilder sb = new StringBuilder();
-    for (initializer initializer : list) {
+    for (Initializer initializer : list) {
       sb.append(initializer.getLiteral());
       sb.append(" ");
     }
@@ -37,7 +37,7 @@ public class initializerList implements Node, List<initializer> {
   }
 
   @Override
-  public Iterator<initializer> iterator() {
+  public Iterator<Initializer> iterator() {
     return list.iterator();
   }
 
@@ -52,7 +52,7 @@ public class initializerList implements Node, List<initializer> {
   }
 
   @Override
-  public boolean add(initializer initializer) {
+  public boolean add(Initializer initializer) {
     return list.add(initializer);
   }
 
@@ -67,12 +67,12 @@ public class initializerList implements Node, List<initializer> {
   }
 
   @Override
-  public boolean addAll(Collection<? extends initializer> c) {
+  public boolean addAll(Collection<? extends Initializer> c) {
     return list.addAll(c);
   }
 
   @Override
-  public boolean addAll(int index, Collection<? extends initializer> c) {
+  public boolean addAll(int index, Collection<? extends Initializer> c) {
     return list.addAll(index, c);
   }
 
@@ -92,22 +92,22 @@ public class initializerList implements Node, List<initializer> {
   }
 
   @Override
-  public initializer get(int index) {
+  public Initializer get(int index) {
     return list.get(index);
   }
 
   @Override
-  public initializer set(int index, initializer element) {
+  public Initializer set(int index, Initializer element) {
     return list.set(index, element);
   }
 
   @Override
-  public void add(int index, initializer element) {
+  public void add(int index, Initializer element) {
     list.add(index, element);
   }
 
   @Override
-  public initializer remove(int index) {
+  public Initializer remove(int index) {
     return list.remove(index);
   }
 
@@ -122,17 +122,17 @@ public class initializerList implements Node, List<initializer> {
   }
 
   @Override
-  public ListIterator<initializer> listIterator() {
+  public ListIterator<Initializer> listIterator() {
     return list.listIterator();
   }
 
   @Override
-  public ListIterator<initializer> listIterator(int index) {
+  public ListIterator<Initializer> listIterator(int index) {
     return list.listIterator(index);
   }
 
   @Override
-  public List<initializer> subList(int fromIndex, int toIndex) {
+  public List<Initializer> subList(int fromIndex, int toIndex) {
     return list.subList(fromIndex, toIndex);
   }
 }
