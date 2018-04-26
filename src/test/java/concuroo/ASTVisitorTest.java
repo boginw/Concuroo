@@ -126,7 +126,12 @@ public class ASTVisitorTest {
 
     Node n = new ASTVisitor(st).visit(ctx);
     assertTrue(n instanceof ReturnStatement);
+
+    Expression returnValue = ((ReturnStatement) n).getReturnValue();
     assertTrue(((ReturnStatement) n).getReturnValue() instanceof IntLiteral);
+
+    String intLiteral = ((IntLiteral) returnValue).getLiteral();
+    assertEquals("1", intLiteral);
   }
 
   @Test
@@ -136,7 +141,12 @@ public class ASTVisitorTest {
 
     Node n = new ASTVisitor(st).visit(ctx);
     assertTrue(n instanceof ReturnStatement);
-    assertTrue(((ReturnStatement) n).getReturnValue() instanceof BoolLiteral);
+
+    Expression returnValue = ((ReturnStatement) n).getReturnValue();
+    assertTrue(returnValue instanceof BoolLiteral);
+
+    String boolLiteral = ((BoolLiteral) returnValue).getLiteral();
+    assertEquals("true", boolLiteral);
   }
 
   @Test
@@ -168,19 +178,29 @@ public class ASTVisitorTest {
 
     Node n = new ASTVisitor(st).visit(ctx);
     assertTrue(n instanceof AdditiveExpression);
-    assertTrue(((AdditiveExpression) n).getFirstOperand() instanceof IntLiteral);
-    int firstOperand = (int) ((IntLiteral)((AdditiveExpression) n).getFirstOperand()).getValue();
-    assertTrue(((AdditiveExpression) n).getSecondOperand() instanceof IntLiteral);
 
-    Expression expr = ((AdditiveExpression) n).getFirstOperand();
-    Object obj = ((IntLiteral) expr).getValue();
-    Integer intLit = (Integer) obj;
-    assertTrue(intLit == 1);
+    Expression firstOperand = ((AdditiveExpression) n).getFirstOperand();
+    Expression secondOperand = ((AdditiveExpression) n).getSecondOperand();
 
-    expr = ((AdditiveExpression) n).getSecondOperand();
-    obj = ((IntLiteral) expr).getValue();
-    intLit = (Integer) obj;
-    assertTrue(intLit == 2);
+    /* Testing first operand */
+    assertTrue(firstOperand instanceof IntLiteral);
+
+    IntLiteral firstLiteral = (IntLiteral) firstOperand;
+    assertEquals(firstLiteral.getLiteral(), "1");
+    assertTrue(firstLiteral.getValue() instanceof Integer);
+
+    int firstInt = (int) ((IntLiteral) firstOperand).getValue();
+    assertEquals(firstInt, 1);
+
+    /* Testing second operand */
+    assertTrue(secondOperand instanceof IntLiteral);
+
+    IntLiteral secondLiteral = (IntLiteral) secondOperand;
+    assertEquals(secondLiteral.getLiteral(), "2");
+    assertTrue(secondLiteral.getValue() instanceof Integer);
+
+    int secondInt = (int) ((IntLiteral) secondOperand).getValue();
+    assertEquals(secondInt, 2);
   }
 
   @Test
@@ -190,18 +210,29 @@ public class ASTVisitorTest {
 
     Node n = new ASTVisitor(st).visit(ctx);
     assertTrue(n instanceof MultiplicativeExpression);
-    assertTrue(((MultiplicativeExpression) n).getFirstOperand() instanceof IntLiteral);
-    assertTrue(((MultiplicativeExpression) n).getSecondOperand() instanceof IntLiteral);
 
-    Expression expr = ((MultiplicativeExpression) n).getFirstOperand();
-    Object obj = ((IntLiteral) expr).getValue();
-    Integer intLit = (Integer) obj;
-    assertTrue(intLit == 1);
+    Expression firstOperand = ((MultiplicativeExpression) n).getFirstOperand();
+    Expression secondOperand = ((MultiplicativeExpression) n).getSecondOperand();
 
-    expr = ((MultiplicativeExpression) n).getSecondOperand();
-    obj = ((IntLiteral) expr).getValue();
-    intLit = (Integer) obj;
-    assertTrue(intLit == 2);
+    /* Testing first operand */
+    assertTrue(firstOperand instanceof IntLiteral);
+
+    IntLiteral firstLiteral = (IntLiteral) firstOperand;
+    assertEquals(firstLiteral.getLiteral(), "1");
+    assertTrue(firstLiteral.getValue() instanceof Integer);
+
+    int firstInt = (int) ((IntLiteral) firstOperand).getValue();
+    assertEquals(firstInt, 1);
+
+    /* Testing second operand */
+    assertTrue(secondOperand instanceof IntLiteral);
+
+    IntLiteral secondLiteral = (IntLiteral) secondOperand;
+    assertEquals(secondLiteral.getLiteral(), "2");
+    assertTrue(secondLiteral.getValue() instanceof Integer);
+
+    int secondInt = (int) ((IntLiteral) secondOperand).getValue();
+    assertEquals(secondInt, 2);
   }
 
   @Test
@@ -217,12 +248,12 @@ public class ASTVisitorTest {
     Expression expr = ((LogicalAndExpression) n).getFirstOperand();
     Object obj = ((BoolLiteral) expr).getValue();
     Boolean boolLit = (Boolean) obj;
-    assertTrue(boolLit == true);
+    assertTrue(boolLit);
 
     expr = ((LogicalAndExpression) n).getSecondOperand();
     obj = ((BoolLiteral) expr).getValue();
     boolLit = (Boolean) obj;
-    assertTrue(boolLit == false);
+    assertFalse(boolLit);
   }
 
   @Test
@@ -238,12 +269,12 @@ public class ASTVisitorTest {
     Expression expr = ((LogicalOrExpression) n).getFirstOperand();
     Object obj = ((BoolLiteral) expr).getValue();
     Boolean boolLit = (Boolean) obj;
-    assertTrue(boolLit == true);
+    assertTrue(boolLit);
 
     expr = ((LogicalOrExpression) n).getSecondOperand();
     obj = ((BoolLiteral) expr).getValue();
     boolLit = (Boolean) obj;
-    assertTrue(boolLit == false);
+    assertFalse(boolLit);
   }
 
   @Test
@@ -270,12 +301,12 @@ public class ASTVisitorTest {
     Expression expr = ((LogicalEqualityExpression) n).getFirstOperand();
     Object obj = ((BoolLiteral) expr).getValue();
     Boolean boolLit = (Boolean) obj;
-    assertTrue(boolLit == true);
+    assertTrue(boolLit);
 
     expr = ((LogicalEqualityExpression) n).getSecondOperand();
     obj = ((BoolLiteral) expr).getValue();
     boolLit = (Boolean) obj;
-    assertTrue(boolLit == false);
+    assertFalse(boolLit);
   }
 
   public ConcurooParser parse(String input){
