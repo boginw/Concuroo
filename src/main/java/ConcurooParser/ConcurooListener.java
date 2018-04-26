@@ -168,16 +168,6 @@ public interface ConcurooListener extends ParseTreeListener {
 	 */
 	void exitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#declarationList}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclarationList(ConcurooParser.DeclarationListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#declarationList}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclarationList(ConcurooParser.DeclarationListContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#initDeclarator}.
 	 * @param ctx the parse tree
 	 */
@@ -237,16 +227,6 @@ public interface ConcurooListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParameterDeclaration(ConcurooParser.ParameterDeclarationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#identifierList}.
-	 * @param ctx the parse tree
-	 */
-	void enterIdentifierList(ConcurooParser.IdentifierListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#identifierList}.
-	 * @param ctx the parse tree
-	 */
-	void exitIdentifierList(ConcurooParser.IdentifierListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#declarationSpecifiers}.
 	 * @param ctx the parse tree
@@ -398,16 +378,6 @@ public interface ConcurooListener extends ParseTreeListener {
 	 */
 	void exitTypeModifier(ConcurooParser.TypeModifierContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#typeQualifierList}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeQualifierList(ConcurooParser.TypeQualifierListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#typeQualifierList}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeQualifierList(ConcurooParser.TypeQualifierListContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#typeQualifier}.
 	 * @param ctx the parse tree
 	 */
@@ -417,6 +387,16 @@ public interface ConcurooListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeQualifier(ConcurooParser.TypeQualifierContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ConcurooParser#boolLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void enterBoolLiteral(ConcurooParser.BoolLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ConcurooParser#boolLiteral}.
+	 * @param ctx the parse tree
+	 */
+	void exitBoolLiteral(ConcurooParser.BoolLiteralContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#start}.
 	 * @param ctx the parse tree

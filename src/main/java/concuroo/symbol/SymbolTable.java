@@ -1,6 +1,7 @@
 package concuroo.symbol;
 
 import concuroo.nodes.Node;
+import concuroo.nodes.statement.DeclarationStatement;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -74,9 +75,18 @@ public class SymbolTable {
    *
    * @param s Symbol to append
    */
-  public void insert(Node s) {
-    symbols.put(s.getLiteral(), s);
+  public void insert(DeclarationStatement s) {
+    symbols.put(s.getIdentifier(), s);
   }
+
+  /**
+   * Inserts a symbol to the table
+   *
+   * @param s Symbol to append
+   */
+  /*public void insert(FunctionDefinition s) {
+    symbols.put(s.getIdentifier(), s);
+  }*/
 
   /**
    * Sets the SymbolTable's parent

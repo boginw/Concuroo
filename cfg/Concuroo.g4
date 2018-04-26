@@ -2,11 +2,15 @@ grammar Concuroo;
 
 // Expressions
 primaryExpression
-    :   Identifier
-    |   ConstantLiteral
+    :   boolLiteral
+    |   CharLiteral
+    |   Number
+    |   DoubleLiteral
     |   StringLiteral+
+    |   Identifier
     |   '(' expression ')'
     ;
+
 
 postfixExpression
     :   primaryExpression
@@ -82,7 +86,6 @@ logicalOrExpression
 assignmentExpression
     :   logicalOrExpression
     |   unaryExpression '=' assignmentExpression
-    |   Number // for
     ;
 
 expression
@@ -97,12 +100,7 @@ declarationStatement
   ;
 
 functionDefinition
-  : declarationSpecifiers? declarator declarationList? compoundStatement
-  ;
-
-declarationList
-  : declarationStatement
-  | declarationList declarationStatement
+  : declarationSpecifiers? pointer? Identifier '(' parameterTypeList? ')' compoundStatement
   ;
 
 initDeclarator
@@ -116,10 +114,7 @@ declarator
 
  directDeclarator
   : Identifier
-  | '(' declarator ')'
   | directDeclarator '[' assignmentExpression? ']'
-  | directDeclarator '(' parameterTypeList ')'
-  | directDeclarator '(' identifierList? ')'
   ;
 
 parameterTypeList
@@ -134,11 +129,6 @@ parameterList
 
 parameterDeclaration
   : declarationSpecifiers declarator
-  ;
-
-identifierList
-  : Identifier
-  | identifierList ',' Identifier
   ;
 
 declarationSpecifiers
@@ -214,23 +204,18 @@ typeSpecifier
   ;
 
 pointer
-  : '*' typeQualifierList?
+  : '*'
   ;
 
 typeModifier
   : 'long'
   ;
 
-typeQualifierList
-  : typeQualifier
-  | typeQualifierList typeQualifier
-  ;
-
 typeQualifier
   : 'const'
   ;
 
-
+boolLiteral : 'true' | 'false';
 
 
 
@@ -256,15 +241,6 @@ externalDeclaration
 
 /* Literals */
 StringLiteral : '"' SCharSeq? '"';
-
-
-
-ConstantLiteral
-  : BoolLiteral
-  | CharLiteral
-  | IntLiteral
-  | DoubleLiteral
-  ;
 
 ComparisonOperator
   : '!='
@@ -321,19 +297,12 @@ fragment
 Digit: [0-9];
 
 
-
-fragment
 IntLiteral : Number;
 
-fragment
 DoubleLiteral
   : Number '.' Number
   | Number '.'
   | '.' Number
   ;
 
-fragment
-BoolLiteral : 'true' | 'false';
-
-fragment
 CharLiteral : '\'' SChar? '\'';

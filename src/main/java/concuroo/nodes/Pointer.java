@@ -2,18 +2,18 @@ package concuroo.nodes;
 
 public class Pointer implements Node {
 
-  private typeQualifierList typeQualifierList;
+  private TypeQualifierList TypeQualifierList;
 
   @Override
   public String getLiteral() {
     return null;
   }
 
-  public concuroo.nodes.typeQualifierList getTypeQualifierList() {
-    return typeQualifierList;
+  public TypeQualifierList getTypeQualifierList() {
+    return TypeQualifierList;
   }
 
-  public void setTypeQualifierList(concuroo.nodes.typeQualifierList typeQualifierList) {
-    this.typeQualifierList = typeQualifierList;
+  public void setTypeQualifierList(TypeQualifierList TypeQualifierList) {
+    this.TypeQualifierList = TypeQualifierList;
   }
 }

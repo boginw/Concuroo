@@ -107,12 +107,6 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ConcurooParser#declarationList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDeclarationList(ConcurooParser.DeclarationListContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#initDeclarator}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -148,12 +142,6 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitParameterDeclaration(ConcurooParser.ParameterDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ConcurooParser#identifierList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIdentifierList(ConcurooParser.IdentifierListContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#declarationSpecifiers}.
 	 * @param ctx the parse tree
@@ -245,17 +233,17 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitTypeModifier(ConcurooParser.TypeModifierContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ConcurooParser#typeQualifierList}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTypeQualifierList(ConcurooParser.TypeQualifierListContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#typeQualifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTypeQualifier(ConcurooParser.TypeQualifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ConcurooParser#boolLiteral}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBoolLiteral(ConcurooParser.BoolLiteralContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#start}.
 	 * @param ctx the parse tree

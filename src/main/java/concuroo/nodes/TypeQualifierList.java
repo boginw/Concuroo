@@ -6,14 +6,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
-public class typeQualifierList implements Node, List<typeQualifier> {
+public class TypeQualifierList implements Node, List<TypeQualifier> {
 
-  private List<typeQualifier> list = new ArrayList<>();
+  private List<TypeQualifier> list = new ArrayList<>();
 
   @Override
   public String getLiteral() {
     StringBuilder sb = new StringBuilder();
-    for (typeQualifier qualifier : list) {
+    for (TypeQualifier qualifier : list) {
       sb.append(qualifier.getLiteral());
       sb.append(" ");
     }
@@ -36,7 +36,7 @@ public class typeQualifierList implements Node, List<typeQualifier> {
   }
 
   @Override
-  public Iterator<typeQualifier> iterator() {
+  public Iterator<TypeQualifier> iterator() {
     return list.iterator();
   }
 
@@ -51,8 +51,8 @@ public class typeQualifierList implements Node, List<typeQualifier> {
   }
 
   @Override
-  public boolean add(typeQualifier typeQualifier) {
-    return list.add(typeQualifier);
+  public boolean add(TypeQualifier TypeQualifier) {
+    return list.add(TypeQualifier);
   }
 
   @Override
@@ -66,12 +66,12 @@ public class typeQualifierList implements Node, List<typeQualifier> {
   }
 
   @Override
-  public boolean addAll(Collection<? extends typeQualifier> c) {
+  public boolean addAll(Collection<? extends TypeQualifier> c) {
     return list.addAll(c);
   }
 
   @Override
-  public boolean addAll(int index, Collection<? extends typeQualifier> c) {
+  public boolean addAll(int index, Collection<? extends TypeQualifier> c) {
     return list.addAll(index, c);
   }
 
@@ -91,22 +91,22 @@ public class typeQualifierList implements Node, List<typeQualifier> {
   }
 
   @Override
-  public typeQualifier get(int index) {
+  public TypeQualifier get(int index) {
     return list.get(index);
   }
 
   @Override
-  public typeQualifier set(int index, typeQualifier element) {
+  public TypeQualifier set(int index, TypeQualifier element) {
     return list.set(index, element);
   }
 
   @Override
-  public void add(int index, typeQualifier element) {
+  public void add(int index, TypeQualifier element) {
     list.add(index, element);
   }
 
   @Override
-  public typeQualifier remove(int index) {
+  public TypeQualifier remove(int index) {
     return list.remove(index);
   }
 
@@ -121,17 +121,17 @@ public class typeQualifierList implements Node, List<typeQualifier> {
   }
 
   @Override
-  public ListIterator<typeQualifier> listIterator() {
+  public ListIterator<TypeQualifier> listIterator() {
     return list.listIterator();
   }
 
   @Override
-  public ListIterator<typeQualifier> listIterator(int index) {
+  public ListIterator<TypeQualifier> listIterator(int index) {
     return list.listIterator(index);
   }
 
   @Override
-  public List<typeQualifier> subList(int fromIndex, int toIndex) {
+  public List<TypeQualifier> subList(int fromIndex, int toIndex) {
     return list.subList(fromIndex, toIndex);
   }
 }

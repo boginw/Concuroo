@@ -16,7 +16,7 @@ public class IfStatement implements SelectionStatement {
     sb.append("if (").append(condition.getLiteral()).append(") ").append(consequence.getLiteral());
 
     if(alternative != null){
-      sb.append("else ").append(alternative.getLiteral());
+      sb.append(" else ").append(alternative.getLiteral());
     }
 
     return sb.toString();
