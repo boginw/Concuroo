@@ -15,43 +15,16 @@ jobs:
           - v1-dependencies-{{ checksum "build.gradle" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-      - restore_cache:
-          keys:
-          - v1-rvm-1
-          # fallback to using the latest cache if no exact match is found
-          - v1-rvm-
 
       - run: gradle dependencies
       - run:
           command: |
             sudo apt-get update
-            sudo apt-get install libgdbm-dev libncurses5-dev libyaml-dev automake libtool bison libffi-dev
-            for server in $(shuf -e ha.pool.sks-keyservers.net \
-                            hkp://p80.pool.sks-keyservers.net:80 \
-                            keyserver.ubuntu.com \
-                            hkp://keyserver.ubuntu.com:80 \
-                            pgp.mit.edu) ; do \
-              gpg --keyserver "$server" --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB && break || : ;
-            done;
-
-            if [ ! -f ~/.rvm/scripts/rvm ]; then
-              curl -sSL https://get.rvm.io | bash -s stable
-              source ~/.rvm/scripts/rvm
-              rvm install 2.5.0
-            fi;
-            source ~/.rvm/scripts/rvm
-            rvm use 2.5.0 --default
-            gem install rspec
-            ruby -v
-
+            sudo apt-get install libgdbm-dev libncurses5-dev automake libtool
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "build.gradle" }}
-      - save_cache:
-          paths:
-            - ~/.rvm
-          key: v1-rvm-1
 
       # Setup ANTLR
       - run:
@@ -69,11 +42,3 @@ jobs:
           command: |
             java -Xmx500M -jar ../antlr-4.7.1-complete.jar Concuroo.g4
             javac -cp ../antlr-4.7.1-complete.jar Concuroo*.java
-
-      - run:
-          name: Run ANTLR4 tests
-          working_directory: ~/code/cfg
-          command: source ~/.rvm/scripts/rvm && rspec
-          environment:
-            CLASSPATH: ".:/home/circleci/code/antlr-4.7.1-complete.jar:$CLASSPATH"
-
