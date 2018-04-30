@@ -21,9 +21,6 @@ import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.Logica
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
-import concuroo.nodes.expression.literalExpression.*;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import concuroo.nodes.expression.lhsExpression.LHSExpression;
 import concuroo.nodes.expression.literalExpression.BoolLiteral;
 import concuroo.nodes.expression.literalExpression.CharLiteral;
 import concuroo.nodes.expression.literalExpression.FloatLiteral;
@@ -31,7 +28,8 @@ import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
 import concuroo.nodes.statement.CompoundStatement;
-import concuroo.nodes.statement.DeclarationStatement;
+import concuroo.nodes.statement.ExpressionStatement;
+import concuroo.nodes.statement.VariableDefinition;
 import concuroo.nodes.statement.iterationStatement.WhileStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
@@ -41,6 +39,7 @@ import concuroo.symbol.SymbolTable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -55,7 +54,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitParameterDeclaration(ConcurooParser.ParameterDeclarationContext ctx) {
-    DeclarationStatement declarationStatement = new DeclarationStatement();
+    VariableDefinition declarationStatement = new VariableDefinition();
 
     // Step 1: Down the rabbit hole
     DeclaratorContext declarator = ctx.declarator();
@@ -72,7 +71,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // Step 4: Find the identifier
-    declarationStatement.setIdentifier(directDeclarator.getChild(0).getText());
+    declarationStatement.setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
 
     // Step 5: Check if it is an array declaration
     if (directDeclarator.children.size() > 1) {
@@ -88,7 +87,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitDeclarationStatement(ConcurooParser.DeclarationStatementContext ctx) {
-    DeclarationStatement declarationStatement = new DeclarationStatement();
+    VariableDefinition declarationStatement = new VariableDefinition();
 
     // Step 1: Down the rabbit hole
     InitDeclaratorContext initDeclarator = (InitDeclaratorContext) ctx.getChild(1);
@@ -106,7 +105,8 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // Step 4: Find the identifier
-    declarationStatement.setIdentifier(directDeclarator.getChild(0).getText());
+    declarationStatement
+        .setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
 
     // Step 5: Check if it is an array declaration
     if (directDeclarator.children.size() > 1) {
@@ -122,7 +122,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       );
     }
 
-    global.insert(declarationStatement);
+    global.insert(declarationStatement.getIdentifier());
 
     // Step 7: Profit?
     return declarationStatement;
@@ -161,7 +161,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
         // If there are more siblings
         if (castedChild.children.size() == 3) {
-          funcDef.addParameter((DeclarationStatement) visit(castedChild.getChild(2)));
+          funcDef.addParameter((VariableDefinition) visit(castedChild.getChild(2)));
         }
 
         // Go down
@@ -169,7 +169,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       }
 
       // Add the last parameter (or first, if we never went down the rabbit hole)
-      funcDef.addParameter((DeclarationStatement) visit(child));
+      funcDef.addParameter((VariableDefinition) visit(child));
       Collections.reverse(funcDef.getParameters());
     }
 
@@ -227,6 +227,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
     // Compound statement contains statements
     if (ctx.children.size() == 3) {
+      Stack<ParseTree> parseTreeStack = new Stack<>();
       ParseTree child = ctx.getChild(1);
 
       // Go down the rabbit hole
@@ -235,7 +236,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
         // If there are more siblings
         if (castedChild.children.size() == 2) {
-          cs.addStatement((Statement) visit(castedChild.getChild(1)));
+          parseTreeStack.push(castedChild.getChild(1));
         }
 
         // Go down
@@ -243,9 +244,12 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       }
 
       // Add the last statement (or first, if we never went down the rabbit hole)
-      cs.addStatement((Statement) visit(child));
-      Collections.reverse(cs.getStatements());
+      parseTreeStack.push(child);
 
+      // empty the stack
+      while (!parseTreeStack.empty()) {
+        cs.addStatement((Statement) visit(parseTreeStack.pop()));
+      }
     }
 
     // scope out
@@ -312,7 +316,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       return visitLogicalOrExpression(ctx.logicalOrExpression());
     }
 
-    LHSExpression left = (LHSExpression) visit(ctx.getChild(0));
+    VariableExpression left = (VariableExpression) visit(ctx.getChild(0));
 
     if (left == null) {
       throw new RuntimeException("Left side of assignment is not LHS expression");
@@ -324,6 +328,14 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
     return expr;
   }
+
+  @Override
+  public Node visitExpressionStatement(ConcurooParser.ExpressionStatementContext ctx) {
+    ExpressionStatement exprStat = new ExpressionStatement();
+    exprStat.setExpr((Expression) visit(ctx.getChild(0)));
+    return exprStat;
+  }
+
 
   @Override
   public Node visitAdditiveExpression(ConcurooParser.AdditiveExpressionContext ctx) {
@@ -432,7 +444,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     return null;
   }
 
-  private void scopeIn(SymbolTable scope){
+  private void scopeIn(SymbolTable scope) {
     scope.setParent(global);
     global = scope;
   }

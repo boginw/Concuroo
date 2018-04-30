@@ -1,7 +1,7 @@
 package concuroo.nodes;
 
 import concuroo.nodes.statement.CompoundStatement;
-import concuroo.nodes.statement.DeclarationStatement;
+import concuroo.nodes.statement.VariableDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -12,12 +12,12 @@ public class FunctionDefinition implements Node {
   private boolean pointer;
   private String identifier;
   private CompoundStatement body;
-  private List<DeclarationStatement> parameters = new ArrayList<>();
+  private List<VariableDefinition> parameters = new ArrayList<>();
 
   @Override
   public String getLiteral() {
     List<String> params = new ArrayList<>();
-    for (DeclarationStatement param : parameters) {
+    for (VariableDefinition param : parameters) {
       params.add(param.getLiteral());
     }
 
@@ -58,7 +58,7 @@ public class FunctionDefinition implements Node {
     return body;
   }
 
-  public void addParameter(DeclarationStatement parameter) {
+  public void addParameter(VariableDefinition parameter) {
     this.parameters.add(parameter);
   }
 
@@ -66,15 +66,15 @@ public class FunctionDefinition implements Node {
     return parameters.size();
   }
 
-  public DeclarationStatement getParameter(int index) {
+  public VariableDefinition getParameter(int index) {
     return parameters.get(index);
   }
 
-  public List<DeclarationStatement> getParameters() {
+  public List<VariableDefinition> getParameters() {
     return this.parameters;
   }
 
-  public void setParameters(List<DeclarationStatement> parameters) {
+  public void setParameters(List<VariableDefinition> parameters) {
     this.parameters = parameters;
   }
 }

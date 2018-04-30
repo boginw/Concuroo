@@ -2,16 +2,17 @@ package concuroo.nodes.statement;
 
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.lhsExpression.VariableExpression;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-public class DeclarationStatement implements Statement {
+public class VariableDefinition implements Statement, Expression {
 
   private List<String> specifiers;
   private boolean pointer = false;
-  private String identifier;
+  private VariableExpression identifier;
   private Expression arraySize = null;
   private boolean isArray = false;
   private Expression initializer;
@@ -22,7 +23,7 @@ public class DeclarationStatement implements Statement {
    *
    * @return The declaration's identifier
    */
-  public String getIdentifier() {
+  public VariableExpression getIdentifier() {
     return identifier;
   }
 
@@ -31,7 +32,7 @@ public class DeclarationStatement implements Statement {
    *
    * @param identifier A string that'll be the new identifier for this declaration
    */
-  public void setIdentifier(String identifier) {
+  public void setIdentifier(VariableExpression identifier) {
     this.identifier = identifier;
   }
 
@@ -75,16 +76,16 @@ public class DeclarationStatement implements Statement {
   /**
    * Default constructor
    */
-  public DeclarationStatement() {
+  public VariableDefinition() {
     specifiers = new ArrayList<>();
   }
 
   /**
-   * Constructs a DeclarationStatement
+   * Constructs a VariableDefinition
    *
    * @param populated A populated list of type specifiers
    */
-  public DeclarationStatement(List<String> populated) {
+  public VariableDefinition(List<String> populated) {
     specifiers = populated;
   }
 
@@ -181,8 +182,9 @@ public class DeclarationStatement implements Statement {
   @Override
   public String getLiteral() {
     return StringUtils.join(specifiers, " ") + ' ' +
-        (pointer ? '*' : "") + identifier + (isArray ? '[' + arraySize.getLiteral() + ']' : "") +
-        (initializer != null ? " = " + initializer.getLiteral() : "") + (isParam() ? "" : ";");
+        (pointer ? '*' : "") + identifier.getLiteral() + (isArray ? '[' + arraySize.getLiteral()
+        + ']' : "") + (initializer != null ? " = " + initializer.getLiteral() : "") +
+        (isParam() ? "" : ";");
   }
 
 }

@@ -17,6 +17,7 @@ import concuroo.nodes.expression.lhsExpression.VariableExpression;
 import concuroo.nodes.expression.literalExpression.BoolLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.statement.CompoundStatement;
+import concuroo.nodes.statement.ExpressionStatement;
 import concuroo.nodes.statement.IterationStatement;
 import concuroo.nodes.statement.JumpStatement;
 import concuroo.nodes.statement.SelectionStatement;
@@ -168,10 +169,12 @@ public class ASTVisitorTest {
 
   @Test
   public void visitAssignmentExpressionInt() {
-    ConcurooParser parser = parse("a = 1");
-    AssignmentExpressionContext ctx = parser.assignmentExpression();
+    ConcurooParser parser = parse("{ int a; a = 1; }");
+    CompoundStatementContext ctx = parser.compoundStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    CompoundStatement cs = (CompoundStatement) new ASTVisitor(st).visit(ctx);
+    Node n = ((ExpressionStatement) cs.getStatement(1)).getExpr();
+
     assertTrue(n instanceof AssignmentExpression);
     assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof VariableExpression);
     assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof IntLiteral);
@@ -179,10 +182,12 @@ public class ASTVisitorTest {
 
   @Test
   public void visitAssignmentExpressionBool() {
-    ConcurooParser parser = parse("a = true");
-    AssignmentExpressionContext ctx = parser.assignmentExpression();
+    ConcurooParser parser = parse("{ bool a; a = true; }");
+    CompoundStatementContext ctx = parser.compoundStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    CompoundStatement cs = (CompoundStatement) new ASTVisitor(st).visit(ctx);
+    Node n = ((ExpressionStatement) cs.getStatement(1)).getExpr();
+
     assertTrue(n instanceof AssignmentExpression);
 
     AssignmentExpression returnValue = ((AssignmentExpression) n);

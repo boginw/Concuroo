@@ -3,7 +3,6 @@ package concuroo.nodes.statement;
 import static org.junit.Assert.*;
 
 import concuroo.nodes.Statement;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -14,14 +13,14 @@ public class DeclarationStatementTest {
 
   @Test
   public void shouldExistAndImplementStatement(){
-    DeclarationStatement ds = new DeclarationStatement();
+    VariableDefinition ds = new VariableDefinition();
     assertNotNull(ds);
     assertTrue(ds instanceof Statement);
   }
 
   @Test
   public void shouldBeAbleToHoldDeclarationSpecifiers(){
-    DeclarationStatement ds = new DeclarationStatement();
+    VariableDefinition ds = new VariableDefinition();
 
     assertEquals(0, ds.getSpecifiersCount());
 
@@ -40,7 +39,7 @@ public class DeclarationStatementTest {
 
     Collections.addAll(prePopulatedList, "TypeA", "TypeB", "TypeC");
 
-    DeclarationStatement ds = new DeclarationStatement(prePopulatedList);
+    VariableDefinition ds = new VariableDefinition(prePopulatedList);
 
     assertEquals(3, ds.getSpecifiersCount());
   }
@@ -51,7 +50,7 @@ public class DeclarationStatementTest {
 
     Collections.addAll(prePopulatedList, "TypeA", "TypeB", "TypeC");
 
-    DeclarationStatement ds = new DeclarationStatement(prePopulatedList);
+    VariableDefinition ds = new VariableDefinition(prePopulatedList);
 
     List<String> result = ds.getSpecifiers();
 
