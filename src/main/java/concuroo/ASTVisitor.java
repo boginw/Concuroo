@@ -20,6 +20,9 @@ import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.Mul
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.expression.lhsExpression.VariableExpression;
+import concuroo.nodes.expression.literalExpression.*;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
 import concuroo.nodes.expression.literalExpression.BoolLiteral;
 import concuroo.nodes.expression.literalExpression.CharLiteral;
@@ -220,8 +223,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     CompoundStatement cs = new CompoundStatement();
 
     // scope in
-    cs.getScope().setParent(this.global);
-    global = cs.getScope();
+    scopeIn(cs.getScope());
 
     // Compound statement contains statements
     if (ctx.children.size() == 3) {
@@ -247,7 +249,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // scope out
-    global = cs.getScope().getParent();
+    scopeOut();
 
     return cs;
   }
@@ -428,5 +430,14 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       return specifiers;
     }
     return null;
+  }
+
+  private void scopeIn(SymbolTable scope){
+    scope.setParent(global);
+    global = scope;
+  }
+
+  private void scopeOut() {
+    global = global.getParent();
   }
 }
