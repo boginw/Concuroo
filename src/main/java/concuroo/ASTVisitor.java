@@ -143,7 +143,6 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // Step 3: Fetch identifier name
-
     funcDef.setIdentifier(ctx.Identifier().getText());
 
     // Step 4: Get parameters
