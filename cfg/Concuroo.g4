@@ -11,7 +11,6 @@ primaryExpression
     |   '(' expression ')'
     ;
 
-
 postfixExpression
     :   primaryExpression
     |   postfixExpression '[' expression ']'
@@ -39,6 +38,7 @@ unaryOperator
   | '+'
   | '-'
   | '!'
+  | '<-'
   ;
 
 castExpression
@@ -94,7 +94,6 @@ expression
     ;
 
 // Declarations
-
 declarationStatement
   : declarationSpecifiers initDeclarator ';'
   ;
@@ -160,6 +159,16 @@ statement
   | iterationStatement
   | jumpStatement
   | declarationStatement
+  | coroutineStatement
+  | sendStatement
+  ;
+
+sendStatement
+  : expression '<-' expression ';'
+  ;
+
+coroutineStatement
+  : 'go' expression ';'
   ;
 
 compoundStatement
@@ -201,6 +210,7 @@ typeSpecifier
   | 'double'
   | 'int'
   | 'void'
+  | 'chan'
   ;
 
 pointer
