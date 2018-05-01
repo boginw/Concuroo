@@ -1,4 +1,4 @@
-// Generated from /home/scarress/Documents/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -208,18 +208,6 @@ public class ConcurooBaseListener implements ConcurooListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDeclarationList(ConcurooParser.DeclarationListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitDeclarationList(ConcurooParser.DeclarationListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterInitDeclarator(ConcurooParser.InitDeclaratorContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -287,18 +275,6 @@ public class ConcurooBaseListener implements ConcurooListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitParameterDeclaration(ConcurooParser.ParameterDeclarationContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterIdentifierList(ConcurooParser.IdentifierListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIdentifierList(ConcurooParser.IdentifierListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -479,18 +455,6 @@ public class ConcurooBaseListener implements ConcurooListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitTypeModifier(ConcurooParser.TypeModifierContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterTypeQualifierList(ConcurooParser.TypeQualifierListContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitTypeQualifierList(ConcurooParser.TypeQualifierListContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

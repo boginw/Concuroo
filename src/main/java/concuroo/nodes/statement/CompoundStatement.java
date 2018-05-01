@@ -32,14 +32,25 @@ public class CompoundStatement implements Statement {
 
   @Override
   public String getLiteral() {
-    StringBuilder sb = new StringBuilder("{\n");
+    StringBuilder indent = new StringBuilder();
 
-    for (Statement stat: list) {
-      sb.append(stat.getLiteral()).append("\n");
+    SymbolTable scope = this.scope.getParent();
+    while ((scope = scope.getParent()) != null) {
+      indent.append('\t');
     }
 
-    sb.append("}");
+    StringBuilder sb = new StringBuilder("{\n");
+
+    for (Statement stat : list) {
+      sb.append(indent).append("\t").append(stat.getLiteral()).append("\n");
+    }
+
+    sb.append(indent).append("}");
 
     return sb.toString();
+  }
+
+  public List<Statement> getStatements() {
+    return this.list;
   }
 }

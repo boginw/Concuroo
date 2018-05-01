@@ -1,4 +1,4 @@
-// Generated from /home/scarress/Documents/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -168,16 +168,6 @@ public interface ConcurooListener extends ParseTreeListener {
 	 */
 	void exitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#declarationList}.
-	 * @param ctx the parse tree
-	 */
-	void enterDeclarationList(ConcurooParser.DeclarationListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#declarationList}.
-	 * @param ctx the parse tree
-	 */
-	void exitDeclarationList(ConcurooParser.DeclarationListContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#initDeclarator}.
 	 * @param ctx the parse tree
 	 */
@@ -237,16 +227,6 @@ public interface ConcurooListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParameterDeclaration(ConcurooParser.ParameterDeclarationContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#identifierList}.
-	 * @param ctx the parse tree
-	 */
-	void enterIdentifierList(ConcurooParser.IdentifierListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#identifierList}.
-	 * @param ctx the parse tree
-	 */
-	void exitIdentifierList(ConcurooParser.IdentifierListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#declarationSpecifiers}.
 	 * @param ctx the parse tree
@@ -397,16 +377,6 @@ public interface ConcurooListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeModifier(ConcurooParser.TypeModifierContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#typeQualifierList}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeQualifierList(ConcurooParser.TypeQualifierListContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#typeQualifierList}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeQualifierList(ConcurooParser.TypeQualifierListContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#typeQualifier}.
 	 * @param ctx the parse tree

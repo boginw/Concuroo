@@ -1,27 +1,17 @@
 package concuroo.nodes.expression.unaryExpression;
 
-import concuroo.nodes.TypeSpecifier;
 import concuroo.nodes.expression.CanSetOperator;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.PrimaryExpression;
 
 public class CastExpression implements PrefixExpression, CanSetOperator {
 
-  private TypeSpecifier specifier;
+  private String specifier;
   private PrimaryExpression firstOperand;
-
-  public TypeSpecifier getSpecifier() {
-    return specifier;
-  }
-
-  public void setSpecifier(TypeSpecifier specifier) {
-    this.specifier = specifier;
-  }
-
 
   @Override
   public String getLiteral() {
-    return "(" + specifier.getLiteral() + ") " + firstOperand.getLiteral() + ";";
+    return "(" + specifier + ") " + firstOperand.getLiteral() + ";";
   }
 
   @Override
@@ -34,15 +24,13 @@ public class CastExpression implements PrefixExpression, CanSetOperator {
     this.firstOperand = (PrimaryExpression) firstOperand;
   }
 
-  private String operator;
-
   @Override
   public String getOperator() {
-    return operator;
+    return specifier;
   }
 
   @Override
-  public void setOperator(String operator) {
-    this.operator = operator;
+  public void setOperator(String specifier) {
+    this.specifier = specifier;
   }
 }

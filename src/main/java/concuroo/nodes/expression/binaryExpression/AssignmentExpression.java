@@ -4,6 +4,6 @@ public class AssignmentExpression extends BinaryExpression {
 
   @Override
   public String getOperator() {
-    return "=";
+    return " = ";
   }
 }

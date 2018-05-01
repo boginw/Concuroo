@@ -100,12 +100,7 @@ declarationStatement
   ;
 
 functionDefinition
-  : declarationSpecifiers? declarator declarationList? compoundStatement
-  ;
-
-declarationList
-  : declarationStatement
-  | declarationList declarationStatement
+  : declarationSpecifiers? pointer? Identifier '(' parameterTypeList? ')' compoundStatement
   ;
 
 initDeclarator
@@ -119,10 +114,7 @@ declarator
 
  directDeclarator
   : Identifier
-  | '(' declarator ')'
   | directDeclarator '[' assignmentExpression? ']'
-  | directDeclarator '(' parameterTypeList ')'
-  | directDeclarator '(' identifierList? ')'
   ;
 
 parameterTypeList
@@ -137,11 +129,6 @@ parameterList
 
 parameterDeclaration
   : declarationSpecifiers declarator
-  ;
-
-identifierList
-  : Identifier
-  | identifierList ',' Identifier
   ;
 
 declarationSpecifiers
@@ -217,16 +204,11 @@ typeSpecifier
   ;
 
 pointer
-  : '*' typeQualifierList?
+  : '*'
   ;
 
 typeModifier
   : 'long'
-  ;
-
-typeQualifierList
-  : typeQualifier
-  | typeQualifierList typeQualifier
   ;
 
 typeQualifier
@@ -234,8 +216,6 @@ typeQualifier
   ;
 
 boolLiteral : 'true' | 'false';
-
-
 
 
 

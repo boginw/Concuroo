@@ -2,10 +2,17 @@ package concuroo;
 
 import ConcurooParser.ConcurooBaseVisitor;
 import ConcurooParser.ConcurooParser;
+import ConcurooParser.ConcurooParser.DeclarationSpecifiersContext;
+import ConcurooParser.ConcurooParser.DeclaratorContext;
+import ConcurooParser.ConcurooParser.DirectDeclaratorContext;
+import ConcurooParser.ConcurooParser.InitDeclaratorContext;
+import ConcurooParser.ConcurooParser.ParameterListContext;
+import ConcurooParser.ConcurooParser.ParameterTypeListContext;
+import ConcurooParser.ConcurooParser.PointerContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
+import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
-import concuroo.nodes.TypeSpecifier;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
@@ -14,27 +21,162 @@ import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.Logica
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
-import concuroo.nodes.expression.literalExpression.*;
-import org.antlr.v4.runtime.tree.TerminalNode;
-import concuroo.nodes.expression.lhsExpression.LHSExpression;
+import concuroo.nodes.expression.literalExpression.BoolLiteral;
+import concuroo.nodes.expression.literalExpression.CharLiteral;
+import concuroo.nodes.expression.literalExpression.FloatLiteral;
+import concuroo.nodes.expression.literalExpression.IntLiteral;
+import concuroo.nodes.expression.literalExpression.StringLiteral;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
 import concuroo.nodes.statement.CompoundStatement;
+import concuroo.nodes.statement.ExpressionStatement;
+import concuroo.nodes.statement.VariableDefinition;
 import concuroo.nodes.statement.iterationStatement.WhileStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
 import concuroo.symbol.SymbolTable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Stack;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.apache.commons.lang3.NotImplementedException;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 
 public class ASTVisitor extends ConcurooBaseVisitor<Node> {
+
   private SymbolTable global;
 
-  public ASTVisitor(SymbolTable st){
+  public ASTVisitor(SymbolTable st) {
     global = st;
   }
+
+  @Override
+  public Node visitParameterDeclaration(ConcurooParser.ParameterDeclarationContext ctx) {
+    VariableDefinition declarationStatement = new VariableDefinition();
+
+    // Step 1: Down the rabbit hole
+    DeclaratorContext declarator = ctx.declarator();
+    DirectDeclaratorContext directDeclarator = declarator.directDeclarator();
+
+    // Step 2: Fetch all type specifiers
+    if (ctx.getChild(0) instanceof DeclarationSpecifiersContext) {
+      declarationStatement.setSpecifiers(parseDeclarationSpecifiers(ctx.getChild(0)));
+    }
+
+    // Step 3: Check if it is a pointer
+    if (declarator.children.size() > 1) {
+      declarationStatement.setPointer(true);
+    }
+
+    // Step 4: Find the identifier
+    declarationStatement.setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
+
+    // Step 5: Check if it is an array declaration
+    if (directDeclarator.children.size() > 1) {
+      declarationStatement.setArraySize(
+          (Expression) visitAssignmentExpression(directDeclarator.assignmentExpression())
+      );
+    }
+
+    declarationStatement.setParam(true);
+
+    return declarationStatement;
+  }
+
+  @Override
+  public Node visitDeclarationStatement(ConcurooParser.DeclarationStatementContext ctx) {
+    VariableDefinition declarationStatement = new VariableDefinition();
+
+    // Step 1: Down the rabbit hole
+    InitDeclaratorContext initDeclarator = (InitDeclaratorContext) ctx.getChild(1);
+    DeclaratorContext declarator = initDeclarator.declarator();
+    DirectDeclaratorContext directDeclarator = declarator.directDeclarator();
+
+    // Step 2: Fetch all type specifiers
+    if (ctx.getChild(0) instanceof DeclarationSpecifiersContext) {
+      declarationStatement.setSpecifiers(parseDeclarationSpecifiers(ctx.getChild(0)));
+    }
+
+    // Step 3: Check if it is a pointer
+    if (declarator.children.size() > 1) {
+      declarationStatement.setPointer(true);
+    }
+
+    // Step 4: Find the identifier
+    declarationStatement
+        .setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
+
+    // Step 5: Check if it is an array declaration
+    if (directDeclarator.children.size() > 1) {
+      declarationStatement.setArraySize(
+          (Expression) visitAssignmentExpression(directDeclarator.assignmentExpression())
+      );
+    }
+
+    // Step 6: Check if it has initializer?
+    if (initDeclarator.children.size() > 1) {
+      declarationStatement.setInitializer(
+          (Expression) visitInitializer(initDeclarator.initializer())
+      );
+    }
+
+    global.insert(declarationStatement.getIdentifier());
+
+    // Step 7: Profit?
+    return declarationStatement;
+  }
+
+  @Override
+  public Node visitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx) {
+    FunctionDefinition funcDef = new FunctionDefinition();
+    int index = 0;
+
+    // Step 1: Fetch all type specifiers
+    if (ctx.getChild(index) instanceof DeclarationSpecifiersContext) {
+      funcDef.setSpecifiers(parseDeclarationSpecifiers(ctx.getChild(0)));
+      index++;
+    }
+
+    // Step 2: Check if pointer
+    if (ctx.getChild(index) instanceof PointerContext) {
+      funcDef.setPointer(true);
+      index++;
+    }
+
+    // Step 3: Fetch identifier name
+    funcDef.setIdentifier(ctx.getChild(index++).getText());
+
+    // Step 4: Get parameters
+    index++;
+    if (ctx.getChild(index) instanceof ParameterTypeListContext) {
+      ParameterTypeListContext ptlc = ctx.parameterTypeList();
+
+      ParseTree child = ptlc.getChild(0);
+
+      // Go down the rabbit hole
+      while (child instanceof ParameterListContext) {
+        ParameterListContext castedChild = (ParameterListContext) child;
+
+        // If there are more siblings
+        if (castedChild.children.size() == 3) {
+          funcDef.addParameter((VariableDefinition) visit(castedChild.getChild(2)));
+        }
+
+        // Go down
+        child = castedChild.getChild(0);
+      }
+
+      // Add the last parameter (or first, if we never went down the rabbit hole)
+      funcDef.addParameter((VariableDefinition) visit(child));
+      Collections.reverse(funcDef.getParameters());
+    }
+
+    funcDef.setBody((CompoundStatement) visitCompoundStatement(ctx.compoundStatement()));
+    return funcDef;
+  }
+
 
   @Override
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
@@ -44,21 +186,34 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       }
 
       TerminalNode n;
-      if ((ctx.StringLiteral().size()) != 0) {
-        return new StringLiteral(ctx.StringLiteral().toString());
-      } else if ((n = ctx.CharLiteral()) != null) {
-        return new CharLiteral(ctx.CharLiteral().getSymbol().getText());
-      } else if ((n = ctx.DoubleLiteral()) != null) {
-        return new FloatLiteral(Double.valueOf(ctx.DoubleLiteral().getSymbol().getText()));
-      } else if ((n = ctx.Number()) != null) {
-        return new IntLiteral(Integer.valueOf(ctx.Number().getSymbol().getText()));
-      } else if (ctx.boolLiteral() != null) {
+      List<TerminalNode> str;
+
+      // If it is string
+      if (((str = ctx.StringLiteral()).size()) != 0) {
+        return new StringLiteral(str.toString());
+      }
+      // If it is char
+      else if ((n = ctx.CharLiteral()) != null) {
+        return new CharLiteral(n.getSymbol().getText());
+      }
+      // If it is double
+      else if ((n = ctx.DoubleLiteral()) != null) {
+        return new FloatLiteral(Double.valueOf(n.getSymbol().getText()));
+      }
+      // If it is int
+      else if ((n = ctx.Number()) != null) {
+        return new IntLiteral(Integer.valueOf(n.getSymbol().getText()));
+      }
+      // If it is bool
+      else if (ctx.boolLiteral() != null) {
         if (ctx.boolLiteral().getChild(0).toString().equals("true")) {
           return new BoolLiteral(true);
         }
         return new BoolLiteral(false);
-      } else if ((n = ctx.Identifier()) != null) {
-        return new VariableExpression(ctx.Identifier().getText());
+      }
+      // If it is identifier
+      else if ((n = ctx.Identifier()) != null) {
+        return global.lookup(n.getText());
       }
     }
     throw new RuntimeException("No recognized primary expression");
@@ -72,6 +227,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
     // Compound statement contains statements
     if (ctx.children.size() == 3) {
+      Stack<ParseTree> parseTreeStack = new Stack<>();
       ParseTree child = ctx.getChild(1);
 
       // Go down the rabbit hole
@@ -80,7 +236,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
         // If there are more siblings
         if (castedChild.children.size() == 2) {
-          cs.addStatement((Statement) visit(castedChild.getChild(1)));
+          parseTreeStack.push(castedChild.getChild(1));
         }
 
         // Go down
@@ -88,7 +244,12 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       }
 
       // Add the last statement (or first, if we never went down the rabbit hole)
-      cs.addStatement((Statement) visit(child));
+      parseTreeStack.push(child);
+
+      // empty the stack
+      while (!parseTreeStack.empty()) {
+        cs.addStatement((Statement) visit(parseTreeStack.pop()));
+      }
     }
 
     // scope out
@@ -155,7 +316,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       return visitLogicalOrExpression(ctx.logicalOrExpression());
     }
 
-    LHSExpression left = (LHSExpression) visit(ctx.getChild(0));
+    VariableExpression left = (VariableExpression) visit(ctx.getChild(0));
 
     if (left == null) {
       throw new RuntimeException("Left side of assignment is not LHS expression");
@@ -167,6 +328,14 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
     return expr;
   }
+
+  @Override
+  public Node visitExpressionStatement(ConcurooParser.ExpressionStatementContext ctx) {
+    ExpressionStatement exprStat = new ExpressionStatement();
+    exprStat.setExpr((Expression) visit(ctx.getChild(0)));
+    return exprStat;
+  }
+
 
   @Override
   public Node visitAdditiveExpression(ConcurooParser.AdditiveExpressionContext ctx) {
@@ -242,10 +411,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     CastExpression expr = new CastExpression();
-    TypeSpecifier tp = new TypeSpecifier();
-    tp.setSpecifier(ctx.getChild(1).getText());
-    expr.setSpecifier(tp);
-
+    expr.setOperator(ctx.getChild(1).getText());
     expr.setFirstOperand((Expression) visit(ctx.getChild(3)));
 
     return expr;
@@ -264,7 +430,21 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     return aggregate;
   }
 
-  private void scopeIn(SymbolTable scope){
+  private List<String> parseDeclarationSpecifiers(ParseTree parseTree) {
+    List<String> specifiers = new ArrayList<>();
+    if (parseTree instanceof DeclarationSpecifiersContext) {
+      DeclarationSpecifiersContext child = (DeclarationSpecifiersContext) parseTree;
+
+      for (ParseTree specifier : child.children) {
+        specifiers.add(specifier.getText());
+      }
+
+      return specifiers;
+    }
+    return null;
+  }
+
+  private void scopeIn(SymbolTable scope) {
     scope.setParent(global);
     global = scope;
   }
