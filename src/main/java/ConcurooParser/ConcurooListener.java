@@ -278,6 +278,26 @@ public interface ConcurooListener extends ParseTreeListener {
 	 */
 	void exitStatement(ConcurooParser.StatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ConcurooParser#sendStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSendStatement(ConcurooParser.SendStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ConcurooParser#sendStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSendStatement(ConcurooParser.SendStatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link ConcurooParser#coroutineStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ConcurooParser#coroutineStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#compoundStatement}.
 	 * @param ctx the parse tree
 	 */

@@ -340,6 +340,30 @@ public class ConcurooBaseListener implements ConcurooListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSendStatement(ConcurooParser.SendStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSendStatement(ConcurooParser.SendStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCompoundStatement(ConcurooParser.CompoundStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}

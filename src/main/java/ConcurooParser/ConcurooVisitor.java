@@ -173,6 +173,18 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(ConcurooParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ConcurooParser#sendStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSendStatement(ConcurooParser.SendStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ConcurooParser#coroutineStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#compoundStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

@@ -144,6 +144,7 @@ initializer
   : assignmentExpression
   | '{' initializerList '}'
   | '{' initializerList ',' '}'
+  | 'make' '(' declarationSpecifiers ')'
   ;
 
 initializerList
@@ -210,7 +211,6 @@ typeSpecifier
   | 'double'
   | 'int'
   | 'void'
-  | 'chan'
   ;
 
 pointer
@@ -219,6 +219,7 @@ pointer
 
 typeModifier
   : 'long'
+  | 'chan'
   ;
 
 typeQualifier
