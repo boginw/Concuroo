@@ -131,26 +131,23 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   @Override
   public Node visitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx) {
     FunctionDefinition funcDef = new FunctionDefinition();
-    int index = 0;
 
     // Step 1: Fetch all type specifiers
-    if (ctx.getChild(index) instanceof DeclarationSpecifiersContext) {
+    if (ctx.declarationSpecifiers() != null) {
       funcDef.setSpecifiers(parseDeclarationSpecifiers(ctx.getChild(0)));
-      index++;
     }
 
     // Step 2: Check if pointer
-    if (ctx.getChild(index) instanceof PointerContext) {
+    if (ctx.pointer() != null) {
       funcDef.setPointer(true);
-      index++;
     }
 
     // Step 3: Fetch identifier name
-    funcDef.setIdentifier(ctx.getChild(index++).getText());
+
+    funcDef.setIdentifier(ctx.Identifier().getText());
 
     // Step 4: Get parameters
-    index++;
-    if (ctx.getChild(index) instanceof ParameterTypeListContext) {
+    if (ctx.parameterTypeList() != null) {
       ParameterTypeListContext ptlc = ctx.parameterTypeList();
 
       ParseTree child = ptlc.getChild(0);
