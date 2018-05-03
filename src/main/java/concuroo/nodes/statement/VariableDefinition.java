@@ -1,5 +1,7 @@
 package concuroo.nodes.statement;
 
+import concuroo.nodes.DeclarationSpecifierList;
+import concuroo.nodes.HasSpecifiers;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
@@ -8,15 +10,31 @@ import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-public class VariableDefinition implements Statement, Expression {
+public class VariableDefinition implements Statement, Expression, HasSpecifiers {
 
-  private List<String> specifiers;
+  private DeclarationSpecifierList specifiers;
+
   private boolean pointer = false;
   private VariableExpression identifier;
   private Expression arraySize = null;
   private boolean isArray = false;
   private Expression initializer;
   private boolean param;
+
+  /**
+   * Default constructor.
+   */
+  public VariableDefinition() {
+  }
+
+  /**
+   * Constructs a VariableDefinition
+   *
+   * @param specifiers A populated list of type specifiers
+   */
+  public VariableDefinition(DeclarationSpecifierList specifiers) {
+    this.specifiers = specifiers;
+  }
 
   /**
    * Gets the declaration's identifier
@@ -74,58 +92,6 @@ public class VariableDefinition implements Statement, Expression {
   }
 
   /**
-   * Default constructor
-   */
-  public VariableDefinition() {
-    specifiers = new ArrayList<>();
-  }
-
-  /**
-   * Constructs a VariableDefinition
-   *
-   * @param populated A populated list of type specifiers
-   */
-  public VariableDefinition(List<String> populated) {
-    specifiers = populated;
-  }
-
-  /**
-   * Gets the count of specifiers in the declaration
-   *
-   * @return Size of the specifiers list
-   */
-  public int getSpecifiersCount() {
-    return specifiers.size();
-  }
-
-  /**
-   * Adds one or more specifier to the list of specifiers
-   *
-   * @param args One or more specifier
-   */
-  public void addSpecifier(String... args) {
-    Collections.addAll(specifiers, args);
-  }
-
-  /**
-   * Gets all specifiers
-   *
-   * @return List of all specifiers
-   */
-  public List<String> getSpecifiers() {
-    return specifiers;
-  }
-
-  /**
-   * Sets the declaration's specifiers
-   *
-   * @param specifiers List of specifiers
-   */
-  public void setSpecifiers(List<String> specifiers) {
-    this.specifiers = specifiers;
-  }
-
-  /**
    * Gets the initial value for the declaration
    *
    * @return Initial value for declaration
@@ -177,6 +143,16 @@ public class VariableDefinition implements Statement, Expression {
    */
   public void setParam(boolean param) {
     this.param = param;
+  }
+
+  @Override
+  public DeclarationSpecifierList getSpecifiers() {
+    return specifiers;
+  }
+
+  @Override
+  public void setSpecifiers(DeclarationSpecifierList specifiers) {
+    this.specifiers = specifiers;
   }
 
   @Override

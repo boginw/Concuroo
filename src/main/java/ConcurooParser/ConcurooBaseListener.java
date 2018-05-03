@@ -1,4 +1,4 @@
-// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from C:/repos/p4-code/cfg\Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
