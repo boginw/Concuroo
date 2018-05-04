@@ -10,7 +10,6 @@ import ConcurooParser.ConcurooParser.InitDeclaratorContext;
 import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.PointerContext;
-import ConcurooParser.ConcurooParser.PostfixExpressionContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import ConcurooParser.ConcurooParser.UnaryOperatorContext;
@@ -31,15 +30,14 @@ import concuroo.nodes.expression.literalExpression.CharLiteral;
 import concuroo.nodes.expression.literalExpression.FloatLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
-import concuroo.nodes.expression.unaryExpression.AdditivePrefixExpression;
-import concuroo.nodes.expression.unaryExpression.AddressOfExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.AdditivePrefixExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.AddressOfExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
-import concuroo.nodes.expression.unaryExpression.DereferenceExpression;
-import concuroo.nodes.expression.unaryExpression.NegationExpression;
-import concuroo.nodes.expression.unaryExpression.PipeExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.DereferenceExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.NegationExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.PipeExpression;
 import concuroo.nodes.expression.unaryExpression.PrefixExpression;
-import concuroo.nodes.expression.unaryExpression.RegressivePrefixExpression;
-import concuroo.nodes.expression.unaryExpression.UnaryExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.RegressivePrefixExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.CoroutineStatement;
 import concuroo.nodes.statement.ExpressionStatement;
@@ -459,6 +457,10 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         default: n = null; break;
       }
       return n;
+    }
+
+    if (ctx.CompoundOperator() != null) {
+
     }
 
     return visitChildren(ctx);

@@ -1,12 +1,13 @@
-package concuroo.nodes.expression.unaryExpression;
+package concuroo.nodes.expression.unaryExpression.unaryOperator;
 
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 
-public class AdditivePrefixExpression implements PrefixExpression {
-  public AdditivePrefixExpression() {
+public class NegationExpression implements PrefixExpression {
+  public NegationExpression() {
   }
 
-  public AdditivePrefixExpression(Expression firstOperand) {
+  public NegationExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
 
@@ -14,7 +15,7 @@ public class AdditivePrefixExpression implements PrefixExpression {
 
   @Override
   public Expression getFirstOperand() {
-      return firstOperand;
+    return firstOperand;
   }
 
   @Override
@@ -24,11 +25,11 @@ public class AdditivePrefixExpression implements PrefixExpression {
 
   @Override
   public String getOperator() {
-    return "+";
+    return "!";
   }
 
   @Override
   public String getLiteral() {
-      return getOperator() + getFirstOperand().getLiteral() + ";";
+    return getOperator() + getFirstOperand().getLiteral() + ";";
   }
 }

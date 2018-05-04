@@ -1,7 +1,8 @@
-package concuroo.nodes.expression.unaryExpression;
+package concuroo.nodes.expression.unaryExpression.unaryOperator;
 
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
+import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 
 public class AddressOfExpression implements PrefixExpression {
   public AddressOfExpression() {

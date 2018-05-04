@@ -1,16 +1,11 @@
-package concuroo.nodes.expression.unaryExpression;
+package concuroo.nodes.expression.unaryExpression.compoundExpression;
 
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.unaryExpression.UnaryExpression;
 
-public class NegationExpression implements PrefixExpression {
-  public NegationExpression() {
-  }
+public class CompoundNegativeExpression implements UnaryExpression {
 
-  public NegationExpression(Expression firstOperand) {
-    setFirstOperand(firstOperand);
-  }
-
-  private Expression firstOperand;
+  private UnaryExpression firstOperand;
 
   @Override
   public Expression getFirstOperand() {
@@ -19,12 +14,12 @@ public class NegationExpression implements PrefixExpression {
 
   @Override
   public void setFirstOperand(Expression firstOperand) {
-    this.firstOperand = firstOperand;
+    this.firstOperand = (UnaryExpression) firstOperand;
   }
 
   @Override
   public String getOperator() {
-    return "!";
+    return "--";
   }
 
   @Override

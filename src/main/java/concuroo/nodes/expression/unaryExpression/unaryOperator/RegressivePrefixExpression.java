@@ -1,12 +1,13 @@
-package concuroo.nodes.expression.unaryExpression;
+package concuroo.nodes.expression.unaryExpression.unaryOperator;
 
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 
-public class DereferenceExpression implements PrefixExpression {
-  public DereferenceExpression() {
+public class RegressivePrefixExpression implements PrefixExpression {
+  public RegressivePrefixExpression() {
   }
 
-  public DereferenceExpression(Expression firstOperand) {
+  public RegressivePrefixExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
 
@@ -24,7 +25,7 @@ public class DereferenceExpression implements PrefixExpression {
 
   @Override
   public String getOperator() {
-    return "*";
+    return "-";
   }
 
   @Override

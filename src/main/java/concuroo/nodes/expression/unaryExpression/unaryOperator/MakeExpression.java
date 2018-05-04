@@ -1,4 +1,4 @@
-package concuroo.nodes.expression.unaryExpression;
+package concuroo.nodes.expression.unaryExpression.unaryOperator;
 
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
