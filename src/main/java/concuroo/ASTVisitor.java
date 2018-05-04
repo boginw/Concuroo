@@ -12,6 +12,7 @@ import ConcurooParser.ConcurooParser.InitDeclaratorContext;
 import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.PointerContext;
+import ConcurooParser.ConcurooParser.SendStatementContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
@@ -19,6 +20,7 @@ import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
+import concuroo.nodes.expression.binaryExpression.SendStatement;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.MultiplicativeExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
@@ -422,6 +424,14 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   public Node visitCoroutineStatement(CoroutineStatementContext ctx) {
     CoroutineStatement stmt = new CoroutineStatement();
     stmt.setExpression((Expression) visitExpression(ctx.expression()));
+    return stmt;
+  }
+
+  @Override
+  public Node visitSendStatement(SendStatementContext ctx) {
+    SendStatement stmt = new SendStatement();
+    stmt.setFirstOperand((Expression) visit(ctx.getChild(0)));
+    stmt.setSecondOperand((Expression) visit(ctx.getChild(2)));
     return stmt;
   }
 
