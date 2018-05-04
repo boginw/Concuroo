@@ -4,8 +4,14 @@ import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
 
 public class AddressOfExpression implements PrefixExpression {
+  public AddressOfExpression() {
+  }
+
+  public AddressOfExpression(Expression firstOperand) {
+    setFirstOperand(firstOperand);
+  }
+
   private LHSExpression firstOperand;
-  private String operator = "&";
 
   @Override
   public LHSExpression getFirstOperand() {
@@ -19,11 +25,11 @@ public class AddressOfExpression implements PrefixExpression {
 
   @Override
   public String getOperator() {
-    return operator;
+    return "&";
   }
 
   @Override
   public String getLiteral() {
-    return operator + firstOperand.getLiteral() + ";";
+    return getOperator() + firstOperand.getLiteral() + ";";
   }
 }

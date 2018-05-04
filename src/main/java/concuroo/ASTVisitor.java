@@ -6,13 +6,14 @@ import ConcurooParser.ConcurooParser.CoroutineStatementContext;
 import ConcurooParser.ConcurooParser.DeclarationSpecifiersContext;
 import ConcurooParser.ConcurooParser.DeclaratorContext;
 import ConcurooParser.ConcurooParser.DirectDeclaratorContext;
-import ConcurooParser.ConcurooParser.ExpressionContext;
-import ConcurooParser.ConcurooParser.ExpressionStatementContext;
 import ConcurooParser.ConcurooParser.InitDeclaratorContext;
 import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.PointerContext;
+import ConcurooParser.ConcurooParser.PostfixExpressionContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import ConcurooParser.ConcurooParser.UnaryOperatorContext;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
@@ -30,7 +31,15 @@ import concuroo.nodes.expression.literalExpression.CharLiteral;
 import concuroo.nodes.expression.literalExpression.FloatLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
+import concuroo.nodes.expression.unaryExpression.AdditivePrefixExpression;
+import concuroo.nodes.expression.unaryExpression.AddressOfExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
+import concuroo.nodes.expression.unaryExpression.DereferenceExpression;
+import concuroo.nodes.expression.unaryExpression.NegationExpression;
+import concuroo.nodes.expression.unaryExpression.PipeExpression;
+import concuroo.nodes.expression.unaryExpression.PrefixExpression;
+import concuroo.nodes.expression.unaryExpression.RegressivePrefixExpression;
+import concuroo.nodes.expression.unaryExpression.UnaryExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.CoroutineStatement;
 import concuroo.nodes.statement.ExpressionStatement;
@@ -427,6 +436,36 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     CoroutineStatement stmt = new CoroutineStatement();
     stmt.setExpression((Expression) visitExpression(ctx.expression()));
     return stmt;
+  }
+
+  @Override
+  public Node visitUnaryExpression(UnaryExpressionContext ctx) {
+    if(ctx.postfixExpression() != null) {
+      return visitPostfixExpression(ctx.postfixExpression());
+    }
+
+    if (ctx.unaryOperator() != null) {
+      String operator = ctx.unaryOperator().getText();
+      Expression expr = (Expression) visit(ctx.getChild(1));
+      PrefixExpression n;
+
+      switch (operator) {
+        case "+" : n = new AdditivePrefixExpression(expr); break;
+        case "-" : n = new RegressivePrefixExpression(expr); break;
+        case "*" : n = new DereferenceExpression(expr); break;
+        case "&" : n = new AddressOfExpression(expr); break;
+        case "!" : n = new NegationExpression(expr); break;
+        case "<-": n = new PipeExpression(expr); break;
+        default: n = null; break;
+      }
+      return n;
+    }
+
+    return visitChildren(ctx);
+  }
+
+  private boolean isPlusOrMinus(UnaryOperatorContext ctx) {
+    return ctx.children.size() > 0 && ctx.getChild(0).getText().equals("-") || ctx.getChild(0).getText().equals("+");
   }
 
   @Override

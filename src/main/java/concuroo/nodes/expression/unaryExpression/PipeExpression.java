@@ -2,33 +2,33 @@ package concuroo.nodes.expression.unaryExpression;
 
 import concuroo.nodes.expression.Expression;
 
-public class AdditivePrefixExpression implements PrefixExpression {
-  public AdditivePrefixExpression() {
+public class PipeExpression implements PrefixExpression {
+  public PipeExpression() {
   }
 
-  public AdditivePrefixExpression(Expression firstOperand) {
+  public PipeExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
 
-  private Expression firstOperand;
+  private CastExpression firstOperand;
 
   @Override
   public Expression getFirstOperand() {
-      return firstOperand;
+    return firstOperand;
   }
 
   @Override
   public void setFirstOperand(Expression firstOperand) {
-    this.firstOperand = firstOperand;
+    this.firstOperand = (CastExpression) firstOperand;
   }
 
   @Override
   public String getOperator() {
-    return "+";
+    return "<-";
   }
 
   @Override
   public String getLiteral() {
-      return getOperator() + getFirstOperand().getLiteral() + ";";
+    return getOperator() + getFirstOperand().getLiteral() + ";";
   }
 }

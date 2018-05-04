@@ -2,11 +2,11 @@ package concuroo.nodes.expression.unaryExpression;
 
 import concuroo.nodes.expression.Expression;
 
-public class AdditivePrefixExpression implements PrefixExpression {
-  public AdditivePrefixExpression() {
+public class RegressivePrefixExpression implements PrefixExpression {
+  public RegressivePrefixExpression() {
   }
 
-  public AdditivePrefixExpression(Expression firstOperand) {
+  public RegressivePrefixExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
 
@@ -14,7 +14,7 @@ public class AdditivePrefixExpression implements PrefixExpression {
 
   @Override
   public Expression getFirstOperand() {
-      return firstOperand;
+    return firstOperand;
   }
 
   @Override
@@ -24,11 +24,11 @@ public class AdditivePrefixExpression implements PrefixExpression {
 
   @Override
   public String getOperator() {
-    return "+";
+    return "-";
   }
 
   @Override
   public String getLiteral() {
-      return getOperator() + getFirstOperand().getLiteral() + ";";
+    return getOperator() + getFirstOperand().getLiteral() + ";";
   }
 }

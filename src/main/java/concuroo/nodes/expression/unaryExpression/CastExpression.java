@@ -10,11 +10,6 @@ public class CastExpression implements PrefixExpression, CanSetOperator {
   private PrimaryExpression firstOperand;
 
   @Override
-  public String getLiteral() {
-    return "(" + specifier + ") " + firstOperand.getLiteral() + ";";
-  }
-
-  @Override
   public Expression getFirstOperand() {
     return (Expression) firstOperand;
   }
@@ -32,5 +27,10 @@ public class CastExpression implements PrefixExpression, CanSetOperator {
   @Override
   public void setOperator(String specifier) {
     this.specifier = specifier;
+  }
+
+  @Override
+  public String getLiteral() {
+    return "(" + specifier + ") " + getFirstOperand().getLiteral() + ";";
   }
 }
