@@ -3,12 +3,13 @@ package concuroo.nodes.statement;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
+import concuroo.nodes.expression.unaryExpression.Identifier;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-public class VariableDefinition implements Statement, Expression {
+public class VariableDefinition implements Statement, Expression, Identifier{
 
   private List<String> specifiers;
   private boolean pointer = false;
@@ -187,4 +188,8 @@ public class VariableDefinition implements Statement, Expression {
         (isParam() ? "" : ";");
   }
 
+  @Override
+  public String getID() {
+    return identifier.getID();
+  }
 }

@@ -8,11 +8,17 @@ import ConcurooParser.ConcurooParser.DirectDeclaratorContext;
 import ConcurooParser.ConcurooParser.InitDeclaratorContext;
 import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
-import ConcurooParser.ConcurooParser.PointerContext;
+import ConcurooParser.ConcurooParser.PostfixExpressionContext;
+import ConcurooParser.ConcurooParser.StartContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
+import ConcurooParser.ConcurooParser.TranslationUnitContext;
+import ConcurooParser.ConcurooParser.ArgumentExpressionListContext;
 import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
+import concuroo.nodes.Program;
 import concuroo.nodes.Statement;
+import concuroo.nodes.TranslationUnit;
+import concuroo.nodes.expression.ArgumentExpressionList;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
@@ -26,7 +32,10 @@ import concuroo.nodes.expression.literalExpression.CharLiteral;
 import concuroo.nodes.expression.literalExpression.FloatLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
+import concuroo.nodes.expression.unaryExpression.ArrayExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
+import concuroo.nodes.expression.unaryExpression.FunctionExpression;
+import concuroo.nodes.expression.unaryExpression.IncrementDecrementExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.ExpressionStatement;
 import concuroo.nodes.statement.VariableDefinition;
@@ -53,6 +62,29 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   }
 
   @Override
+  public Node visitStart(StartContext ctx) {
+    Program program = new Program();
+    program.setTranslationUnit((TranslationUnit) visit(ctx.translationUnit()));
+    return program;
+  }
+
+  @Override
+  public Node visitTranslationUnit(TranslationUnitContext ctx) {
+    TranslationUnitContext tuc = ctx;
+    Stack<TranslationUnitContext> tucList = new Stack<>() ;
+    TranslationUnit translationUnit = new TranslationUnit();
+    while(tuc != null)
+    {
+      tucList.push(tuc);
+      tuc = tuc.translationUnit();
+    }
+    while (!tucList.empty()){
+      translationUnit.addUnit(visit(tucList.pop().externalDeclaration()));
+    }
+    return translationUnit;
+  }
+
+  @Override
   public Node visitParameterDeclaration(ConcurooParser.ParameterDeclarationContext ctx) {
     VariableDefinition declarationStatement = new VariableDefinition();
 
@@ -71,7 +103,8 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // Step 4: Find the identifier
-    declarationStatement.setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
+    declarationStatement
+        .setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
 
     // Step 5: Check if it is an array declaration
     if (directDeclarator.children.size() > 1) {
@@ -122,7 +155,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       );
     }
 
-    global.insert(declarationStatement.getIdentifier());
+    global.insert(declarationStatement);
 
     // Step 7: Profit?
     return declarationStatement;
@@ -143,8 +176,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // Step 3: Fetch identifier name
-    funcDef.setIdentifier(ctx.Identifier().getText());
-
+    funcDef.setIdentifier(new FunctionExpression(ctx.Identifier().getText()));
     // Step 4: Get parameters
     if (ctx.parameterTypeList() != null) {
       ParameterTypeListContext ptlc = ctx.parameterTypeList();
@@ -154,7 +186,6 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       // Go down the rabbit hole
       while (child instanceof ParameterListContext) {
         ParameterListContext castedChild = (ParameterListContext) child;
-
         // If there are more siblings
         if (castedChild.children.size() == 3) {
           funcDef.addParameter((VariableDefinition) visit(castedChild.getChild(2)));
@@ -170,9 +201,9 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     funcDef.setBody((CompoundStatement) visitCompoundStatement(ctx.compoundStatement()));
+    global.insert(funcDef);
     return funcDef;
   }
-
 
   @Override
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
@@ -398,6 +429,50 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     expr.setSecondOperand((Expression) visit(ctx.getChild(2)));
 
     return expr;
+  }
+
+  @Override
+  public Node visitArgumentExpressionList(ArgumentExpressionListContext ctx) {
+    ArgumentExpressionList arg = new ArgumentExpressionList();
+    ArgumentExpressionListContext argCtx = ctx;
+    while (argCtx != null) {
+      if (argCtx.assignmentExpression() != null) {
+        arg.addParam(visit(argCtx.assignmentExpression()));
+      }
+      argCtx = argCtx.argumentExpressionList();
+      }
+    return arg;
+  }
+
+  @Override
+  public Node visitPostfixExpression(PostfixExpressionContext ctx) {
+
+    if (ctx.children.size() > 1 && ctx.getChild(1).getText().equals("(")) {
+      FunctionExpression functionExpression = new FunctionExpression(global.lookup(ctx.getChild(0).getText()).getLiteral());
+      if (ctx.argumentExpressionList() != null) {
+        functionExpression
+            .setParameterList((ArgumentExpressionList) visit(ctx.argumentExpressionList()));
+      }
+      return functionExpression;
+    } else if (ctx.children.size() > 1 && ctx.getChild(1).getText().equals("[")) {
+      ArrayExpression arrExp = new ArrayExpression();
+      arrExp.setFirstOperand(new VariableExpression(ctx.getChild(0).getText()));
+      arrExp.setOperator((Expression) visitExpression(ctx.expression()));
+      return arrExp;
+    } else if (ctx.children.size() > 1 && ctx.getChild(1).getText().equals("++")) {
+      IncrementDecrementExpression incExp = new IncrementDecrementExpression();
+      incExp.setFirstOperand((Expression) visit(ctx.getChild(0)));
+      incExp.setOperator("++");
+      return incExp;
+    } else if (ctx.children.size() > 1 && ctx.getChild(1).getText().equals("--")) {
+      IncrementDecrementExpression decExp = new IncrementDecrementExpression();
+      decExp.setFirstOperand((Expression) visit(ctx.getChild(0)));
+      decExp.setOperator("--");
+      return decExp;
+    } else if (ctx.primaryExpression() != null) {
+      return visitPrimaryExpression(ctx.primaryExpression());
+    }
+    return visitChildren(ctx);
   }
 
   @Override
