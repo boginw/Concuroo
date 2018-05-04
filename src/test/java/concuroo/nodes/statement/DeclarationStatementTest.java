@@ -2,6 +2,7 @@ package concuroo.nodes.statement;
 
 import static org.junit.Assert.*;
 
+import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,17 +21,17 @@ public class DeclarationStatementTest {
 
   @Test
   public void shouldBeAbleToHoldDeclarationSpecifiers(){
-    VariableDefinition ds = new VariableDefinition();
+    VariableDefinition ds = new VariableDefinition(new DeclarationSpecifierList(new ArrayList<>()));
 
-    assertEquals(0, ds.getSpecifiersCount());
+    assertEquals(0, ds.getSpecifiers().getSpecifiersCount());
 
-    ds.addSpecifier("TypeA");
+    ds.getSpecifiers().addSpecifier("TypeA");
 
-    assertEquals(1, ds.getSpecifiersCount());
+    assertEquals(1, ds.getSpecifiers().getSpecifiersCount());
 
-    ds.addSpecifier("TypeB");
+    ds.getSpecifiers().addSpecifier("TypeB");
 
-    assertEquals(2, ds.getSpecifiersCount());
+    assertEquals(2, ds.getSpecifiers().getSpecifiersCount());
   }
 
   @Test
@@ -38,10 +39,11 @@ public class DeclarationStatementTest {
     List<String> prePopulatedList = new ArrayList<>();
 
     Collections.addAll(prePopulatedList, "TypeA", "TypeB", "TypeC");
+    DeclarationSpecifierList specifiers = new DeclarationSpecifierList(prePopulatedList);
 
-    VariableDefinition ds = new VariableDefinition(prePopulatedList);
+    VariableDefinition ds = new VariableDefinition(specifiers);
 
-    assertEquals(3, ds.getSpecifiersCount());
+    assertEquals(3, ds.getSpecifiers().getSpecifiersCount());
   }
 
   @Test
@@ -50,9 +52,11 @@ public class DeclarationStatementTest {
 
     Collections.addAll(prePopulatedList, "TypeA", "TypeB", "TypeC");
 
-    VariableDefinition ds = new VariableDefinition(prePopulatedList);
+    DeclarationSpecifierList specifiers = new DeclarationSpecifierList(prePopulatedList);
 
-    List<String> result = ds.getSpecifiers();
+    VariableDefinition ds = new VariableDefinition(specifiers);
+
+    List<String> result = ds.getSpecifiers().getSpecifiers();
 
     assertEquals(3, result.size());
 

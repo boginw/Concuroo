@@ -1,4 +1,4 @@
-// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from C:/repos/p4-code/cfg\Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
@@ -200,6 +200,20 @@ public class ConcurooBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitStatement(ConcurooParser.StatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSendStatement(ConcurooParser.SendStatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
