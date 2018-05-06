@@ -5,6 +5,10 @@ import concuroo.nodes.expression.unaryExpression.UnaryExpression;
 
 public class CompoundNegativeExpression implements UnaryExpression {
 
+  public CompoundNegativeExpression(UnaryExpression firstOperator) {
+    setFirstOperand(firstOperator);
+  }
+
   private UnaryExpression firstOperand;
 
   @Override

@@ -30,6 +30,10 @@ import concuroo.nodes.expression.literalExpression.CharLiteral;
 import concuroo.nodes.expression.literalExpression.FloatLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
+import concuroo.nodes.expression.unaryExpression.SizeofExpression;
+import concuroo.nodes.expression.unaryExpression.UnaryExpression;
+import concuroo.nodes.expression.unaryExpression.compoundExpression.CompoundNegativeExpression;
+import concuroo.nodes.expression.unaryExpression.compoundExpression.CompoundPositiveExpression;
 import concuroo.nodes.expression.unaryExpression.unaryOperator.AdditivePrefixExpression;
 import concuroo.nodes.expression.unaryExpression.unaryOperator.AddressOfExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
@@ -83,7 +87,8 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     // Step 4: Find the identifier
-    declarationStatement.setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
+    declarationStatement
+        .setIdentifier(new VariableExpression(directDeclarator.getChild(0).getText()));
 
     // Step 5: Check if it is an array declaration
     if (directDeclarator.children.size() > 1) {
@@ -438,7 +443,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
   @Override
   public Node visitUnaryExpression(UnaryExpressionContext ctx) {
-    if(ctx.postfixExpression() != null) {
+    if (ctx.postfixExpression() != null) {
       return visitPostfixExpression(ctx.postfixExpression());
     }
 
@@ -448,26 +453,61 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       PrefixExpression n;
 
       switch (operator) {
-        case "+" : n = new AdditivePrefixExpression(expr); break;
-        case "-" : n = new RegressivePrefixExpression(expr); break;
-        case "*" : n = new DereferenceExpression(expr); break;
-        case "&" : n = new AddressOfExpression(expr); break;
-        case "!" : n = new NegationExpression(expr); break;
-        case "<-": n = new PipeExpression(expr); break;
-        default: n = null; break;
+        case "+":
+          n = new AdditivePrefixExpression(expr);
+          break;
+        case "-":
+          n = new RegressivePrefixExpression(expr);
+          break;
+        case "*":
+          n = new DereferenceExpression(expr);
+          break;
+        case "&":
+          n = new AddressOfExpression(expr);
+          break;
+        case "!":
+          n = new NegationExpression(expr);
+          break;
+        case "<-":
+          n = new PipeExpression(expr);
+          break;
+        default:
+          n = null;
+          break;
       }
       return n;
     }
 
     if (ctx.CompoundOperator() != null) {
+      String operator = ctx.CompoundOperator().getText();
+      UnaryExpression expr = (UnaryExpression) visit(ctx.getChild(1));
+      UnaryExpression n;
 
+      switch (operator) {
+        case "++":
+          n = new CompoundPositiveExpression(expr);
+          break;
+        case "--":
+          n = new CompoundNegativeExpression(expr);
+          break;
+        default:
+          n = null;
+          break;
+      }
+      return n;
+    }
+
+    if (ctx.getChild(0).getText().equals("sizeof")) {
+      Expression expr = (Expression) visit(ctx.getChild(2));
+      return new SizeofExpression(expr);
     }
 
     return visitChildren(ctx);
   }
 
   private boolean isPlusOrMinus(UnaryOperatorContext ctx) {
-    return ctx.children.size() > 0 && ctx.getChild(0).getText().equals("-") || ctx.getChild(0).getText().equals("+");
+    return ctx.children.size() > 0 && ctx.getChild(0).getText().equals("-") || ctx.getChild(0)
+        .getText().equals("+");
   }
 
   @Override

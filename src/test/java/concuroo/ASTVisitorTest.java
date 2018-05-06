@@ -16,6 +16,7 @@ import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.Logica
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
 import concuroo.nodes.expression.literalExpression.BoolLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
+import concuroo.nodes.expression.unaryExpression.SizeofExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.ExpressionStatement;
 import concuroo.nodes.statement.IterationStatement;
@@ -285,6 +286,28 @@ public class ASTVisitorTest {
 
     TestBooleanLiteral((BoolLiteral)expr.getFirstOperand(), true);
     TestBooleanLiteral((BoolLiteral)expr.getSecondOperand(), false);
+  }
+
+  @Test
+  public void visitUnaryExpression() {
+    ConcurooParser parser = parse("sizeof(1);");
+    CompoundStatementContext ctx = parser.compoundStatement();
+    Node n = new ASTVisitor(st).visit(ctx);
+
+    assertTrue(n instanceof CompoundStatement);
+    CompoundStatement cStmt = (CompoundStatement) n;
+    assertEquals(cStmt.size(), 1);
+
+    assertTrue(cStmt.getStatement(0) instanceof ExpressionStatement);
+    ExpressionStatement eStmt = (ExpressionStatement) cStmt.getStatement(0);
+
+    assertTrue(eStmt.getExpr() instanceof SizeofExpression);
+    SizeofExpression sExpr = (SizeofExpression) eStmt.getExpr();
+
+    assertTrue(sExpr.getFirstOperand() instanceof IntLiteral);
+    IntLiteral iLit = (IntLiteral) sExpr.getFirstOperand();
+    assertTrue(iLit.getValue() instanceof Integer);
+    assertEquals((int) iLit.getValue(), 1);
   }
 
   public void TestBooleanLiteral(BoolLiteral boolLiteral, boolean Expected) {
