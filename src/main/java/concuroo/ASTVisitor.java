@@ -9,16 +9,16 @@ import ConcurooParser.ConcurooParser.DirectDeclaratorContext;
 import ConcurooParser.ConcurooParser.InitDeclaratorContext;
 import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
-import ConcurooParser.ConcurooParser.PointerContext;
+import ConcurooParser.ConcurooParser.SendStatementContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
-import ConcurooParser.ConcurooParser.UnaryOperatorContext;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
+import concuroo.nodes.expression.binaryExpression.SendStatement;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.MultiplicativeExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
@@ -148,26 +148,22 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   @Override
   public Node visitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx) {
     FunctionDefinition funcDef = new FunctionDefinition();
-    int index = 0;
 
     // Step 1: Fetch all type specifiers
-    if (ctx.getChild(index) instanceof DeclarationSpecifiersContext) {
+    if (ctx.declarationSpecifiers() != null) {
       funcDef.setSpecifiers(parseDeclarationSpecifiers(ctx.getChild(0)));
-      index++;
     }
 
     // Step 2: Check if pointer
-    if (ctx.getChild(index) instanceof PointerContext) {
+    if (ctx.pointer() != null) {
       funcDef.setPointer(true);
-      index++;
     }
 
     // Step 3: Fetch identifier name
-    funcDef.setIdentifier(ctx.getChild(index++).getText());
+    funcDef.setIdentifier(ctx.Identifier().getText());
 
     // Step 4: Get parameters
-    index++;
-    if (ctx.getChild(index) instanceof ParameterTypeListContext) {
+    if (ctx.parameterTypeList() != null) {
       ParameterTypeListContext ptlc = ctx.parameterTypeList();
 
       ParseTree child = ptlc.getChild(0);
@@ -505,9 +501,12 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     return visitChildren(ctx);
   }
 
-  private boolean isPlusOrMinus(UnaryOperatorContext ctx) {
-    return ctx.children.size() > 0 && ctx.getChild(0).getText().equals("-") || ctx.getChild(0)
-        .getText().equals("+");
+  @Override
+  public Node visitSendStatement(SendStatementContext ctx) {
+    SendStatement stmt = new SendStatement();
+    stmt.setFirstOperand((Expression) visit(ctx.getChild(0)));
+    stmt.setSecondOperand((Expression) visit(ctx.getChild(2)));
+    return stmt;
   }
 
   @Override
