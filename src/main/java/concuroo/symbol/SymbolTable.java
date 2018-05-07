@@ -67,7 +67,7 @@ public class SymbolTable {
       return parent.lookup(literal);
     }
     // TODO: throw
-    return null;
+    throw new RuntimeException("Identifier not found");
   }
 
   /**
