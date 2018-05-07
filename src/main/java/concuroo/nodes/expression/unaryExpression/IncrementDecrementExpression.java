@@ -6,8 +6,17 @@ import concuroo.nodes.expression.lhsExpression.VariableExpression;
 
 public class IncrementDecrementExpression implements UnaryExpression {
 
-  VariableExpression operand;
+  private VariableExpression operand;
   private String operator;
+  private boolean isPrefix;
+
+  public boolean isPrefix() {
+    return isPrefix;
+  }
+
+  public void setPrefix(boolean prefix) {
+    isPrefix = prefix;
+  }
 
   @Override
   public Expression getFirstOperand() {
@@ -24,12 +33,15 @@ public class IncrementDecrementExpression implements UnaryExpression {
     return operator;
   }
 
-  public void setOperator(String operator){
+  public void setOperator(String operator) {
     this.operator = operator;
   }
 
   @Override
   public String getLiteral() {
+    if (isPrefix){
+      return operator + " " + operand.getLiteral();
+    }
     return operand.getLiteral() + operator + ';';
   }
 }

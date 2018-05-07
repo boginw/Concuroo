@@ -3,45 +3,40 @@ package concuroo.nodes.expression.unaryExpression;
 import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.expression.ArgumentExpressionList;
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.lhsExpression.VariableExpression;
 
 
-public class FunctionExpression implements UnaryExpression, Identifier{
-
-  public FunctionExpression(String identifier) {
-    this.identifier = identifier;
-  }
+public class FunctionExpression implements Expression, Identifier {
 
   private String identifier;
   private FunctionDefinition definition;
   private ArgumentExpressionList parameters = new ArgumentExpressionList();
 
+  public FunctionExpression(String identifier) {
+    this.identifier = identifier;
+  }
+
   public void setParameterList(ArgumentExpressionList parameters) {
     this.parameters = parameters;
   }
-  public ArgumentExpressionList getParameterList() { return parameters; }
 
-  @Override
-  public Expression getFirstOperand() {
-    return null;
-  }
-
-  @Override
-  public void setFirstOperand(Expression firstOperand) {
-
-  }
-
-  @Override
-  public String getOperator() {
-    return null;
+  public ArgumentExpressionList getParameterList() {
+    return parameters;
   }
 
   @Override
   public String getLiteral() {
-    return identifier;
+    return identifier + " " + parameters.getLiteral();
   }
 
   @Override
-  public String getID() {
-    return identifier;
+  public Expression getIdentifier() {
+    return this;
+  }
+
+  @Override
+  public void setIdentifier(Expression identifier) {
+    FunctionExpression fe = (FunctionExpression) identifier;
+    this.identifier = fe.identifier;
   }
 }

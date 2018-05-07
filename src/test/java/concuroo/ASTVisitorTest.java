@@ -174,7 +174,6 @@ public class ASTVisitorTest {
 
     CompoundStatement cs = (CompoundStatement) new ASTVisitor(st).visit(ctx);
     Node n = ((ExpressionStatement) cs.getStatement(1)).getExpr();
-
     assertTrue(n instanceof AssignmentExpression);
     assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof VariableExpression);
     assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof IntLiteral);

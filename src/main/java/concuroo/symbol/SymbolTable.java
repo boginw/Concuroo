@@ -76,7 +76,7 @@ public class SymbolTable {
    * @param s Symbol to append
    */
   public void insert(Identifier s) {
-    symbols.put(s.getID(), s);
+    symbols.put(s.getIdentifier().getLiteral(), s);
   }
 
 

@@ -1,5 +1,6 @@
 package concuroo.nodes;
 
+import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.unaryExpression.FunctionExpression;
 import concuroo.nodes.expression.unaryExpression.Identifier;
 import concuroo.nodes.statement.CompoundStatement;
@@ -44,8 +45,9 @@ public class FunctionDefinition implements Node, HasSpecifiers, Identifier {
     return pointer;
   }
 
-  public void setIdentifier(FunctionExpression identifier) {
-    this.identifier = identifier;
+  @Override
+  public void setIdentifier(Expression identifier) {
+    this.identifier = (FunctionExpression) identifier;
   }
 
   public FunctionExpression getIdentifier() {
@@ -78,10 +80,5 @@ public class FunctionDefinition implements Node, HasSpecifiers, Identifier {
 
   public void setParameters(List<VariableDefinition> parameters) {
     this.parameters = parameters;
-  }
-
-  @Override
-  public String getID() {
-    return identifier.getID();
   }
 }

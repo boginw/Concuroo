@@ -5,7 +5,7 @@ import concuroo.nodes.expression.lhsExpression.VariableExpression;
 
 public class ArrayExpression implements UnaryExpression{
 
-  private VariableExpression operand;
+  private Expression operand;
   private Expression operator;
 
 
@@ -16,7 +16,7 @@ public class ArrayExpression implements UnaryExpression{
 
   @Override
   public void setFirstOperand(Expression firstOperand) {
-    this.operand = (VariableExpression) firstOperand;
+    this.operand = firstOperand;
 
   }
 
@@ -32,6 +32,6 @@ public class ArrayExpression implements UnaryExpression{
 
   @Override
   public String getLiteral() {
-    return operand.getLiteral() + '(' + operator.getLiteral() + ')';
+    return operand.getLiteral() + '[' + operator.getLiteral() + ']';
   }
 }
