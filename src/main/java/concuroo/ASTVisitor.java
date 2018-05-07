@@ -2,6 +2,7 @@ package concuroo;
 
 import ConcurooParser.ConcurooBaseVisitor;
 import ConcurooParser.ConcurooParser;
+import ConcurooParser.ConcurooParser.CoroutineStatementContext;
 import ConcurooParser.ConcurooParser.DeclarationSpecifiersContext;
 import ConcurooParser.ConcurooParser.DeclaratorContext;
 import ConcurooParser.ConcurooParser.DirectDeclaratorContext;
@@ -10,10 +11,10 @@ import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.PostfixExpressionContext;
 import ConcurooParser.ConcurooParser.StartContext;
+import concuroo.nodes.FunctionDefinition;
 import ConcurooParser.ConcurooParser.StatementListContext;
 import ConcurooParser.ConcurooParser.TranslationUnitContext;
 import ConcurooParser.ConcurooParser.ArgumentExpressionListContext;
-import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
 import concuroo.nodes.Program;
 import concuroo.nodes.Statement;
@@ -489,6 +490,21 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   }
 
   @Override
+  public Node visitCoroutineStatement(CoroutineStatementContext ctx) {
+    CoroutineStatement stmt = new CoroutineStatement();
+    stmt.setExpression((Expression) visitExpression(ctx.expression()));
+    return stmt;
+  }
+
+  @Override
+  public Node visitSendStatement(SendStatementContext ctx) {
+    SendStatement stmt = new SendStatement();
+    stmt.setFirstOperand((Expression) visit(ctx.getChild(0)));
+    stmt.setSecondOperand((Expression) visit(ctx.getChild(2)));
+    return stmt;
+  }
+
+  @Override
   public Node aggregateResult(Node aggregate, Node nextResult) {
     if (aggregate == null) {
       return nextResult;
@@ -501,7 +517,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     return aggregate;
   }
 
-  private List<String> parseDeclarationSpecifiers(ParseTree parseTree) {
+  private DeclarationSpecifierList parseDeclarationSpecifiers(ParseTree parseTree) {
     List<String> specifiers = new ArrayList<>();
     if (parseTree instanceof DeclarationSpecifiersContext) {
       DeclarationSpecifiersContext child = (DeclarationSpecifiersContext) parseTree;
@@ -510,7 +526,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
         specifiers.add(specifier.getText());
       }
 
-      return specifiers;
+      return new DeclarationSpecifierList(specifiers);
     }
     return null;
   }

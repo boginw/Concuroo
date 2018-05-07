@@ -1,4 +1,4 @@
-// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from C:/repos/p4-code/cfg\Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -172,6 +172,18 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitStatement(ConcurooParser.StatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ConcurooParser#sendStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSendStatement(ConcurooParser.SendStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link ConcurooParser#coroutineStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#compoundStatement}.
 	 * @param ctx the parse tree

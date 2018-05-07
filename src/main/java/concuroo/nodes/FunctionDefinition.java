@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-public class FunctionDefinition implements Node, Identifier {
+public class FunctionDefinition implements Node, HasSpecifiers, Identifier {
 
-  private List<String> specifiers;
+  private DeclarationSpecifierList specifiers;
   private boolean pointer;
   private FunctionExpression identifier;
   private CompoundStatement body;
@@ -28,11 +28,11 @@ public class FunctionDefinition implements Node, Identifier {
         .getLiteral();
   }
 
-  public void setSpecifiers(List<String> specifiers) {
+  public void setSpecifiers(DeclarationSpecifierList specifiers) {
     this.specifiers = specifiers;
   }
 
-  public List<String> getSpecifiers() {
+  public DeclarationSpecifierList getSpecifiers() {
     return specifiers;
   }
 

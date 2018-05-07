@@ -1,4 +1,4 @@
-// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
+// Generated from C:/repos/p4-code/cfg\Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -335,6 +335,30 @@ public class ConcurooBaseListener implements ConcurooListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitStatement(ConcurooParser.StatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSendStatement(ConcurooParser.SendStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSendStatement(ConcurooParser.SendStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCoroutineStatement(ConcurooParser.CoroutineStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
