@@ -12,6 +12,7 @@ import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.PostfixExpressionContext;
 import ConcurooParser.ConcurooParser.StartContext;
 import ConcurooParser.ConcurooParser.SendStatementContext;
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
 import ConcurooParser.ConcurooParser.StatementListContext;
@@ -113,6 +114,29 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     declarationStatement.setParam(true);
 
     return declarationStatement;
+  }
+
+  @Override
+  public Node visitUnaryExpression(UnaryExpressionContext ctx) {
+
+    if (ctx.CompoundOperator() != null) {
+      TerminalNode n = ctx.CompoundOperator();
+      if (n.getSymbol().equals("++")) {
+        IncrementDecrementExpression incExp = new IncrementDecrementExpression();
+        incExp.setPrefix(true);
+        incExp.setOperator("++");
+        incExp.setFirstOperand((Expression) visit(ctx.postfixExpression()));
+        return incExp;
+      } else if (n.getSymbol().equals("--")) {
+        IncrementDecrementExpression decExp = new IncrementDecrementExpression();
+        decExp.setPrefix(true);
+        decExp.setOperator("--");
+        decExp.setFirstOperand((Expression) visit(ctx.postfixExpression()));
+        return decExp;
+      }
+    }
+
+    return super.visitUnaryExpression(ctx);
   }
 
   @Override

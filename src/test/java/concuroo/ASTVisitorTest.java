@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class ASTVisitorTest {
+
   private SymbolTable st;
 
   @Before
@@ -73,7 +74,7 @@ public class ASTVisitorTest {
     assertTrue(statement.getConsequence() instanceof ReturnStatement);
 
     WhileStatement expr = (WhileStatement) n;
-    TestBooleanLiteral((BoolLiteral)expr.getCondition(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getCondition(), true);
   }
 
   @Test
@@ -90,7 +91,7 @@ public class ASTVisitorTest {
     assertNull(statement.getAlternative());
 
     IfStatement expr = (IfStatement) n;
-    TestBooleanLiteral((BoolLiteral)expr.getCondition(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getCondition(), true);
   }
 
   @Test
@@ -107,7 +108,7 @@ public class ASTVisitorTest {
     assertTrue(statement.getAlternative() instanceof ReturnStatement);
 
     IfStatement expr = (IfStatement) n;
-    TestBooleanLiteral((BoolLiteral)expr.getCondition(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getCondition(), true);
   }
 
   @Test
@@ -164,7 +165,7 @@ public class ASTVisitorTest {
     ReturnStatement returnValue = ((ReturnStatement) n);
 
     ReturnStatement expr = (ReturnStatement) n;
-    TestBooleanLiteral((BoolLiteral)expr.getReturnValue(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getReturnValue(), true);
   }
 
   @Test
@@ -193,7 +194,7 @@ public class ASTVisitorTest {
     assertTrue(returnValue.getFirstOperand() instanceof VariableExpression);
 
     AssignmentExpression expr = (AssignmentExpression) n;
-    TestBooleanLiteral((BoolLiteral)expr.getSecondOperand(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getSecondOperand(), true);
   }
 
   @Test
@@ -241,8 +242,8 @@ public class ASTVisitorTest {
     assertTrue(((LogicalAndExpression) n).getSecondOperand() instanceof BoolLiteral);
 
     LogicalAndExpression expr = (LogicalAndExpression) n;
-    TestBooleanLiteral((BoolLiteral)expr.getFirstOperand(), true);
-    TestBooleanLiteral((BoolLiteral)expr.getSecondOperand(), false);
+    TestBooleanLiteral((BoolLiteral) expr.getFirstOperand(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getSecondOperand(), false);
 
   }
 
@@ -255,8 +256,8 @@ public class ASTVisitorTest {
     assertTrue(n instanceof LogicalOrExpression);
 
     LogicalOrExpression expr = (LogicalOrExpression) n;
-    TestBooleanLiteral((BoolLiteral)expr.getFirstOperand(), true);
-    TestBooleanLiteral((BoolLiteral)expr.getSecondOperand(), false);
+    TestBooleanLiteral((BoolLiteral) expr.getFirstOperand(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getSecondOperand(), false);
   }
 
   @Test
@@ -282,8 +283,8 @@ public class ASTVisitorTest {
     assertTrue(expr.getFirstOperand() instanceof BoolLiteral);
     assertTrue(expr.getSecondOperand() instanceof BoolLiteral);
 
-    TestBooleanLiteral((BoolLiteral)expr.getFirstOperand(), true);
-    TestBooleanLiteral((BoolLiteral)expr.getSecondOperand(), false);
+    TestBooleanLiteral((BoolLiteral) expr.getFirstOperand(), true);
+    TestBooleanLiteral((BoolLiteral) expr.getSecondOperand(), false);
   }
 
   public void TestBooleanLiteral(BoolLiteral boolLiteral, boolean Expected) {
@@ -303,7 +304,7 @@ public class ASTVisitorTest {
     assertEquals(Expected, intValue);
   }
 
-  public ConcurooParser parse(String input){
+  public ConcurooParser parse(String input) {
     ConcurooLexer lex = new ConcurooLexer(CharStreams.fromString(input));
     ConcurooParser parser = new ConcurooParser(new CommonTokenStream(lex));
     parser.setBuildParseTree(true);
