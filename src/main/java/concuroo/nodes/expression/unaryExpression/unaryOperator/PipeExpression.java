@@ -5,14 +5,12 @@ import concuroo.nodes.expression.unaryExpression.CastExpression;
 import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 
 public class PipeExpression implements PrefixExpression {
-  public PipeExpression() {
-  }
+
+  private CastExpression firstOperand;
 
   public PipeExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
-
-  private CastExpression firstOperand;
 
   @Override
   public Expression getFirstOperand() {

@@ -4,14 +4,12 @@ import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 
 public class DereferenceExpression implements PrefixExpression {
-  public DereferenceExpression() {
-  }
+
+  private Expression firstOperand;
 
   public DereferenceExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
-
-  private Expression firstOperand;
 
   @Override
   public Expression getFirstOperand() {

@@ -3,11 +3,11 @@ package concuroo.nodes.expression.unaryExpression;
 import concuroo.nodes.expression.Expression;
 
 public class SizeofExpression implements UnaryExpression {
+  private Expression firstOperand;
+
   public SizeofExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
-
-  private Expression firstOperand;
 
   @Override
   public Expression getFirstOperand() {

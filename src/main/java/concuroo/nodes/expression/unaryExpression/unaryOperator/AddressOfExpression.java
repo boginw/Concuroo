@@ -5,14 +5,12 @@ import concuroo.nodes.expression.lhsExpression.LHSExpression;
 import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 
 public class AddressOfExpression implements PrefixExpression {
-  public AddressOfExpression() {
-  }
+
+  private LHSExpression firstOperand;
 
   public AddressOfExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
   }
-
-  private LHSExpression firstOperand;
 
   @Override
   public LHSExpression getFirstOperand() {

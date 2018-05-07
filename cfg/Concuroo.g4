@@ -28,7 +28,8 @@ unaryExpression
     : postfixExpression
     | unaryOperator castExpression
     | CompoundOperator unaryExpression
-    | 'sizeof' '(' unaryExpression ')'
+    | 'sizeof' unaryExpression
+    | 'sizeof' '(' declarationSpecifiers ')'
     ;
 
 unaryOperator

@@ -5,8 +5,10 @@ import static org.junit.Assert.*;
 import ConcurooParser.ConcurooLexer;
 import ConcurooParser.ConcurooParser;
 import ConcurooParser.ConcurooParser.*;
+import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.SizeofSpecifier;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.MultiplicativeExpression;
@@ -290,27 +292,45 @@ public class ASTVisitorTest {
 
   @Test
   public void visitUnaryExpression() {
-    ConcurooParser parser = parse("sizeof(1);");
-    CompoundStatementContext ctx = parser.compoundStatement();
+    ConcurooParser parser = parse("sizeof(1)");
+    UnaryExpressionContext ctx = parser.unaryExpression();
     Node n = new ASTVisitor(st).visit(ctx);
-
-    assertTrue(n instanceof CompoundStatement);
-    CompoundStatement cStmt = (CompoundStatement) n;
-    assertEquals(cStmt.size(), 1);
-
-    assertTrue(cStmt.getStatement(0) instanceof ExpressionStatement);
-    ExpressionStatement eStmt = (ExpressionStatement) cStmt.getStatement(0);
-
-    assertTrue(eStmt.getExpr() instanceof SizeofExpression);
-    SizeofExpression sExpr = (SizeofExpression) eStmt.getExpr();
-
+    assertTrue(n instanceof SizeofExpression);
+    SizeofExpression sExpr = (SizeofExpression) n;
     assertTrue(sExpr.getFirstOperand() instanceof IntLiteral);
     IntLiteral iLit = (IntLiteral) sExpr.getFirstOperand();
     assertTrue(iLit.getValue() instanceof Integer);
     assertEquals((int) iLit.getValue(), 1);
   }
 
-  public void TestBooleanLiteral(BoolLiteral boolLiteral, boolean Expected) {
+  @Test
+  public void visitUnaryExpressionWithSizeofInt() {
+    ConcurooParser parser = parse("sizeof(int)");
+    UnaryExpressionContext ctx = parser.unaryExpression();
+    Node n = new ASTVisitor(st).visit(ctx);
+    assertTrue(n instanceof SizeofSpecifier);
+    SizeofSpecifier sExpr = (SizeofSpecifier) n;
+    assertTrue(sExpr.getSpecifiers() != null);
+    DeclarationSpecifierList decList = sExpr.getSpecifiers();
+    assertEquals(decList.getSpecifiersCount(), 1);
+    assertEquals(decList.getSpecifiers().get(0), "int");
+  }
+
+  @Test
+  public void visitUnaryExpressionWithSizeofLongInt() {
+    ConcurooParser parser = parse("sizeof(long int)");
+    UnaryExpressionContext ctx = parser.unaryExpression();
+    Node n = new ASTVisitor(st).visit(ctx);
+    assertTrue(n instanceof SizeofSpecifier);
+    SizeofSpecifier sExpr = (SizeofSpecifier) n;
+    assertTrue(sExpr.getSpecifiers() != null);
+    DeclarationSpecifierList decList = sExpr.getSpecifiers();
+    assertEquals(decList.getSpecifiersCount(), 2);
+    assertEquals(decList.getSpecifiers().get(0), "long");
+    assertEquals(decList.getSpecifiers().get(1), "int");
+  }
+
+  private void TestBooleanLiteral(BoolLiteral boolLiteral, boolean Expected) {
     String expectedLiteral = Expected ? "true" : "false";
     assertEquals(expectedLiteral, boolLiteral.getLiteral());
     assertTrue(boolLiteral.getValue() instanceof Boolean);
@@ -319,7 +339,7 @@ public class ASTVisitorTest {
     assertEquals(Expected, bool);
   }
 
-  public void TestIntegerLiteral(IntLiteral intLiteral, int Expected) {
+  private void TestIntegerLiteral(IntLiteral intLiteral, int Expected) {
     assertEquals(intLiteral.getLiteral(), Integer.toString(Expected));
     assertTrue(intLiteral.getValue() instanceof Integer);
 
@@ -327,7 +347,7 @@ public class ASTVisitorTest {
     assertEquals(Expected, intValue);
   }
 
-  public ConcurooParser parse(String input){
+  private ConcurooParser parse(String input){
     ConcurooLexer lex = new ConcurooLexer(CharStreams.fromString(input));
     ConcurooParser parser = new ConcurooParser(new CommonTokenStream(lex));
     parser.setBuildParseTree(true);

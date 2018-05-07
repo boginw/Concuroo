@@ -11,12 +11,14 @@ import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.SendStatementContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
+import ConcurooParser.ConcurooParser.TypeSpecifierContext;
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.SizeofSpecifier;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.SendStatement;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
@@ -41,7 +43,6 @@ import concuroo.nodes.expression.unaryExpression.unaryOperator.DereferenceExpres
 import concuroo.nodes.expression.unaryExpression.unaryOperator.NegationExpression;
 import concuroo.nodes.expression.unaryExpression.unaryOperator.PipeExpression;
 import concuroo.nodes.expression.unaryExpression.PrefixExpression;
-import concuroo.nodes.expression.unaryExpression.unaryOperator.RegressivePrefixExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.CoroutineStatement;
 import concuroo.nodes.statement.ExpressionStatement;
@@ -195,7 +196,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
     if (ctx.children.size() != 0) {
       if (ctx.children.size() == 3) {
-        return visit(ctx.getChild(0));
+        return visit(ctx.getChild(1));
       }
 
       TerminalNode n;
@@ -424,7 +425,10 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     CastExpression expr = new CastExpression();
-    expr.setOperator(ctx.getChild(1).getText());
+    List<String> stringList = new ArrayList<>();
+    stringList.add(ctx.getChild(1).getText());
+    DeclarationSpecifierList decList = new DeclarationSpecifierList(stringList);
+    expr.setSpecifiers(decList);
     expr.setFirstOperand((Expression) visit(ctx.getChild(3)));
 
     return expr;
@@ -450,10 +454,8 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
 
       switch (operator) {
         case "+":
-          n = new AdditivePrefixExpression(expr);
-          break;
         case "-":
-          n = new RegressivePrefixExpression(expr);
+          n = new AdditivePrefixExpression(expr, operator);
           break;
         case "*":
           n = new DereferenceExpression(expr);
@@ -493,12 +495,23 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       return n;
     }
 
+    if (ctx.declarationSpecifiers() != null) {
+      List<ParseTree> operators = ctx.declarationSpecifiers().children;
+      List<String> list = new ArrayList<>();
+      for(ParseTree operator : operators) {
+        list.add(operator.getText());
+      }
+
+      DeclarationSpecifierList decList = new DeclarationSpecifierList(list);
+      return new SizeofSpecifier(decList);
+    }
+
     if (ctx.getChild(0).getText().equals("sizeof")) {
-      Expression expr = (Expression) visit(ctx.getChild(2));
+      Expression expr = (Expression) visitUnaryExpression(ctx.unaryExpression());
       return new SizeofExpression(expr);
     }
 
-    return visitChildren(ctx);
+    return null;
   }
 
   @Override
@@ -507,6 +520,11 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     stmt.setFirstOperand((Expression) visit(ctx.getChild(0)));
     stmt.setSecondOperand((Expression) visit(ctx.getChild(2)));
     return stmt;
+  }
+
+  @Override
+  public Node visitTypeSpecifier(TypeSpecifierContext ctx) {
+    return visit(ctx.getChild(0));
   }
 
   @Override
