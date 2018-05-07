@@ -1,33 +1,42 @@
 package concuroo.nodes.expression.unaryExpression.compoundExpression;
 
+import concuroo.nodes.expression.CanSetOperator;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.unaryExpression.UnaryExpression;
 
-public class CompoundNegativeExpression implements UnaryExpression {
+public class CompoundExpression implements UnaryExpression, CanSetOperator {
 
-  public CompoundNegativeExpression(UnaryExpression firstOperator) {
+  private UnaryExpression firstOperator;
+  private String operator;
+
+
+  public CompoundExpression(UnaryExpression firstOperator, String operator) {
     setFirstOperand(firstOperator);
+    setOperator(operator);
   }
-
-  private UnaryExpression firstOperand;
 
   @Override
   public Expression getFirstOperand() {
-    return firstOperand;
+    return firstOperator;
   }
 
   @Override
   public void setFirstOperand(Expression firstOperand) {
-    this.firstOperand = (UnaryExpression) firstOperand;
+    this.firstOperator = (UnaryExpression) firstOperand;
   }
 
   @Override
   public String getOperator() {
-    return "--";
+    return operator;
   }
 
   @Override
   public String getLiteral() {
     return getOperator() + getFirstOperand().getLiteral() + ";";
+  }
+
+  @Override
+  public void setOperator(String operator) {
+    this.operator = operator;
   }
 }

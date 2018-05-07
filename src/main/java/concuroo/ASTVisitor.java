@@ -34,8 +34,7 @@ import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
 import concuroo.nodes.expression.unaryExpression.SizeofExpression;
 import concuroo.nodes.expression.unaryExpression.UnaryExpression;
-import concuroo.nodes.expression.unaryExpression.compoundExpression.CompoundNegativeExpression;
-import concuroo.nodes.expression.unaryExpression.compoundExpression.CompoundPositiveExpression;
+import concuroo.nodes.expression.unaryExpression.compoundExpression.CompoundExpression;
 import concuroo.nodes.expression.unaryExpression.unaryOperator.AdditivePrefixExpression;
 import concuroo.nodes.expression.unaryExpression.unaryOperator.AddressOfExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
@@ -479,20 +478,8 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     if (ctx.CompoundOperator() != null) {
       String operator = ctx.CompoundOperator().getText();
       UnaryExpression expr = (UnaryExpression) visit(ctx.getChild(1));
-      UnaryExpression n;
 
-      switch (operator) {
-        case "++":
-          n = new CompoundPositiveExpression(expr);
-          break;
-        case "--":
-          n = new CompoundNegativeExpression(expr);
-          break;
-        default:
-          n = null;
-          break;
-      }
-      return n;
+      return new CompoundExpression(expr, operator);
     }
 
     if (ctx.declarationSpecifiers() != null) {
