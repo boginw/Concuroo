@@ -29,6 +29,6 @@ public class PipeExpression implements PrefixExpression {
 
   @Override
   public String getLiteral() {
-    return getOperator() + getFirstOperand().getLiteral() + ";";
+    return getOperator() + getFirstOperand().getLiteral();
   }
 }

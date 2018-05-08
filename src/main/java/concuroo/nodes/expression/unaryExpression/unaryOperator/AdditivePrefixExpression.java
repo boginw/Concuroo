@@ -31,7 +31,7 @@ public class AdditivePrefixExpression implements PrefixExpression, CanSetOperato
 
   @Override
   public String getLiteral() {
-    return getOperator() + getFirstOperand().getLiteral() + ";";
+    return getOperator() + getFirstOperand().getLiteral();
   }
 
   @Override

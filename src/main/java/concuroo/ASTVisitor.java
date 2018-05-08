@@ -11,9 +11,7 @@ import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.SendStatementContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
-import ConcurooParser.ConcurooParser.TypeSpecifierContext;
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
-import concuroo.errors.ErrorType;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
@@ -472,8 +470,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
           n = new PipeExpression(expr);
           break;
         default:
-          n = null;
-          break;
+          throw new RuntimeException("The operator for the unaryexpression wasn't known.");
       }
       return n;
     }

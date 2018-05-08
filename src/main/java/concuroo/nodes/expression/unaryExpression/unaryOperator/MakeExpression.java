@@ -20,7 +20,7 @@ public class MakeExpression implements Node, HasSpecifiers {
 
   @Override
   public String getLiteral() {
-    return "make(" + specifiers.getLiteral() + ");";
+    return "make(" + specifiers.getLiteral() + ")";
   }
 
 }

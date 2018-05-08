@@ -28,6 +28,6 @@ public class NegationExpression implements PrefixExpression {
 
   @Override
   public String getLiteral() {
-    return getOperator() + getFirstOperand().getLiteral() + ";";
+    return getOperator() + getFirstOperand().getLiteral();
   }
 }

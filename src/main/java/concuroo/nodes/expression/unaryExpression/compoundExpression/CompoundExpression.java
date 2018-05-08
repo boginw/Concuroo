@@ -32,7 +32,7 @@ public class CompoundExpression implements UnaryExpression, CanSetOperator {
 
   @Override
   public String getLiteral() {
-    return getOperator() + getFirstOperand().getLiteral() + ";";
+    return getOperator() + getFirstOperand().getLiteral();
   }
 
   @Override

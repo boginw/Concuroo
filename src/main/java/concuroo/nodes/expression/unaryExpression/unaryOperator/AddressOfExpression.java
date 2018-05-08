@@ -29,6 +29,6 @@ public class AddressOfExpression implements PrefixExpression {
 
   @Override
   public String getLiteral() {
-    return getOperator() + firstOperand.getLiteral() + ";";
+    return getOperator() + firstOperand.getLiteral();
   }
 }
