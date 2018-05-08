@@ -12,6 +12,8 @@ import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import ConcurooParser.ConcurooParser.PostfixExpressionContext;
 import ConcurooParser.ConcurooParser.StartContext;
 import ConcurooParser.ConcurooParser.SendStatementContext;
+import ConcurooParser.ConcurooParser.StatementListContext;
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
@@ -24,6 +26,7 @@ import concuroo.nodes.Program;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.ArgumentExpressionList;
 import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.SizeofSpecifier;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.SendStatement;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
@@ -37,8 +40,17 @@ import concuroo.nodes.expression.literalExpression.CharLiteral;
 import concuroo.nodes.expression.literalExpression.FloatLiteral;
 import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
+import concuroo.nodes.expression.unaryExpression.SizeofExpression;
+import concuroo.nodes.expression.unaryExpression.UnaryExpression;
+import concuroo.nodes.expression.unaryExpression.compoundExpression.CompoundExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.AdditivePrefixExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.AddressOfExpression;
 import concuroo.nodes.expression.unaryExpression.ArrayExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.DereferenceExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.NegationExpression;
+import concuroo.nodes.expression.unaryExpression.unaryOperator.PipeExpression;
+import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 import concuroo.nodes.expression.unaryExpression.FunctionExpression;
 import concuroo.nodes.expression.unaryExpression.IncrementDecrementExpression;
 import concuroo.nodes.statement.CompoundStatement;
@@ -117,28 +129,6 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     return declarationStatement;
   }
 
-  @Override
-  public Node visitUnaryExpression(UnaryExpressionContext ctx) {
-
-    if (ctx.CompoundOperator() != null) {
-      TerminalNode n = ctx.CompoundOperator();
-      if (n.getSymbol().equals("++")) {
-        IncrementDecrementExpression incExp = new IncrementDecrementExpression();
-        incExp.setPrefix(true);
-        incExp.setOperator("++");
-        incExp.setFirstOperand((Expression) visit(ctx.postfixExpression()));
-        return incExp;
-      } else if (n.getSymbol().equals("--")) {
-        IncrementDecrementExpression decExp = new IncrementDecrementExpression();
-        decExp.setPrefix(true);
-        decExp.setOperator("--");
-        decExp.setFirstOperand((Expression) visit(ctx.postfixExpression()));
-        return decExp;
-      }
-    }
-
-    return super.visitUnaryExpression(ctx);
-  }
 
   @Override
   public Node visitDeclarationStatement(ConcurooParser.DeclarationStatementContext ctx) {
@@ -230,8 +220,10 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   @Override
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
     if (ctx.children.size() != 0) {
+      // There's 3 children when it's a parenthesized expression.
       if (ctx.children.size() == 3) {
-        return visit(ctx.getChild(0));
+        // The middle child is the expression, between the opening and closening parenthesis.
+        return visit(ctx.getChild(1));
       }
 
       TerminalNode n;
@@ -511,7 +503,10 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     }
 
     CastExpression expr = new CastExpression();
-    expr.setOperator(ctx.getChild(1).getText());
+    List<String> stringList = new ArrayList<>();
+    stringList.add(ctx.getChild(1).getText());
+    DeclarationSpecifierList decList = new DeclarationSpecifierList(stringList);
+    expr.setSpecifiers(decList);
     expr.setFirstOperand((Expression) visit(ctx.getChild(3)));
 
     return expr;
@@ -522,6 +517,66 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     CoroutineStatement stmt = new CoroutineStatement();
     stmt.setExpression((Expression) visitExpression(ctx.expression()));
     return stmt;
+  }
+
+  @Override
+  public Node visitUnaryExpression(UnaryExpressionContext ctx) {
+    if (ctx.postfixExpression() != null) {
+      return visitPostfixExpression(ctx.postfixExpression());
+    }
+
+    if (ctx.unaryOperator() != null) {
+      String operator = ctx.unaryOperator().getText();
+      Expression expr = (Expression) visit(ctx.getChild(1));
+      PrefixExpression n;
+
+      switch (operator) {
+        case "+":
+        case "-":
+          n = new AdditivePrefixExpression(expr, operator);
+          break;
+        case "*":
+          n = new DereferenceExpression(expr);
+          break;
+        case "&":
+          n = new AddressOfExpression(expr);
+          break;
+        case "!":
+          n = new NegationExpression(expr);
+          break;
+        case "<-":
+          n = new PipeExpression(expr);
+          break;
+        default:
+          throw new RuntimeException("The operator for the unaryexpression wasn't known.");
+      }
+      return n;
+    }
+
+    if (ctx.CompoundOperator() != null) {
+      String operator = ctx.CompoundOperator().getText();
+      UnaryExpression expr = (UnaryExpression) visit(ctx.getChild(1));
+
+      return new CompoundExpression(expr, operator);
+    }
+
+    if (ctx.declarationSpecifiers() != null) {
+      List<ParseTree> operators = ctx.declarationSpecifiers().children;
+      List<String> list = new ArrayList<>();
+      for(ParseTree operator : operators) {
+        list.add(operator.getText());
+      }
+
+      DeclarationSpecifierList decList = new DeclarationSpecifierList(list);
+      return new SizeofSpecifier(decList);
+    }
+
+    if (ctx.getChild(0).getText().equals("sizeof")) {
+      Expression expr = (Expression) visitUnaryExpression(ctx.unaryExpression());
+      return new SizeofExpression(expr);
+    }
+
+    throw new RuntimeException("UnaryExpression did not get a valid input");
   }
 
   @Override

@@ -29,7 +29,7 @@ unaryExpression
     | unaryOperator castExpression
     | CompoundOperator unaryExpression
     | 'sizeof' unaryExpression
-    | 'sizeof' '(' typeSpecifier ')'
+    | 'sizeof' '(' declarationSpecifiers ')'
     ;
 
 unaryOperator
