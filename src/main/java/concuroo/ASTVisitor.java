@@ -13,6 +13,7 @@ import ConcurooParser.ConcurooParser.SendStatementContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
 import ConcurooParser.ConcurooParser.TypeSpecifierContext;
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import concuroo.errors.ErrorType;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.FunctionDefinition;
 import concuroo.nodes.Node;
@@ -194,7 +195,9 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   @Override
   public Node visitPrimaryExpression(ConcurooParser.PrimaryExpressionContext ctx) {
     if (ctx.children.size() != 0) {
+      // There's 3 children when it's a parenthesized expression.
       if (ctx.children.size() == 3) {
+        // The middle child is the expression, between the opening and closening parenthesis.
         return visit(ctx.getChild(1));
       }
 
@@ -498,7 +501,7 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
       return new SizeofExpression(expr);
     }
 
-    return null;
+    throw new RuntimeException("UnaryExpression did not get a valid input");
   }
 
   @Override
@@ -507,11 +510,6 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
     stmt.setFirstOperand((Expression) visit(ctx.getChild(0)));
     stmt.setSecondOperand((Expression) visit(ctx.getChild(2)));
     return stmt;
-  }
-
-  @Override
-  public Node visitTypeSpecifier(TypeSpecifierContext ctx) {
-    return visit(ctx.getChild(0));
   }
 
   @Override

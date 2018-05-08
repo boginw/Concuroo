@@ -26,6 +26,6 @@ public class SizeofExpression implements UnaryExpression {
 
   @Override
   public String getLiteral() {
-    return getOperator() + "(" + getFirstOperand().getLiteral() + ")";
+    return getOperator() + getFirstOperand().getLiteral();
   }
 }
