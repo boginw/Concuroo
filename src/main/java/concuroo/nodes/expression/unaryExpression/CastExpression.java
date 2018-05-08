@@ -28,7 +28,7 @@ public class CastExpression implements PrefixExpression, HasSpecifiers {
 
   @Override
   public String getLiteral() {
-    return "(" + specifiers.getLiteral() + ") " + getFirstOperand().getLiteral() + ";";
+    return "(" + specifiers.getLiteral() + ") " + getFirstOperand().getLiteral();
   }
 
   @Override
