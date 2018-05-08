@@ -26,7 +26,10 @@ public class FunctionExpression implements Expression, Identifier {
 
   @Override
   public String getLiteral() {
-    return identifier + " " + parameters.getLiteral();
+    if (parameters.getParams().size() > 0) {
+      return identifier + " " + parameters.getLiteral();
+    }
+    return identifier;
   }
 
   @Override

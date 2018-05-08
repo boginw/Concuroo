@@ -25,7 +25,8 @@ public class FunctionDefinition implements Node, HasSpecifiers, Identifier {
     }
 
     return StringUtils.join(specifiers, " ") + ' ' +
-        (pointer ? '*' : "") + identifier.getLiteral() + '(' + StringUtils.join(params, ", ") + ')' + body
+        (pointer ? '*' : "") + identifier.getLiteral() + '(' + StringUtils.join(params, ", ") + ')'
+        + body
         .getLiteral();
   }
 

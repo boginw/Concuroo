@@ -6,6 +6,7 @@ import concuroo.nodes.expression.Expression;
 public interface Identifier extends Node {
 
   Expression getIdentifier();
+
   void setIdentifier(Expression identifier);
 
 }

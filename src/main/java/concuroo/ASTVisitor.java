@@ -18,6 +18,7 @@ import concuroo.nodes.FunctionDefinition;
 import ConcurooParser.ConcurooParser.StatementListContext;
 import ConcurooParser.ConcurooParser.TranslationUnitContext;
 import ConcurooParser.ConcurooParser.ArgumentExpressionListContext;
+import ConcurooParser.ConcurooParser.AssignmentExpressionContext;
 import concuroo.nodes.Node;
 import concuroo.nodes.Program;
 import concuroo.nodes.Statement;
@@ -455,11 +456,15 @@ public class ASTVisitor extends ConcurooBaseVisitor<Node> {
   public Node visitArgumentExpressionList(ArgumentExpressionListContext ctx) {
     ArgumentExpressionList arg = new ArgumentExpressionList();
     ArgumentExpressionListContext argCtx = ctx;
+    Stack<AssignmentExpressionContext> expList = new Stack<>();
     while (argCtx != null) {
       if (argCtx.assignmentExpression() != null) {
-        arg.addParam(visit(argCtx.assignmentExpression()));
+        expList.push(argCtx.assignmentExpression());
+        argCtx = argCtx.argumentExpressionList();
       }
-      argCtx = argCtx.argumentExpressionList();
+    }
+    while (!expList.empty()) {
+      arg.addParam(visit(expList.pop()));
     }
     return arg;
   }
