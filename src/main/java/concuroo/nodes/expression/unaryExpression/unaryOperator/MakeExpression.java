@@ -1,4 +1,4 @@
-package concuroo.nodes.expression.unaryExpression;
+package concuroo.nodes.expression.unaryExpression.unaryOperator;
 
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
@@ -20,7 +20,7 @@ public class MakeExpression implements Node, HasSpecifiers {
 
   @Override
   public String getLiteral() {
-    return "make(" + specifiers.getLiteral() + ");";
+    return "make(" + specifiers.getLiteral() + ")";
   }
 
 }

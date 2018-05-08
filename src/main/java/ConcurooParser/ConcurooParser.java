@@ -487,8 +487,8 @@ public class ConcurooParser extends Parser {
 		public UnaryExpressionContext unaryExpression() {
 			return getRuleContext(UnaryExpressionContext.class,0);
 		}
-		public TypeSpecifierContext typeSpecifier() {
-			return getRuleContext(TypeSpecifierContext.class,0);
+		public DeclarationSpecifiersContext declarationSpecifiers() {
+			return getRuleContext(DeclarationSpecifiersContext.class,0);
 		}
 		public UnaryExpressionContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -558,7 +558,7 @@ public class ConcurooParser extends Parser {
 				setState(147);
 				match(T__0);
 				setState(148);
-				typeSpecifier();
+				declarationSpecifiers();
 				setState(149);
 				match(T__1);
 				}
@@ -3664,7 +3664,7 @@ public class ConcurooParser extends Parser {
 		"\u008b\u0089\3\2\2\2\u008c\u009a\5\4\3\2\u008d\u008e\5\n\6\2\u008e\u008f"+
 		"\5\f\7\2\u008f\u009a\3\2\2\2\u0090\u0091\7\64\2\2\u0091\u009a\5\b\5\2"+
 		"\u0092\u0093\7\n\2\2\u0093\u009a\5\b\5\2\u0094\u0095\7\n\2\2\u0095\u0096"+
-		"\7\3\2\2\u0096\u0097\5J&\2\u0097\u0098\7\4\2\2\u0098\u009a\3\2\2\2\u0099"+
+		"\7\3\2\2\u0096\u0097\5.\30\2\u0097\u0098\7\4\2\2\u0098\u009a\3\2\2\2\u0099"+
 		"\u008c\3\2\2\2\u0099\u008d\3\2\2\2\u0099\u0090\3\2\2\2\u0099\u0092\3\2"+
 		"\2\2\u0099\u0094\3\2\2\2\u009a\t\3\2\2\2\u009b\u009c\t\2\2\2\u009c\13"+
 		"\3\2\2\2\u009d\u009e\7\3\2\2\u009e\u009f\5J&\2\u009f\u00a0\7\4\2\2\u00a0"+

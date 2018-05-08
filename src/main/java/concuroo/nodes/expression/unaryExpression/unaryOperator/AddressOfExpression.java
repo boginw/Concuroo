@@ -1,11 +1,16 @@
-package concuroo.nodes.expression.unaryExpression;
+package concuroo.nodes.expression.unaryExpression.unaryOperator;
 
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.lhsExpression.LHSExpression;
+import concuroo.nodes.expression.unaryExpression.PrefixExpression;
 
 public class AddressOfExpression implements PrefixExpression {
+
   private LHSExpression firstOperand;
-  private String operator = "&";
+
+  public AddressOfExpression(Expression firstOperand) {
+    setFirstOperand(firstOperand);
+  }
 
   @Override
   public LHSExpression getFirstOperand() {
@@ -19,11 +24,11 @@ public class AddressOfExpression implements PrefixExpression {
 
   @Override
   public String getOperator() {
-    return operator;
+    return "&";
   }
 
   @Override
   public String getLiteral() {
-    return operator + firstOperand.getLiteral() + ";";
+    return getOperator() + firstOperand.getLiteral();
   }
 }
