@@ -5,12 +5,10 @@ import concuroo.nodes.HasSpecifiers;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.Expression;
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import concuroo.nodes.expression.unaryExpression.Identifier;
 import org.apache.commons.lang3.StringUtils;
 
-public class VariableDefinition implements Statement, Expression, HasSpecifiers {
+public class VariableDefinition implements Statement, Expression, Identifier, HasSpecifiers{
 
   private DeclarationSpecifierList specifiers;
 
@@ -41,7 +39,8 @@ public class VariableDefinition implements Statement, Expression, HasSpecifiers 
    *
    * @return The declaration's identifier
    */
-  public VariableExpression getIdentifier() {
+  @Override
+  public Expression getIdentifier() {
     return identifier;
   }
 
@@ -50,8 +49,9 @@ public class VariableDefinition implements Statement, Expression, HasSpecifiers 
    *
    * @param identifier A string that'll be the new identifier for this declaration
    */
-  public void setIdentifier(VariableExpression identifier) {
-    this.identifier = identifier;
+  @Override
+  public void setIdentifier(Expression identifier) {
+    this.identifier = (VariableExpression) identifier;
   }
 
   /**
@@ -162,5 +162,4 @@ public class VariableDefinition implements Statement, Expression, HasSpecifiers 
         + ']' : "") + (initializer != null ? " = " + initializer.getLiteral() : "") +
         (isParam() ? "" : ";");
   }
-
 }

@@ -45,7 +45,7 @@ public class CompoundStatement implements Statement {
       sb.append(indent).append("\t").append(stat.getLiteral()).append("\n");
     }
 
-    sb.append(indent).append("}");
+    sb.append(indent).append("}" + '\n');
 
     return sb.toString();
   }

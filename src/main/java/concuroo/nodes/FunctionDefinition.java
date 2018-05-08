@@ -1,16 +1,19 @@
 package concuroo.nodes;
 
+import concuroo.nodes.expression.Expression;
+import concuroo.nodes.expression.unaryExpression.FunctionExpression;
+import concuroo.nodes.expression.unaryExpression.Identifier;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.VariableDefinition;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-public class FunctionDefinition implements Node, HasSpecifiers {
+public class FunctionDefinition implements Node, HasSpecifiers, Identifier {
 
   private DeclarationSpecifierList specifiers;
   private boolean pointer;
-  private String identifier;
+  private FunctionExpression identifier;
   private CompoundStatement body;
   private List<VariableDefinition> parameters = new ArrayList<>();
 
@@ -21,8 +24,9 @@ public class FunctionDefinition implements Node, HasSpecifiers {
       params.add(param.getLiteral());
     }
 
-    return specifiers.getLiteral() + ' ' +
-        (pointer ? '*' : "") + identifier + '(' + StringUtils.join(params, ", ") + ')' + body
+    return StringUtils.join(specifiers, " ") + ' ' +
+        (pointer ? '*' : "") + identifier.getLiteral() + '(' + StringUtils.join(params, ", ") + ')'
+        + body
         .getLiteral();
   }
 
@@ -42,11 +46,12 @@ public class FunctionDefinition implements Node, HasSpecifiers {
     return pointer;
   }
 
-  public void setIdentifier(String identifier) {
-    this.identifier = identifier;
+  @Override
+  public void setIdentifier(Expression identifier) {
+    this.identifier = (FunctionExpression) identifier;
   }
 
-  public String getIdentifier() {
+  public FunctionExpression getIdentifier() {
     return identifier;
   }
 
