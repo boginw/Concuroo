@@ -27,7 +27,7 @@ public class REPL {
         SymbolTable st = new SymbolTable();
 
         StartContext ctx = parser.start();
-        Node n = new ASTVisitor(st).visitStart(ctx);
+        Node n = new CSTVisitor(st).visitStart(ctx);
 
         System.out.print(n.getLiteral() + "\n");
       } catch (Exception e) {

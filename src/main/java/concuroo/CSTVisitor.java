@@ -71,11 +71,11 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 
-public class ASTVisitor extends ConcurooBaseVisitor<Node> {
+public class CSTVisitor extends ConcurooBaseVisitor<Node> {
 
   private SymbolTable global;
 
-  public ASTVisitor(SymbolTable st) {
+  public CSTVisitor(SymbolTable st) {
     global = st;
   }
 

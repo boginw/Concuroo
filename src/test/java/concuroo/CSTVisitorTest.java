@@ -33,7 +33,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ASTVisitorTest {
+public class CSTVisitorTest {
 
   private SymbolTable st;
 
@@ -46,7 +46,7 @@ public class ASTVisitorTest {
   public void visitEmptyCompoundStatement() {
     ConcurooParser parser = parse("{}");
     CompoundStatementContext ctx = parser.compoundStatement();
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof CompoundStatement);
     assertEquals(0, ((CompoundStatement) n).size());
   }
@@ -55,7 +55,7 @@ public class ASTVisitorTest {
   public void visitNonEmptyCompoundStatement() {
     ConcurooParser parser = parse("{return;}");
     CompoundStatementContext ctx = parser.compoundStatement();
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof CompoundStatement);
     assertEquals(1, ((CompoundStatement) n).size());
     assertTrue(((CompoundStatement) n).getStatement(0) instanceof ReturnStatement);
@@ -67,7 +67,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("while(true) return;");
     IterationStatementContext ctx = parser.iterationStatement();
 
-    Node n = new ASTVisitor(new SymbolTable()).visit(ctx);
+    Node n = new CSTVisitor(new SymbolTable()).visit(ctx);
     assertTrue(n instanceof IterationStatement);
 
     IterationStatement statement = (IterationStatement) n;
@@ -83,7 +83,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("if(true) return;");
     IfStatementContext ctx = parser.ifStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof IfStatement);
 
     IfStatement statement = (IfStatement) n;
@@ -100,7 +100,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("if(true) return; else return;");
     SelectionStatementContext ctx = parser.selectionStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof IfStatement);
 
     IfStatement statement = (IfStatement) n;
@@ -117,7 +117,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("break;");
     JumpStatementContext ctx = parser.jumpStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof BreakStatement);
   }
 
@@ -126,7 +126,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("continue;");
     JumpStatementContext ctx = parser.jumpStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof ContinueStatement);
   }
 
@@ -135,7 +135,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("return;");
     JumpStatementContext ctx = parser.jumpStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof ReturnStatement);
     assertNull(((ReturnStatement) n).getReturnValue());
   }
@@ -145,7 +145,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("return 1;");
     JumpStatementContext ctx = parser.jumpStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof ReturnStatement);
 
     Expression returnValue = ((ReturnStatement) n).getReturnValue();
@@ -160,7 +160,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("return true;");
     JumpStatementContext ctx = parser.jumpStatement();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof ReturnStatement);
 
     ReturnStatement returnValue = ((ReturnStatement) n);
@@ -174,7 +174,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("{ int a; a = 1; }");
     CompoundStatementContext ctx = parser.compoundStatement();
 
-    CompoundStatement cs = (CompoundStatement) new ASTVisitor(st).visit(ctx);
+    CompoundStatement cs = (CompoundStatement) new CSTVisitor(st).visit(ctx);
     Node n = ((ExpressionStatement) cs.getStatement(1)).getExpr();
     assertTrue(n instanceof AssignmentExpression);
     assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof VariableExpression);
@@ -186,7 +186,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("{ bool a; a = true; }");
     CompoundStatementContext ctx = parser.compoundStatement();
 
-    CompoundStatement cs = (CompoundStatement) new ASTVisitor(st).visit(ctx);
+    CompoundStatement cs = (CompoundStatement) new CSTVisitor(st).visit(ctx);
     Node n = ((ExpressionStatement) cs.getStatement(1)).getExpr();
 
     assertTrue(n instanceof AssignmentExpression);
@@ -203,7 +203,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("1+2");
     AdditiveExpressionContext ctx = parser.additiveExpression();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof AdditiveExpression);
 
     Expression firstOperand = ((AdditiveExpression) n).getFirstOperand();
@@ -220,7 +220,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("1*2");
     MultiplicativeExpressionContext ctx = parser.multiplicativeExpression();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof MultiplicativeExpression);
 
     Expression firstOperand = ((MultiplicativeExpression) n).getFirstOperand();
@@ -237,7 +237,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("true&&false");
     LogicalAndExpressionContext ctx = parser.logicalAndExpression();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof LogicalAndExpression);
     assertTrue(((LogicalAndExpression) n).getFirstOperand() instanceof BoolLiteral);
     assertTrue(((LogicalAndExpression) n).getSecondOperand() instanceof BoolLiteral);
@@ -253,7 +253,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("true||false");
     LogicalOrExpressionContext ctx = parser.logicalOrExpression();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof LogicalOrExpression);
 
     LogicalOrExpression expr = (LogicalOrExpression) n;
@@ -266,7 +266,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("1==1||2==3");
     LogicalOrExpressionContext ctx = parser.logicalOrExpression();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof LogicalOrExpression);
     assertTrue(((LogicalOrExpression) n).getFirstOperand() instanceof LogicalEqualityExpression);
     assertTrue(((LogicalOrExpression) n).getSecondOperand() instanceof LogicalEqualityExpression);
@@ -277,7 +277,7 @@ public class ASTVisitorTest {
     ConcurooParser parser = parse("true==false");
     EqualityExpressionContext ctx = parser.equalityExpression();
 
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof LogicalEqualityExpression);
 
     LogicalEqualityExpression expr = (LogicalEqualityExpression) n;
@@ -292,7 +292,7 @@ public class ASTVisitorTest {
   public void visitUnaryExpression() {
     ConcurooParser parser = parse("sizeof(1)");
     UnaryExpressionContext ctx = parser.unaryExpression();
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof SizeofExpression);
     SizeofExpression sExpr = (SizeofExpression) n;
     assertTrue(sExpr.getFirstOperand() instanceof IntLiteral);
@@ -305,7 +305,7 @@ public class ASTVisitorTest {
   public void visitUnaryExpressionWithSizeofInt() {
     ConcurooParser parser = parse("sizeof(int)");
     UnaryExpressionContext ctx = parser.unaryExpression();
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof SizeofSpecifier);
     SizeofSpecifier sExpr = (SizeofSpecifier) n;
     assertTrue(sExpr.getSpecifiers() != null);
@@ -318,7 +318,7 @@ public class ASTVisitorTest {
   public void visitUnaryExpressionWithSizeofLongInt() {
     ConcurooParser parser = parse("sizeof(long int)");
     UnaryExpressionContext ctx = parser.unaryExpression();
-    Node n = new ASTVisitor(st).visit(ctx);
+    Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof SizeofSpecifier);
     SizeofSpecifier sExpr = (SizeofSpecifier) n;
     assertTrue(sExpr.getSpecifiers() != null);
