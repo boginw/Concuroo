@@ -120,7 +120,6 @@ declarator
 
 parameterTypeList
   : parameterList
-  | parameterList ',' '...'
   ;
 
 parameterList
