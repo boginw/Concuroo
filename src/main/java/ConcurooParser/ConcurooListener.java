@@ -1,4 +1,4 @@
-// Generated from C:/repos/p4-code/cfg\Concuroo.g4 by ANTLR 4.7
+// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
@@ -158,15 +158,15 @@ public interface ConcurooListener extends ParseTreeListener {
 	 */
 	void exitDeclarationStatement(ConcurooParser.DeclarationStatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#functionDefinition}.
+	 * Enter a parse tree produced by {@link ConcurooParser#functionDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void enterFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx);
+	void enterFunctionDeclaration(ConcurooParser.FunctionDeclarationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#functionDefinition}.
+	 * Exit a parse tree produced by {@link ConcurooParser#functionDeclaration}.
 	 * @param ctx the parse tree
 	 */
-	void exitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx);
+	void exitFunctionDeclaration(ConcurooParser.FunctionDeclarationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#initDeclarator}.
 	 * @param ctx the parse tree
@@ -358,6 +358,16 @@ public interface ConcurooListener extends ParseTreeListener {
 	 */
 	void exitIterationStatement(ConcurooParser.IterationStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link ConcurooParser#deleteStatement}.
+	 * @param ctx the parse tree
+	 */
+	void enterDeleteStatement(ConcurooParser.DeleteStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ConcurooParser#deleteStatement}.
+	 * @param ctx the parse tree
+	 */
+	void exitDeleteStatement(ConcurooParser.DeleteStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#jumpStatement}.
 	 * @param ctx the parse tree
 	 */
@@ -397,16 +407,6 @@ public interface ConcurooListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTypeModifier(ConcurooParser.TypeModifierContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link ConcurooParser#typeQualifier}.
-	 * @param ctx the parse tree
-	 */
-	void enterTypeQualifier(ConcurooParser.TypeQualifierContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link ConcurooParser#typeQualifier}.
-	 * @param ctx the parse tree
-	 */
-	void exitTypeQualifier(ConcurooParser.TypeQualifierContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link ConcurooParser#boolLiteral}.
 	 * @param ctx the parse tree

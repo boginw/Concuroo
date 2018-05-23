@@ -2,6 +2,9 @@ package concuroo.nodes.expression.binaryExpression.logicalBinaryExpression;
 
 import concuroo.nodes.expression.binaryExpression.LogicalBinaryExpression;
 
+/**
+ * This class represents an expression of the form 1 == 1
+ */
 public class LogicalEqualityExpression extends LogicalBinaryExpression {
 
   @Override

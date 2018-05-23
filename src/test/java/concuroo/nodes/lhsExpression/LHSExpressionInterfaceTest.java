@@ -2,18 +2,30 @@ package concuroo.nodes.lhsExpression;
 
 import static org.junit.Assert.*;
 
-import concuroo.nodes.expression.Expression;
-import concuroo.nodes.expression.lhsExpression.LHSExpression;
+import concuroo.ReturnType;
+import concuroo.nodes.Expression;
+import concuroo.nodes.expression.LHSExpression;
 
-import org.junit.Before;
 import org.junit.Test;
 
 public class LHSExpressionInterfaceTest {
 
   public class TestClass implements LHSExpression {
 
+    private ReturnType returnReturnType;
+
     @Override
     public String getLiteral() {
+      return null;
+    }
+
+    @Override
+    public void setReturnType(ReturnType returnReturnType) {
+      this.returnReturnType = returnReturnType;
+    }
+
+    @Override
+    public ReturnType getReturnType() {
       return null;
     }
   }

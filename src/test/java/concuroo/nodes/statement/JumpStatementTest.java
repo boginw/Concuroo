@@ -8,7 +8,12 @@ import org.junit.Test;
 public class JumpStatementTest {
   @Test
   public void shouldImplementStatement(){
-    JumpStatement st = () -> "jump";
+    JumpStatement st = new JumpStatement() {
+      @Override
+      public String getLiteral() {
+        return null;
+      }
+    };
     assertTrue(st instanceof Statement);
   }
 }

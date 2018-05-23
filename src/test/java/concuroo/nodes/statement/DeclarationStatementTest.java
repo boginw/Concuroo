@@ -14,24 +14,24 @@ public class DeclarationStatementTest {
 
   @Test
   public void shouldExistAndImplementStatement(){
-    VariableDefinition ds = new VariableDefinition();
+    VariableDeclaration ds = new VariableDeclaration();
     assertNotNull(ds);
     assertTrue(ds instanceof Statement);
   }
 
   @Test
   public void shouldBeAbleToHoldDeclarationSpecifiers(){
-    VariableDefinition ds = new VariableDefinition(new DeclarationSpecifierList(new ArrayList<>()));
+    VariableDeclaration ds = new VariableDeclaration(new DeclarationSpecifierList(new ArrayList<>()));
 
-    assertEquals(0, ds.getSpecifiers().getSpecifiersCount());
+    assertEquals(0, ds.getSpecifiers().size());
 
-    ds.getSpecifiers().addSpecifier("TypeA");
+    ds.getSpecifiers().add("TypeA");
 
-    assertEquals(1, ds.getSpecifiers().getSpecifiersCount());
+    assertEquals(1, ds.getSpecifiers().size());
 
-    ds.getSpecifiers().addSpecifier("TypeB");
+    ds.getSpecifiers().add("TypeB");
 
-    assertEquals(2, ds.getSpecifiers().getSpecifiersCount());
+    assertEquals(2, ds.getSpecifiers().size());
   }
 
   @Test
@@ -41,9 +41,9 @@ public class DeclarationStatementTest {
     Collections.addAll(prePopulatedList, "TypeA", "TypeB", "TypeC");
     DeclarationSpecifierList specifiers = new DeclarationSpecifierList(prePopulatedList);
 
-    VariableDefinition ds = new VariableDefinition(specifiers);
+    VariableDeclaration ds = new VariableDeclaration(specifiers);
 
-    assertEquals(3, ds.getSpecifiers().getSpecifiersCount());
+    assertEquals(3, ds.getSpecifiers().size());
   }
 
   @Test
@@ -54,9 +54,9 @@ public class DeclarationStatementTest {
 
     DeclarationSpecifierList specifiers = new DeclarationSpecifierList(prePopulatedList);
 
-    VariableDefinition ds = new VariableDefinition(specifiers);
+    VariableDeclaration ds = new VariableDeclaration(specifiers);
 
-    List<String> result = ds.getSpecifiers().getSpecifiers();
+    List<String> result = ds.getSpecifiers();
 
     assertEquals(3, result.size());
 

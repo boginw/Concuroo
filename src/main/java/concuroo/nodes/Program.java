@@ -1,26 +1,19 @@
 package concuroo.nodes;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class Program implements Node {
-
-  private List<Node> edc = new ArrayList<>();
+/**
+ * This class represents a program. A program is just a list of declarations. Therefore, we just
+ * extend the ArrayList class
+ */
+public class Program extends ArrayList<Declaration> implements Node {
 
   @Override
   public String getLiteral() {
     StringBuilder sb = new StringBuilder();
-    for (Node node : edc) {
+    for (Declaration node : this) {
       sb.append(node.getLiteral());
     }
     return sb.toString();
-  }
-
-  public void addUnit(Node edc){
-    this.edc.add(edc);
-  }
-
-  public List<Node> getUnits(){
-    return edc;
   }
 }

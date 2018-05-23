@@ -1,7 +1,7 @@
 package concuroo.symbol;
 
 import concuroo.nodes.Node;
-import concuroo.nodes.expression.unaryExpression.Identifier;
+import concuroo.nodes.expression.Identifier;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -66,8 +66,7 @@ public class SymbolTable {
     if (parent != null) {
       return parent.lookup(literal);
     }
-    // TODO: throw
-    throw new RuntimeException("Identifier not found");
+    return null;
   }
 
   /**
@@ -76,7 +75,10 @@ public class SymbolTable {
    * @param s Symbol to append
    */
   public void insert(Identifier s) {
-    symbols.put(s.getIdentifier().getLiteral(), s);
+    if(symbols.get(s.getIdentifier()) != null){
+      throw new RuntimeException("error: redefinition of '"+s.getIdentifier()+"'");
+    }
+    symbols.put(s.getIdentifier(), s);
   }
 
 

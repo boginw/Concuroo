@@ -1,4 +1,4 @@
-// Generated from C:/repos/p4-code/cfg\Concuroo.g4 by ANTLR 4.7
+// Generated from /home/hamburger/projects/p4-code/cfg/Concuroo.g4 by ANTLR 4.7
 package ConcurooParser;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -101,11 +101,11 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitDeclarationStatement(ConcurooParser.DeclarationStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link ConcurooParser#functionDefinition}.
+	 * Visit a parse tree produced by {@link ConcurooParser#functionDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionDefinition(ConcurooParser.FunctionDefinitionContext ctx);
+	T visitFunctionDeclaration(ConcurooParser.FunctionDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#initDeclarator}.
 	 * @param ctx the parse tree
@@ -221,6 +221,12 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIterationStatement(ConcurooParser.IterationStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link ConcurooParser#deleteStatement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeleteStatement(ConcurooParser.DeleteStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#jumpStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -244,12 +250,6 @@ public interface ConcurooVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTypeModifier(ConcurooParser.TypeModifierContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link ConcurooParser#typeQualifier}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTypeQualifier(ConcurooParser.TypeQualifierContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link ConcurooParser#boolLiteral}.
 	 * @param ctx the parse tree

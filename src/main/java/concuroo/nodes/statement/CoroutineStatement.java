@@ -1,13 +1,17 @@
 package concuroo.nodes.statement;
 
 import concuroo.nodes.Statement;
-import concuroo.nodes.expression.Expression;
+import concuroo.nodes.Expression;
 
+/**
+ * This class represents the coroutine statement, that is, starting a function a coroutine. This is
+ * done by saying go fn()
+ */
 public class CoroutineStatement implements Statement {
 
   private Expression expression;
 
-  public Expression getExpression(){
+  public Expression getExpression() {
     return expression;
   }
 

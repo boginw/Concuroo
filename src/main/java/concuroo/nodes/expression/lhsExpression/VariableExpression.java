@@ -1,31 +1,68 @@
 package concuroo.nodes.expression.lhsExpression;
 
-import concuroo.nodes.expression.Expression;
-import concuroo.nodes.expression.unaryExpression.Identifier;
-import concuroo.nodes.statement.VariableDefinition;
+import concuroo.ReturnType;
+import concuroo.nodes.expression.HasDefinition;
+import concuroo.nodes.expression.LHSExpression;
+import concuroo.nodes.expression.Identifier;
+import concuroo.nodes.statement.VariableDeclaration;
 
-public class VariableExpression implements LHSExpression, Identifier {
+/**
+ * This class represents an variable used in an expression.
+ */
+public class VariableExpression implements LHSExpression, Identifier,
+    HasDefinition<VariableDeclaration> {
 
-  private String literal;
-  private VariableDefinition definition;
+  private String identifier;
+  private VariableDeclaration definition;
 
-  public VariableExpression(String literal) {
-    this.literal = literal;
+  /**
+   * Default constructor
+   *
+   * @param identifier Identifier of the variable
+   * @param definition The definition of the variable
+   */
+  public VariableExpression(String identifier, VariableDeclaration definition) {
+    this.identifier = identifier;
+    this.definition = definition;
   }
 
   @Override
   public String getLiteral() {
-    return literal;
+    return identifier;
   }
 
   @Override
-  public Expression getIdentifier() {
-    return this;
+  public String toString() {
+    return identifier;
   }
 
   @Override
-  public void setIdentifier(Expression identifier)
-  {
-    this.literal = identifier.getLiteral();
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  @Override
+  public void setIdentifier(String identifier) {
+    this.identifier = identifier;
+  }
+
+  @Override
+  public VariableDeclaration getDefinition() {
+    return this.definition;
+  }
+
+  @Override
+  public void setDefinition(VariableDeclaration definition) {
+    this.definition = definition;
+  }
+
+  @Override
+  public ReturnType getReturnType() {
+    return definition.getReturnType();
+  }
+
+  @Override
+  public void setReturnType(ReturnType returnReturnType) {
+    definition.setReturnType(returnReturnType);
   }
 }

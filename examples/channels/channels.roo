@@ -1,0 +1,14 @@
+chan int channel = make(int);
+// Jeg er en kommentar¡
+void main(){
+  go b(channel);
+  int b;
+
+  b <- channel;
+}
+/*
+  Kender du mig ?
+*/
+void b(chan int channel){
+  channel <- 23;
+}

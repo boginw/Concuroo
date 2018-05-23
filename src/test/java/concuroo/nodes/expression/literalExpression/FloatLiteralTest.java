@@ -7,8 +7,6 @@ import static org.junit.Assert.*;
 
 public class FloatLiteralTest {
 
-  private double delta = 0;
-
   @Test
   public void FloatLiteralDirectMethodTest() {
     double literalFloat = 42.42f;
@@ -16,6 +14,7 @@ public class FloatLiteralTest {
 
     LiteralExpression node = new FloatLiteral(literalFloat);
 
+    double delta = 0;
     assertEquals(literalFloat, Double.valueOf(node.getLiteral()), delta);
     assertEquals(literalFloat, node.getValue());
 

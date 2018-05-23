@@ -38,6 +38,8 @@ unaryOperator
   | '+'
   | '-'
   | '!'
+  | '++'
+  | '--'
   | '<-'
   ;
 
@@ -98,7 +100,7 @@ declarationStatement
   : declarationSpecifiers initDeclarator ';'
   ;
 
-functionDefinition
+functionDeclaration
   : declarationSpecifiers? pointer? Identifier '(' parameterTypeList? ')' compoundStatement
   ;
 
@@ -136,7 +138,7 @@ declarationSpecifiers
 
 declarationSpecifier
   : typeSpecifier
-  | typeQualifier
+  /*| typeQualifier */
   | typeModifier
   ;
 
@@ -162,6 +164,7 @@ statement
   | declarationStatement
   | coroutineStatement
   | sendStatement
+  | deleteStatement
   ;
 
 
@@ -199,6 +202,10 @@ iterationStatement
   : 'while' '(' expression ')' statement
   ;
 
+deleteStatement
+  : 'delete' Identifier ';'
+  ;
+
 jumpStatement
   : 'continue' ';'
   | 'break' ';'
@@ -223,9 +230,9 @@ typeModifier
   | 'chan'
   ;
 
-typeQualifier
+/*typeQualifier
   : 'const'
-  ;
+  ;*/
 
 boolLiteral : 'true' | 'false';
 
@@ -243,7 +250,7 @@ translationUnit
   ;
 
 externalDeclaration
-    :   functionDefinition
+    :   functionDeclaration
     |   declarationStatement
     |   ';' // stray ;
     ;

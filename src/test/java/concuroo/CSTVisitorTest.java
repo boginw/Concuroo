@@ -1,13 +1,26 @@
 package concuroo;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import ConcurooParser.ConcurooLexer;
 import ConcurooParser.ConcurooParser;
-import ConcurooParser.ConcurooParser.*;
+import ConcurooParser.ConcurooParser.AdditiveExpressionContext;
+import ConcurooParser.ConcurooParser.CompoundStatementContext;
+import ConcurooParser.ConcurooParser.EqualityExpressionContext;
+import ConcurooParser.ConcurooParser.IfStatementContext;
+import ConcurooParser.ConcurooParser.IterationStatementContext;
+import ConcurooParser.ConcurooParser.JumpStatementContext;
+import ConcurooParser.ConcurooParser.LogicalAndExpressionContext;
+import ConcurooParser.ConcurooParser.LogicalOrExpressionContext;
+import ConcurooParser.ConcurooParser.MultiplicativeExpressionContext;
+import ConcurooParser.ConcurooParser.SelectionStatementContext;
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.Node;
-import concuroo.nodes.expression.Expression;
+import concuroo.nodes.Expression;
 import concuroo.nodes.expression.SizeofSpecifier;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
@@ -21,12 +34,12 @@ import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.unaryExpression.SizeofExpression;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.ExpressionStatement;
-import concuroo.nodes.statement.IterationStatement;
-import concuroo.nodes.statement.iterationStatement.WhileStatement;
+import concuroo.nodes.statement.SelectionStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
+import concuroo.nodes.statement.selectionStatement.WhileStatement;
 import concuroo.symbol.SymbolTable;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -58,8 +71,19 @@ public class CSTVisitorTest {
     Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof CompoundStatement);
     assertEquals(1, ((CompoundStatement) n).size());
-    assertTrue(((CompoundStatement) n).getStatement(0) instanceof ReturnStatement);
+    assertTrue(((CompoundStatement) n).get(0) instanceof ReturnStatement);
     assertEquals(((CompoundStatement) n).getScope().getParent(), st);
+  }
+
+  @Test
+  public void visitCompoundStatementHasItsOwnScope() {
+    ConcurooParser parser = parse("{}");
+    CompoundStatementContext ctx = parser.compoundStatement();
+    Node n = new CSTVisitor(st).visit(ctx);
+    assertTrue(n instanceof CompoundStatement);
+    assertEquals(0, ((CompoundStatement) n).size());
+    assertNotSame(st, ((CompoundStatement) n).getScope());
+    assertEquals(st, ((CompoundStatement) n).getScope().getParent());
   }
 
   @Test
@@ -68,9 +92,9 @@ public class CSTVisitorTest {
     IterationStatementContext ctx = parser.iterationStatement();
 
     Node n = new CSTVisitor(new SymbolTable()).visit(ctx);
-    assertTrue(n instanceof IterationStatement);
+    assertTrue(n instanceof SelectionStatement);
 
-    IterationStatement statement = (IterationStatement) n;
+    SelectionStatement statement = (SelectionStatement) n;
     assertTrue(statement.getCondition() instanceof BoolLiteral);
     assertTrue(statement.getConsequence() instanceof ReturnStatement);
 
@@ -163,8 +187,6 @@ public class CSTVisitorTest {
     Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof ReturnStatement);
 
-    ReturnStatement returnValue = ((ReturnStatement) n);
-
     ReturnStatement expr = (ReturnStatement) n;
     TestBooleanLiteral((BoolLiteral) expr.getReturnValue(), true);
   }
@@ -175,10 +197,17 @@ public class CSTVisitorTest {
     CompoundStatementContext ctx = parser.compoundStatement();
 
     CompoundStatement cs = (CompoundStatement) new CSTVisitor(st).visit(ctx);
-    Node n = ((ExpressionStatement) cs.getStatement(1)).getExpr();
+    Node n = ((ExpressionStatement) cs.get(1)).getExpression();
     assertTrue(n instanceof AssignmentExpression);
-    assertTrue(((AssignmentExpression) n).getFirstOperand() instanceof VariableExpression);
-    assertTrue(((AssignmentExpression) n).getSecondOperand() instanceof IntLiteral);
+    AssignmentExpression aExpr = (AssignmentExpression) n;
+
+    assertTrue(aExpr.getFirstOperand() instanceof VariableExpression);
+    VariableExpression firstOperand = (VariableExpression) aExpr.getFirstOperand();
+    assertEquals(firstOperand.getIdentifier(), "a");
+
+    assertTrue(aExpr.getSecondOperand() instanceof IntLiteral);
+    IntLiteral intLit = (IntLiteral) aExpr.getSecondOperand();
+    assertEquals((int) intLit.getValue(), 1);
   }
 
   @Test
@@ -187,12 +216,17 @@ public class CSTVisitorTest {
     CompoundStatementContext ctx = parser.compoundStatement();
 
     CompoundStatement cs = (CompoundStatement) new CSTVisitor(st).visit(ctx);
-    Node n = ((ExpressionStatement) cs.getStatement(1)).getExpr();
+    Node n = ((ExpressionStatement) cs.get(1)).getExpression();
+    AssignmentExpression aExpr = (AssignmentExpression) n;
 
     assertTrue(n instanceof AssignmentExpression);
 
     AssignmentExpression returnValue = ((AssignmentExpression) n);
     assertTrue(returnValue.getFirstOperand() instanceof VariableExpression);
+
+    assertTrue(aExpr.getFirstOperand() instanceof VariableExpression);
+    VariableExpression firstOperand = (VariableExpression) aExpr.getFirstOperand();
+    assertEquals(firstOperand.getIdentifier(), "a");
 
     AssignmentExpression expr = (AssignmentExpression) n;
     TestBooleanLiteral((BoolLiteral) expr.getSecondOperand(), true);
@@ -310,8 +344,8 @@ public class CSTVisitorTest {
     SizeofSpecifier sExpr = (SizeofSpecifier) n;
     assertTrue(sExpr.getSpecifiers() != null);
     DeclarationSpecifierList decList = sExpr.getSpecifiers();
-    assertEquals(decList.getSpecifiersCount(), 1);
-    assertEquals(decList.getSpecifiers().get(0), "int");
+    assertEquals(decList.size(), 1);
+    assertEquals(decList.get(0), "int");
   }
 
   @Test
@@ -323,9 +357,9 @@ public class CSTVisitorTest {
     SizeofSpecifier sExpr = (SizeofSpecifier) n;
     assertTrue(sExpr.getSpecifiers() != null);
     DeclarationSpecifierList decList = sExpr.getSpecifiers();
-    assertEquals(decList.getSpecifiersCount(), 2);
-    assertEquals(decList.getSpecifiers().get(0), "long");
-    assertEquals(decList.getSpecifiers().get(1), "int");
+    assertEquals(decList.size(), 2);
+    assertEquals(decList.get(0), "long");
+    assertEquals(decList.get(1), "int");
   }
 
   private void TestBooleanLiteral(BoolLiteral boolLiteral, boolean Expected) {
@@ -345,7 +379,7 @@ public class CSTVisitorTest {
     assertEquals(Expected, intValue);
   }
 
-  private ConcurooParser parse(String input){
+  private ConcurooParser parse(String input) {
     ConcurooLexer lex = new ConcurooLexer(CharStreams.fromString(input));
     ConcurooParser parser = new ConcurooParser(new CommonTokenStream(lex));
     parser.setBuildParseTree(true);

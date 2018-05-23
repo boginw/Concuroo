@@ -1,0 +1,59 @@
+int DEL = 250;
+int LED1 = 12;
+int LED2 = 11;
+
+//setup routine
+void setup()
+{
+	pinMode(LED1, 1);
+	pinMode(LED2, 1);
+}
+
+void loop()
+{
+	chan int channel = make(chan int);
+	go sender(channel);
+
+	go flash(LED1, channel);
+	delay(DEL);
+
+	while(1) {
+		flashForAWhile(LED2, channel);
+	}
+
+	sizeof(int);
+
+
+  return 14;
+  return 14.14;
+  return "string";
+  return 'c';
+
+	delete channel;
+}
+
+void flashForAWhile(int led, chan int channel) {
+	delay(DEL * 5);
+	go flash(LED2, channel);
+	delay(DEL * 5);
+}
+
+void flash(int led, chan int channel)
+{
+	while (true)
+	{
+		digitalWrite(led, 1);
+		delay(<-channel);
+		digitalWrite(led, 0);
+		delay(<-channel);
+	}
+}
+
+void sender(chan int channel)
+{
+	int del = DEL;
+	while (1)
+	{
+		channel <- del;
+	}
+}

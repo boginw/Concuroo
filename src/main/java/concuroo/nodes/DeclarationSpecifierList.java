@@ -1,56 +1,25 @@
 package concuroo.nodes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 
-public class DeclarationSpecifierList implements Node {
+/**
+ * A list of specifiers, aka a list of strings
+ */
+public class DeclarationSpecifierList extends ArrayList<String> implements Node {
 
-  private List<String> specifiers = new ArrayList<>();
-
+  /**
+   * Default constructor
+   *
+   * @param specifiers A list of specifiers
+   */
   public DeclarationSpecifierList(List<String> specifiers) {
-    this.specifiers = specifiers;
-  }
-
-  /**
-   * Gets the count of specifiers in the declaration
-   *
-   * @return Size of the specifiers list
-   */
-  public int getSpecifiersCount() {
-    return specifiers.size();
-  }
-
-  /**
-   * Adds one or more specifier to the list of specifiers
-   *
-   * @param args One or more specifier
-   */
-  public void addSpecifier(String... args) {
-    Collections.addAll(specifiers, args);
-  }
-
-  /**
-   * Gets all specifiers
-   *
-   * @return List of all specifiers
-   */
-  public List<String> getSpecifiers() {
-    return specifiers;
-  }
-
-  /**
-   * Sets the declaration's specifiers
-   *
-   * @param specifiers List of specifiers
-   */
-  public void setSpecifiers(List<String> specifiers) {
-    this.specifiers = specifiers;
+    super(specifiers);
   }
 
   @Override
   public String getLiteral() {
-    return StringUtils.join(specifiers, " ");
+    return StringUtils.join(this, " ");
   }
 }

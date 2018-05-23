@@ -1,0 +1,8 @@
+int a = 23;
+
+void setup(){
+int b;
+}
+
+void loop(){
+}

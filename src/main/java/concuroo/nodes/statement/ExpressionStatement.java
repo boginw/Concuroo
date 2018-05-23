@@ -1,9 +1,14 @@
 package concuroo.nodes.statement;
 
 import concuroo.nodes.Statement;
-import concuroo.nodes.expression.Expression;
+import concuroo.nodes.Expression;
 
+/**
+ * In order to make assignments, call functions etc. We need an expression statement to evaluate
+ * arbitrary expressions without storing its return value
+ */
 public class ExpressionStatement implements Statement {
+
   private Expression expr;
 
   @Override
@@ -11,11 +16,11 @@ public class ExpressionStatement implements Statement {
     return expr.getLiteral() + ";";
   }
 
-  public Expression getExpr() {
+  public Expression getExpression() {
     return expr;
   }
 
-  public void setExpr(Expression expr) {
+  public void setExpression(Expression expr) {
     this.expr = expr;
   }
 }

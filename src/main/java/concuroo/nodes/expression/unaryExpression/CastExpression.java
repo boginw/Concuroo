@@ -1,24 +1,28 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import concuroo.ReturnType;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
-import concuroo.nodes.expression.CanSetOperator;
-import concuroo.nodes.expression.Expression;
-import concuroo.nodes.expression.PrimaryExpression;
+import concuroo.nodes.Expression;
+import concuroo.nodes.expression.UnaryExpression;
 
-public class CastExpression implements PrefixExpression, HasSpecifiers {
-
-  private PrimaryExpression firstOperand;
+/**
+ * This class represents an expression of the form (int) 2.4, that is, casting an operand to a diff-
+ * erent type
+ */
+public class CastExpression implements UnaryExpression, HasSpecifiers {
+  private ReturnType returnReturnType;
+  private Expression firstOperand;
   private DeclarationSpecifierList specifiers;
 
   @Override
   public Expression getFirstOperand() {
-    return (Expression) firstOperand;
+    return firstOperand;
   }
 
   @Override
   public void setFirstOperand(Expression firstOperand) {
-    this.firstOperand = (PrimaryExpression) firstOperand;
+    this.firstOperand = firstOperand;
   }
 
   @Override
@@ -39,5 +43,15 @@ public class CastExpression implements PrefixExpression, HasSpecifiers {
   @Override
   public void setSpecifiers(DeclarationSpecifierList specifiers) {
     this.specifiers = specifiers;
+  }
+
+  @Override
+  public ReturnType getReturnType() {
+    return returnReturnType;
+  }
+
+  @Override
+  public void setReturnType(ReturnType returnReturnType) {
+    this.returnReturnType = returnReturnType;
   }
 }
