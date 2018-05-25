@@ -154,7 +154,11 @@ public class ArduinoCodeGeneratorTest {
             + prefixer + "c)\n"
             + "{\n"
             + "LinkedList<int> goroutines__started;\n"
-            + "return;\n"
+            + "{\n"
+            + "while(goroutines__started.size()){\n"
+            + "kill(goroutines__started.shift());\n"
+            + "}return;\n"
+            + "}\n"
             + "while(goroutines__started.size()){\n"
             + "kill(goroutines__started.shift());\n"
             + "}\n"
@@ -231,7 +235,11 @@ public class ArduinoCodeGeneratorTest {
         + "int *" + prefixer + "c = main__params->" + prefixer + "c;\n"
         + "Channel<int > *" + prefixer + "d = main__params->" + prefixer + "d;\n"
         + "\n"
-        + "return;\n"
+        + "{\n"
+        + "while(goroutines__started.size()){\n"
+        + "kill(goroutines__started.shift());\n"
+        + "}return;\n"
+        + "}\n"
         + "while(goroutines__started.size()){\n"
         + "kill(goroutines__started.shift());\n"
         + "}"
@@ -314,7 +322,12 @@ public class ArduinoCodeGeneratorTest {
     cs.add(var);
     cs.add(ret);
 
-    String Expected = "{\nint " + prefixer + "a = 15;\n\nreturn " + prefixer + "a;\n}";
+    String Expected = "{\nint " + prefixer + "a = 15;\n\n{\n"
+        + "while(goroutines__started.size()){\n"
+        + "kill(goroutines__started.shift());\n"
+        + "}return " + prefixer + "a;\n"
+        + "}\n"
+        + "}";
 
     cg.visit(cs);
 
@@ -376,23 +389,23 @@ public class ArduinoCodeGeneratorTest {
   public void whileStatement() {
     WhileStatement wstm = new WhileStatement();
     wstm.setCondition(new BoolLiteral(true));
-    wstm.setConsequence(new ReturnStatement());
+    wstm.setConsequence(new BreakStatement());
 
     cg.visit(wstm);
 
-    String Expected = "while(true)return;";
+    String Expected = "while(true)break;";
 
     assertStringEqual(Expected, mockTarget.getOutput());
 
     mockTarget.clear();
 
     CompoundStatement stm = new CompoundStatement();
-    stm.add(new ReturnStatement());
+    stm.add(new BreakStatement());
     wstm.setConsequence(stm);
 
     cg.visit(wstm);
 
-    Expected = "while(true){\nreturn;\n}";
+    Expected = "while(true){\nbreak;\n}";
     assertStringEqual(Expected, mockTarget.getOutput());
   }
 
@@ -424,7 +437,11 @@ public class ArduinoCodeGeneratorTest {
 
     cg.visit(rstm);
 
-    String Expected = "return;";
+    String Expected = "{\n"
+        + "while(goroutines__started.size()){\n"
+        + "kill(goroutines__started.shift());\n"
+        + "}return;\n"
+        + "}";
 
     assertStringEqual(Expected, mockTarget.getOutput());
 
@@ -434,7 +451,11 @@ public class ArduinoCodeGeneratorTest {
 
     cg.visit(rstm);
 
-    Expected = "return 2;";
+    Expected = "{\n"
+        + "while(goroutines__started.size()){\n"
+        + "kill(goroutines__started.shift());\n"
+        + "}return 2;\n"
+        + "}";
 
     assertStringEqual(Expected, mockTarget.getOutput());
   }
@@ -443,29 +464,29 @@ public class ArduinoCodeGeneratorTest {
   public void ifStatement() {
     IfStatement istm = new IfStatement();
     istm.setCondition(new BoolLiteral(true));
-    istm.setConsequence(new ReturnStatement());
+    istm.setConsequence(new BreakStatement());
 
     cg.visit(istm);
-    String Expected = "if(true)return;";
+    String Expected = "if(true)break;";
     assertStringEqual(Expected, mockTarget.getOutput());
 
     mockTarget.clear();
 
     CompoundStatement stm = new CompoundStatement();
-    stm.add(new ReturnStatement());
+    stm.add(new BreakStatement());
     istm.setConsequence(stm);
 
     cg.visit(istm);
-    Expected = "if(true){\nreturn;\n}";
+    Expected = "if(true){\nbreak;\n}";
     assertStringEqual(Expected, mockTarget.getOutput());
 
     mockTarget.clear();
 
-    istm.setConsequence(new ReturnStatement());
-    istm.setAlternative(new ReturnStatement());
+    istm.setConsequence(new BreakStatement());
+    istm.setAlternative(new BreakStatement());
 
     cg.visit(istm);
-    Expected = "if(true)return;\n else return;\n";
+    Expected = "if(true)break;\n else break;\n";
     assertStringEqual(Expected, mockTarget.getOutput());
 
     mockTarget.clear();
@@ -474,7 +495,7 @@ public class ArduinoCodeGeneratorTest {
     istm.setAlternative(stm);
 
     cg.visit(istm);
-    Expected = "if(true){\nreturn;\n}\n else {\nreturn;\n}\n";
+    Expected = "if(true){\nbreak;\n}\n else {\nbreak;\n}\n";
     assertStringEqual(Expected, mockTarget.getOutput());
   }
 

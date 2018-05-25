@@ -17,12 +17,12 @@ void loop()
 	go flash(LED1, channel);
 	delay(DEL);
 
+  return;
 	while(1) {
 		flashForAWhile(LED2, channel);
 	}
 
 	sizeof(int);
-
 
   return 14;
   return 14.14;

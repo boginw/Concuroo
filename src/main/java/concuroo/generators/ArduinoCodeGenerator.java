@@ -50,6 +50,11 @@ public class ArduinoCodeGenerator implements CodeGenerator {
   private String concu_prefix = "__concuroo__";
   private int numOfGoRoutinesCalled = 0;
   private final Builder targetBuilder;
+  private RawStatement killwhile = new RawStatement(
+      "while(goroutines__started.size()){\n"
+          + "kill(goroutines__started.shift());\n"
+          + "}");
+
 
   public ArduinoCodeGenerator() {
     this(new Builder());
@@ -99,9 +104,10 @@ public class ArduinoCodeGenerator implements CodeGenerator {
 
     functionDeclaration.getBody().addToTop(linklist);
 
-    RawStatement killwhile = new RawStatement("while(goroutines__started.size()){\n"
+    /*RawStatement killwhile = new RawStatement(
+        "while(goroutines__started.size()){\n"
         + "kill(goroutines__started.shift());\n"
-        + "}");
+        + "}");*/
 
     functionDeclaration.getBody().add(killwhile);
 
@@ -309,6 +315,10 @@ public class ArduinoCodeGenerator implements CodeGenerator {
   }
 
   public void visit(ReturnStatement returnStatement, Builder targetBuilder) {
+    // we ensure that we always kill all coroutines
+    targetBuilder.add("{\n");
+    visit(killwhile, targetBuilder);
+
     targetBuilder.add("return ");
     if (returnStatement.getReturnValue() != null) {
       visit(returnStatement.getReturnValue());
@@ -316,6 +326,7 @@ public class ArduinoCodeGenerator implements CodeGenerator {
       targetBuilder.removeLastCharacter();
     }
     targetBuilder.add(";");
+    targetBuilder.add("\n}");
   }
 
   @Override
