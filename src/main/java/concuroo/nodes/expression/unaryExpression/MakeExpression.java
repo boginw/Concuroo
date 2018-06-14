@@ -1,10 +1,13 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import ConcurooParser.ConcurooParser.InitializerContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
 import concuroo.nodes.Node;
 import concuroo.nodes.Expression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents the make expressions, which are of the form `make(chan int)` or something
@@ -28,6 +31,15 @@ public class MakeExpression implements Node, HasSpecifiers, Expression {
   @Override
   public String getLiteral() {
     return "make(" + specifiers.getLiteral() + ")";
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    InitializerContext actx = Node.checkCtx(ctx, InitializerContext.class);
+
+    setSpecifiers(Node.parseDeclarationSpecifiers(actx.declarationSpecifiers()));
+
+    return this;
   }
 
   @Override

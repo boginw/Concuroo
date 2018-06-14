@@ -1,8 +1,12 @@
 package concuroo.nodes.statement.selectionStatement;
 
+import ConcurooParser.ConcurooParser.IfStatementContext;
+import concuroo.CSTVisitor;
+import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
 import concuroo.nodes.statement.SelectionStatement;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents the if statement, which is of the form: if(condition) consequence OR
@@ -63,6 +67,22 @@ public class IfStatement implements SelectionStatement {
     }
 
     return sb.toString();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    Node.checkCtx(ctx, IfStatementContext.class);
+
+    if (ctx.children.size() == 3) {
+      IfStatement st = (IfStatement) visitor.visit(ctx.getChild(0));
+      st.setAlternative((Statement) visitor.visit(ctx.getChild(2)));
+      return st;
+    }
+
+    setCondition((Expression) visitor.visit(ctx.getChild(2)));
+    setConsequence((Statement) visitor.visit(ctx.getChild(4)));
+
+    return this;
   }
 
 }

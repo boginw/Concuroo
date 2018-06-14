@@ -1,7 +1,11 @@
 package concuroo.nodes.statement.jumpStatement;
 
+import ConcurooParser.ConcurooParser.JumpStatementContext;
+import concuroo.CSTVisitor;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.statement.JumpStatement;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an statement of the form return and return exp
@@ -28,5 +32,20 @@ public class ReturnStatement implements JumpStatement {
     }
     sb.append(";");
     return sb.toString();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    JumpStatementContext actx = Node.checkCtx(ctx, JumpStatementContext.class);
+
+    if (ctx.children.size() == 3) {
+      setReturnValue((Expression) visitor.visitExpression(actx.expression()));
+
+    } else if (ctx.children.size() == 1) {
+
+      throw new RuntimeException("Missing semicolon");
+    }
+
+    return this;
   }
 }

@@ -1,6 +1,7 @@
 package concuroo.generators;
 
 import concuroo.Builder;
+import concuroo.CSTVisitor;
 import concuroo.CodeGenerator;
 import concuroo.Stdlib;
 import concuroo.exceptions.ExpressionNotFoundException;
@@ -44,6 +45,7 @@ import concuroo.nodes.statement.selectionStatement.IfStatement;
 import concuroo.nodes.statement.selectionStatement.WhileStatement;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 public class ArduinoCodeGenerator implements CodeGenerator {
 
@@ -54,6 +56,7 @@ public class ArduinoCodeGenerator implements CodeGenerator {
       "while(goroutines__started.size()){\n"
           + "kill(goroutines__started.shift());\n"
           + "}");
+  private RawStatement linklist = new RawStatement("LinkedList<int> goroutines__started;");
 
 
   public ArduinoCodeGenerator() {
@@ -100,15 +103,7 @@ public class ArduinoCodeGenerator implements CodeGenerator {
       injectGoParamStructDeref(functionDeclaration, targetBuilder);
     }
 
-    RawStatement linklist = new RawStatement("LinkedList<int> goroutines__started;");
-
     functionDeclaration.getBody().addToTop(linklist);
-
-    /*RawStatement killwhile = new RawStatement(
-        "while(goroutines__started.size()){\n"
-        + "kill(goroutines__started.shift());\n"
-        + "}");*/
-
     functionDeclaration.getBody().add(killwhile);
 
     targetBuilder.startPrototype();
@@ -352,7 +347,7 @@ public class ArduinoCodeGenerator implements CodeGenerator {
   }
 
   public void visit(ExpressionStatement expressionStatement, Builder targetBuilder) {
-    if(expressionStatement.getExpression() != null) {
+    if (expressionStatement.getExpression() != null) {
       visit(expressionStatement.getExpression(), targetBuilder);
       targetBuilder.add(";");
     }
@@ -710,6 +705,11 @@ public class ArduinoCodeGenerator implements CodeGenerator {
 
     @Override
     public String getLiteral() {
+      return null;
+    }
+
+    @Override
+    public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
       return null;
     }
   }

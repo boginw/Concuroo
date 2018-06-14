@@ -1,12 +1,19 @@
 package concuroo.nodes;
 
+import ConcurooParser.ConcurooParser.FunctionDeclarationContext;
+import ConcurooParser.ConcurooParser.ParameterListContext;
+import ConcurooParser.ConcurooParser.ParameterTypeListContext;
+import concuroo.CSTVisitor;
 import concuroo.CodeGenerator;
 import concuroo.nodes.expression.Identifier;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.VariableDeclaration;
 import concuroo.symbol.SymbolTable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -137,5 +144,53 @@ public class FunctionDeclaration extends ArrayList<VariableDeclaration> implemen
         // TODO: why not get literal of body?
 //        .getLiteral();
         ;
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    FunctionDeclarationContext actx = Node.checkCtx(ctx, FunctionDeclarationContext.class);
+
+    visitor.scopeIn(getScope());
+    // Step 1: Fetch all type specifiers
+    if (actx.declarationSpecifiers() != null) {
+      setSpecifiers(Node.parseDeclarationSpecifiers(ctx.getChild(0)));
+    }
+
+    // Step 2: Check if pointer
+    if (actx.pointer() != null) {
+      setPointer(true);
+    }
+
+    // Step 3: Fetch identifier name
+    setIdentifier(actx.Identifier().getText());
+    // Step 4: Get parameters
+    if (actx.parameterTypeList() != null) {
+      ParameterTypeListContext ptlc = actx.parameterTypeList();
+
+      ParseTree child = ptlc.getChild(0);
+
+      // Go down the rabbit hole
+      while (child instanceof ParameterListContext) {
+        ParameterListContext castedChild = (ParameterListContext) child;
+        // If there are more siblings
+        if (castedChild.children.size() == 3) {
+          add((VariableDeclaration) visitor.visit(castedChild.getChild(2)));
+        }
+
+        // Go down
+        child = castedChild.getChild(0);
+      }
+
+      // Add the last parameter (or first, if we never went down the rabbit hole)
+      add((VariableDeclaration) visitor.visit(child));
+      Collections.reverse(this);
+    }
+
+    setBody((CompoundStatement) visitor.visitCompoundStatement(actx.compoundStatement()));
+
+    visitor.scopeOut();
+    visitor.getGlobal().insert(this);
+
+    return this;
   }
 }

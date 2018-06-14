@@ -1,8 +1,12 @@
 package concuroo.nodes.expression.literalExpression;
 
+import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.LiteralExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents the domain of booleans (true, false)
@@ -10,6 +14,10 @@ import concuroo.nodes.expression.LiteralExpression;
 public class BoolLiteral implements LiteralExpression<Boolean> {
 
   private boolean value;
+
+  public BoolLiteral() {
+
+  }
 
   /**
    * The default constructor
@@ -33,6 +41,14 @@ public class BoolLiteral implements LiteralExpression<Boolean> {
   @Override
   public String getLiteral() {
     return String.valueOf(value);
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    PrimaryExpressionContext actx = Node.checkCtx(ctx, PrimaryExpressionContext.class);
+    setValue(actx.boolLiteral().getChild(0).toString().equals("true"));
+
+    return this;
   }
 
   @Override

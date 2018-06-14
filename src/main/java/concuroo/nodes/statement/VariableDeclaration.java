@@ -1,19 +1,28 @@
 package concuroo.nodes.statement;
 
+import ConcurooParser.ConcurooParser.DeclarationSpecifiersContext;
+import ConcurooParser.ConcurooParser.DeclarationStatementContext;
+import ConcurooParser.ConcurooParser.DeclaratorContext;
+import ConcurooParser.ConcurooParser.DirectDeclaratorContext;
+import ConcurooParser.ConcurooParser.InitDeclaratorContext;
+import ConcurooParser.ConcurooParser.ParameterDeclarationContext;
+import concuroo.CSTVisitor;
 import concuroo.CodeGenerator;
 import concuroo.ReturnType;
 import concuroo.nodes.Declaration;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
+import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
 import concuroo.nodes.expression.Identifier;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.commons.lang3.StringUtils;
 
 public class VariableDeclaration implements Statement, Expression, Identifier, HasSpecifiers,
     Declaration {
 
-  private DeclarationSpecifierList specifiers;
+  private DeclarationSpecifierList specifiers = new DeclarationSpecifierList();
 
   private ReturnType returnReturnType;
   private boolean pointer = false;
@@ -27,7 +36,9 @@ public class VariableDeclaration implements Statement, Expression, Identifier, H
   /**
    * Default constructor
    */
-  public VariableDeclaration() {}
+  public VariableDeclaration() {
+
+  }
 
   /**
    * Constructs a VariableDeclaration
@@ -182,6 +193,64 @@ public class VariableDeclaration implements Statement, Expression, Identifier, H
         (pointer ? '*' : "") + identifier + (isArray ? '[' + arraySize.getLiteral()
         + ']' : "") + (initializer != null ? " = " + initializer.getLiteral() : "") +
         (isParam() ? "" : ";");
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    // Step 1: Down the rabbit hole
+    InitDeclaratorContext initDeclarator;
+    DeclaratorContext declarator;
+    DirectDeclaratorContext directDeclarator;
+
+    if(ctx instanceof ParameterDeclarationContext) {
+      declarator = ((ParameterDeclarationContext) ctx).declarator();
+      directDeclarator = declarator.directDeclarator();
+      setParam(true);
+    } else if(ctx instanceof DeclarationStatementContext) {
+      initDeclarator = (InitDeclaratorContext) ctx.getChild(1);
+      declarator = initDeclarator.declarator();
+      directDeclarator = declarator.directDeclarator();
+
+      // Step 6: Check if it has initializer?
+      if (initDeclarator.children.size() > 1) {
+        setInitializer((Expression) visitor.visitInitializer(initDeclarator.initializer())
+        );
+      }
+
+      if (visitor.getGlobal().isGlobalScope()) {
+        setGlobal(true);
+      }
+
+    } else {
+      throw new RuntimeException("Invalid context");
+    }
+
+    // Step 2: Fetch all type specifiers
+    if (ctx.getChild(0) instanceof DeclarationSpecifiersContext) {
+      setSpecifiers(Node.parseDeclarationSpecifiers(ctx.getChild(0)));
+    }
+
+    // Step 3: Check if it is a pointer
+    if (declarator.children.size() > 1) {
+      setPointer(true);
+    }
+
+    // Step 4: Find the identifier
+    setIdentifier(directDeclarator.getChild(0).getText());
+
+    // Step 5: Check if it is an array declaration
+    if (directDeclarator.children.size() > 1) {
+      setArraySize(
+          (Expression) visitor.visitAssignmentExpression(directDeclarator.assignmentExpression())
+      );
+    }
+
+    if (!isParam()) {
+      visitor.getGlobal().insert(this);
+    }
+
+    // Step 7: Profit?
+    return this;
   }
 
   @Override

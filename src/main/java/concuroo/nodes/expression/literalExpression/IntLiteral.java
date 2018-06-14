@@ -1,16 +1,24 @@
 package concuroo.nodes.expression.literalExpression;
 
+import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.LiteralExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents the domain of integer numbers
  */
 public class IntLiteral implements LiteralExpression<Integer> {
 
-  private ReturnType returnReturnType = new ReturnType();
+  private ReturnType returnType = new ReturnType();
   private int value;
+
+  public IntLiteral() {
+    returnType.type = Types.INT;
+  }
 
   /**
    * The default constructor
@@ -19,7 +27,7 @@ public class IntLiteral implements LiteralExpression<Integer> {
    */
   public IntLiteral(int value) {
     this.value = value;
-    returnReturnType.type = Types.INT;
+    returnType.type = Types.INT;
   }
 
   @Override
@@ -38,8 +46,16 @@ public class IntLiteral implements LiteralExpression<Integer> {
   }
 
   @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    PrimaryExpressionContext actx = Node.checkCtx(ctx, PrimaryExpressionContext.class);
+    setValue(Integer.valueOf(actx.Number().getSymbol().getText()));
+
+    return this;
+  }
+
+  @Override
   public ReturnType getReturnType() {
-    return returnReturnType;
+    return returnType;
   }
 
   @Override

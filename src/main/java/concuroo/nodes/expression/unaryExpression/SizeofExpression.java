@@ -1,9 +1,13 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.UnaryExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an expression of sizeof(1+1), that is the size of the expression 1+1.
@@ -12,6 +16,10 @@ public class SizeofExpression implements UnaryExpression {
 
   private Expression firstOperand;
   private ReturnType returnReturnType;
+
+  public SizeofExpression() {
+    this(null);
+  }
 
   /**
    * Default constructor
@@ -42,6 +50,13 @@ public class SizeofExpression implements UnaryExpression {
   @Override
   public String getLiteral() {
     return getOperator() + " " + getFirstOperand().getLiteral();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    UnaryExpressionContext actx = Node.checkCtx(ctx, UnaryExpressionContext.class);
+    setFirstOperand((Expression) visitor.visitUnaryExpression(actx.unaryExpression()));
+    return this;
   }
 
   @Override

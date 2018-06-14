@@ -1,8 +1,12 @@
 package concuroo.nodes.expression.literalExpression;
 
+import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.LiteralExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents the domain of rational numbers
@@ -10,7 +14,8 @@ import concuroo.nodes.expression.LiteralExpression;
 public class FloatLiteral implements LiteralExpression<Double> {
 
   private double value;
-  private ReturnType returnReturnType = new ReturnType();
+
+  public FloatLiteral(){}
 
   /**
    * Default constructor
@@ -19,7 +24,6 @@ public class FloatLiteral implements LiteralExpression<Double> {
    */
   public FloatLiteral(double value) {
     this.value = value;
-    returnReturnType.type = Types.DOUBLE;
   }
 
   @Override
@@ -38,8 +42,18 @@ public class FloatLiteral implements LiteralExpression<Double> {
   }
 
   @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    PrimaryExpressionContext actx = Node.checkCtx(ctx, PrimaryExpressionContext.class);
+    setValue(Double.valueOf(actx.DoubleLiteral().getSymbol().getText()));
+
+    return this;
+  }
+
+  @Override
   public ReturnType getReturnType() {
-    return returnReturnType;
+    return new ReturnType() {{
+      type = Types.DOUBLE;
+    }};
   }
 
   @Override

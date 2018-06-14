@@ -1,10 +1,16 @@
 package concuroo.nodes.expression;
 
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.Expression;
 import concuroo.nodes.HasSpecifiers;
+import concuroo.nodes.Node;
+import java.util.List;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  * This class represents an expression of the form sizeof(long int)
@@ -12,7 +18,13 @@ import concuroo.nodes.HasSpecifiers;
 public class SizeofSpecifier implements Expression, HasSpecifiers {
 
   private ReturnType returnReturnType;
-  private DeclarationSpecifierList specifiers;
+  private DeclarationSpecifierList specifiers = new DeclarationSpecifierList();
+
+  /**
+   * Default constructor
+   */
+  public SizeofSpecifier() {
+  }
 
   /**
    * Default constructor
@@ -21,13 +33,24 @@ public class SizeofSpecifier implements Expression, HasSpecifiers {
    */
   public SizeofSpecifier(DeclarationSpecifierList specifiers) {
     setSpecifiers(specifiers);
-    returnReturnType = new ReturnType();
-    returnReturnType.type = Types.INT;
   }
 
   @Override
   public String getLiteral() {
     return "sizeof" + "(" + getSpecifiers().getLiteral() + ")";
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    UnaryExpressionContext actx = Node.checkCtx(ctx, UnaryExpressionContext.class);
+
+    List<ParseTree> operators = actx.declarationSpecifiers().children;
+
+    for (ParseTree operator : operators) {
+      getSpecifiers().add(operator.getText());
+    }
+
+    return this;
   }
 
   @Override
@@ -42,7 +65,9 @@ public class SizeofSpecifier implements Expression, HasSpecifiers {
 
   @Override
   public ReturnType getReturnType() {
-    return returnReturnType;
+    return new ReturnType(){{
+      type = Types.INT;
+    }};
   }
 
   @Override

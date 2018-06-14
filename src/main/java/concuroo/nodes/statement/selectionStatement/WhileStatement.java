@@ -1,8 +1,12 @@
 package concuroo.nodes.statement.selectionStatement;
 
+import ConcurooParser.ConcurooParser.IterationStatementContext;
+import concuroo.CSTVisitor;
+import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
 import concuroo.nodes.statement.SelectionStatement;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents a statement of the form: while(condition) statements
@@ -35,5 +39,15 @@ public class WhileStatement implements SelectionStatement {
   @Override
   public String getLiteral() {
     return "while(" + condition.getLiteral() + ") " + consequence.getLiteral();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    Node.checkCtx(ctx, IterationStatementContext.class);
+
+    setCondition((Expression) visitor.visit(ctx.getChild(2)));
+    setConsequence((Statement) visitor.visit(ctx.getChild(4)));
+
+    return this;
   }
 }

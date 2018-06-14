@@ -1,7 +1,10 @@
 package concuroo.mocks;
 
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 public class ExpressionMock implements Expression {
 
@@ -17,6 +20,11 @@ public class ExpressionMock implements Expression {
 
   @Override
   public String getLiteral() {
+    return null;
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
     return null;
   }
 }

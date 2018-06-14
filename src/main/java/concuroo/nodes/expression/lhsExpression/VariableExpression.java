@@ -1,10 +1,14 @@
 package concuroo.nodes.expression.lhsExpression;
 
+import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.HasDefinition;
-import concuroo.nodes.expression.LHSExpression;
 import concuroo.nodes.expression.Identifier;
+import concuroo.nodes.expression.LHSExpression;
 import concuroo.nodes.statement.VariableDeclaration;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an variable used in an expression.
@@ -14,6 +18,9 @@ public class VariableExpression implements LHSExpression, Identifier,
 
   private String identifier;
   private VariableDeclaration definition;
+
+  public VariableExpression() {
+  }
 
   /**
    * Default constructor
@@ -29,6 +36,24 @@ public class VariableExpression implements LHSExpression, Identifier,
   @Override
   public String getLiteral() {
     return identifier;
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    PrimaryExpressionContext actx = Node.checkCtx(ctx, PrimaryExpressionContext.class);
+    String id = actx.Identifier().getText();
+
+    VariableDeclaration def = (VariableDeclaration) visitor.getGlobal().lookup(id);
+
+    if (def == null) {
+      throw new RuntimeException(
+          "Variable Definition was not found in Variable " + id);
+    }
+
+    setDefinition(def);
+    setIdentifier(id);
+
+    return this;
   }
 
   @Override

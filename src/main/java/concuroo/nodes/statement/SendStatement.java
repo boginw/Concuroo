@@ -1,10 +1,15 @@
 package concuroo.nodes.statement;
 
 
+import ConcurooParser.ConcurooParser.SendStatementContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.binaryExpression.BinaryExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents a statement of the form c <- 1, that is, a send statement. In order to have
@@ -17,6 +22,16 @@ public class SendStatement extends BinaryExpression implements Statement {
   @Override
   public String getLiteral() {
     return getFirstOperand().getLiteral() + " <- " + getSecondOperand().getLiteral();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    Node.checkCtx(ctx, SendStatementContext.class);
+
+    setFirstOperand((Expression) visitor.visit(ctx.getChild(0)));
+    setSecondOperand((Expression) visitor.visit(ctx.getChild(2)));
+
+    return this;
   }
 
   @Override

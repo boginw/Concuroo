@@ -1,11 +1,16 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import ConcurooParser.ConcurooParser.PostfixExpressionContext;
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
-import concuroo.nodes.expression.CanSetOperator;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
+import concuroo.nodes.expression.CanSetOperator;
 import concuroo.nodes.expression.LHSExpression;
 import concuroo.nodes.expression.UnaryExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an expression of the form ++a, --a, a++, a--
@@ -81,6 +86,25 @@ public class IncrementDecrementExpression implements UnaryExpression, CanSetOper
       return operator + operand.getLiteral();
     }
     return operand.getLiteral() + operator;
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    if (ctx instanceof PostfixExpressionContext) {
+      setFirstOperand((Expression) visitor.visit(ctx.getChild(0)));
+      setOperator(ctx.getChild(1).getText());
+      setPrefix(false);
+
+      return this;
+    }
+
+    UnaryExpressionContext actx = Node.checkCtx(ctx, UnaryExpressionContext.class);
+
+    setFirstOperand((Expression) visitor.visit(ctx.getChild(1)));
+    setOperator(actx.unaryOperator().getText());
+    setPrefix(true);
+
+    return this;
   }
 
   @Override

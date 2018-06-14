@@ -1,10 +1,17 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import ConcurooParser.ConcurooParser;
+import ConcurooParser.ConcurooParser.CastExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.UnaryExpression;
+import java.util.ArrayList;
+import java.util.List;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an expression of the form (int) 2.4, that is, casting an operand to a diff-
@@ -33,6 +40,25 @@ public class CastExpression implements UnaryExpression, HasSpecifiers {
   @Override
   public String getLiteral() {
     return "(" + specifiers.getLiteral() + ") " + getFirstOperand().getLiteral();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    CastExpressionContext actx = Node.checkCtx(ctx, CastExpressionContext.class);
+
+    if (ctx.getChild(0) instanceof ConcurooParser.UnaryExpressionContext) {
+      return visitor.visitUnaryExpression(actx.unaryExpression());
+    }
+
+    List<String> stringList = new ArrayList<>();
+    stringList.add(ctx.getChild(1).getText());
+
+    DeclarationSpecifierList decList = new DeclarationSpecifierList(stringList);
+
+    setSpecifiers(decList);
+    setFirstOperand((Expression) visitor.visit(ctx.getChild(3)));
+
+    return this;
   }
 
   @Override

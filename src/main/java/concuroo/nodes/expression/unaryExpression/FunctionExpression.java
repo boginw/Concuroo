@@ -1,11 +1,15 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import ConcurooParser.ConcurooParser.PostfixExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.nodes.ArgumentExpressionList;
-import concuroo.nodes.FunctionDeclaration;
 import concuroo.nodes.Expression;
+import concuroo.nodes.FunctionDeclaration;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.HasDefinition;
 import concuroo.nodes.expression.Identifier;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an expression of the form a(1,2,3), that is, a function call
@@ -20,6 +24,12 @@ public class FunctionExpression implements Expression, Identifier,
 
   /**
    * Default constructor
+   */
+  public FunctionExpression() {
+  }
+
+  /**
+   * Default constructor
    *
    * @param identifier The identifier of the function call
    */
@@ -29,6 +39,7 @@ public class FunctionExpression implements Expression, Identifier,
 
   /**
    * Sets the parameters of the function call
+   *
    * @param parameters The parameters of the function call
    */
   public void setParameterList(ArgumentExpressionList parameters) {
@@ -37,6 +48,7 @@ public class FunctionExpression implements Expression, Identifier,
 
   /**
    * Gets the parameters of the function call
+   *
    * @return The parameters of the function call
    */
   public ArgumentExpressionList getParameterList() {
@@ -59,6 +71,19 @@ public class FunctionExpression implements Expression, Identifier,
       return identifier + " " + parameters.getLiteral();
     }
     return identifier;
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    PostfixExpressionContext actx = Node.checkCtx(ctx, PostfixExpressionContext.class);
+
+    setIdentifier(ctx.getChild(0).getText());
+
+    if (actx.argumentExpressionList() != null) {
+      setParameterList((ArgumentExpressionList) visitor.visit(actx.argumentExpressionList()));
+    }
+
+    return this;
   }
 
   @Override

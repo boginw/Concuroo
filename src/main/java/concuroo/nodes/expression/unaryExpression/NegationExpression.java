@@ -1,17 +1,27 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.UnaryExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an expression of the form !a
  */
 public class NegationExpression implements UnaryExpression {
 
-  private ReturnType returnReturnType;
   private Expression firstOperand;
+
+  /**
+   * Default constructor
+   */
+  public NegationExpression() {
+
+  }
 
   /**
    * Default constructor
@@ -20,8 +30,6 @@ public class NegationExpression implements UnaryExpression {
    */
   public NegationExpression(Expression firstOperand) {
     setFirstOperand(firstOperand);
-    returnReturnType = new ReturnType();
-    returnReturnType.type = Types.BOOL;
   }
 
   @Override
@@ -45,8 +53,19 @@ public class NegationExpression implements UnaryExpression {
   }
 
   @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    Node.checkCtx(ctx, UnaryExpressionContext.class);
+
+    setFirstOperand((Expression) visitor.visit(ctx.getChild(1)));
+
+    return this;
+  }
+
+  @Override
   public ReturnType getReturnType() {
-    return returnReturnType;
+    return new ReturnType() {{
+      type = Types.BOOL;
+    }};
   }
 
   @Override

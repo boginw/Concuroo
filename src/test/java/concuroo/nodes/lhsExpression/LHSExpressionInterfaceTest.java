@@ -2,10 +2,13 @@ package concuroo.nodes.lhsExpression;
 
 import static org.junit.Assert.*;
 
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.LHSExpression;
 
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.Test;
 
 public class LHSExpressionInterfaceTest {
@@ -16,6 +19,11 @@ public class LHSExpressionInterfaceTest {
 
     @Override
     public String getLiteral() {
+      return null;
+    }
+
+    @Override
+    public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
       return null;
     }
 

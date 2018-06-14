@@ -1,9 +1,13 @@
 package concuroo.nodes.expression.lhsExpression;
 
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.LHSExpression;
 import concuroo.nodes.expression.UnaryExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an expression of the form *a. This class represents the dereferencing of an
@@ -13,6 +17,12 @@ public class DereferenceExpression implements LHSExpression, UnaryExpression {
 
   private ReturnType returnReturnType;
   private Expression firstOperand;
+
+  /**
+   * Default constructor
+   */
+  public DereferenceExpression() {
+  }
 
   /**
    * Default constructor
@@ -41,6 +51,15 @@ public class DereferenceExpression implements LHSExpression, UnaryExpression {
   @Override
   public String getLiteral() {
     return getOperator() + getFirstOperand().getLiteral();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    Node.checkCtx(ctx, UnaryExpressionContext.class);
+
+    setFirstOperand((Expression) visitor.visit(ctx.getChild(1)));
+
+    return this;
   }
 
   @Override

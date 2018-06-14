@@ -2,11 +2,14 @@ package concuroo.nodes.statement.selectionStatement;
 
 import static org.junit.Assert.*;
 
+import concuroo.CSTVisitor;
+import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
 import concuroo.nodes.statement.JumpStatement;
 import concuroo.nodes.statement.SelectionStatement;
+import org.antlr.v4.runtime.ParserRuleContext;
 import org.junit.Test;
 
 public class IfStatementTest {
@@ -34,6 +37,11 @@ public class IfStatementTest {
       public String getLiteral() {
         return "const";
       }
+
+      @Override
+      public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+        return null;
+      }
     };
     st.setConsequence(stat);
 
@@ -47,6 +55,11 @@ public class IfStatementTest {
       @Override
       public String getLiteral() {
         return "alt";
+      }
+
+      @Override
+      public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+        return null;
       }
     };
     st.setAlternative(stat);

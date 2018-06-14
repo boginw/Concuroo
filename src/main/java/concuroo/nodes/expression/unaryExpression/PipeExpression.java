@@ -1,8 +1,12 @@
 package concuroo.nodes.expression.unaryExpression;
 
+import ConcurooParser.ConcurooParser.UnaryExpressionContext;
+import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.nodes.Expression;
+import concuroo.nodes.Node;
 import concuroo.nodes.expression.UnaryExpression;
+import org.antlr.v4.runtime.ParserRuleContext;
 
 /**
  * This class represents an expression of the form <-c, that is receiving from a channel
@@ -11,6 +15,10 @@ public class PipeExpression implements UnaryExpression {
 
   private Expression firstOperand;
   private ReturnType returnReturnType;
+
+  public PipeExpression() {
+
+  }
 
   /**
    * Default constructor
@@ -39,6 +47,15 @@ public class PipeExpression implements UnaryExpression {
   @Override
   public String getLiteral() {
     return getOperator() + getFirstOperand().getLiteral();
+  }
+
+  @Override
+  public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
+    Node.checkCtx(ctx, UnaryExpressionContext.class);
+
+    setFirstOperand((Expression) visitor.visit(ctx.getChild(1)));
+
+    return this;
   }
 
   @Override

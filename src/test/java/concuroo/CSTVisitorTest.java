@@ -1,6 +1,7 @@
 package concuroo;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -342,7 +343,7 @@ public class CSTVisitorTest {
     Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof SizeofSpecifier);
     SizeofSpecifier sExpr = (SizeofSpecifier) n;
-    assertTrue(sExpr.getSpecifiers() != null);
+    assertNotNull(sExpr.getSpecifiers());
     DeclarationSpecifierList decList = sExpr.getSpecifiers();
     assertEquals(decList.size(), 1);
     assertEquals(decList.get(0), "int");
@@ -355,7 +356,7 @@ public class CSTVisitorTest {
     Node n = new CSTVisitor(st).visit(ctx);
     assertTrue(n instanceof SizeofSpecifier);
     SizeofSpecifier sExpr = (SizeofSpecifier) n;
-    assertTrue(sExpr.getSpecifiers() != null);
+    assertNotNull(sExpr.getSpecifiers());
     DeclarationSpecifierList decList = sExpr.getSpecifiers();
     assertEquals(decList.size(), 2);
     assertEquals(decList.get(0), "long");
