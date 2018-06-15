@@ -1,15 +1,22 @@
-package concuroo.mocks;
+package concuroo.nodes.statement;
 
 import concuroo.CSTVisitor;
-import concuroo.CodeGenerator;
 import concuroo.Visitor;
-import concuroo.nodes.Declaration;
 import concuroo.nodes.Node;
+import concuroo.nodes.Statement;
 import org.antlr.v4.runtime.ParserRuleContext;
 
-public class NodeMock implements Declaration {
+public class RawStatement implements Statement {
 
-  public boolean hit = false;
+  private String rawCode;
+
+  public RawStatement(String code) {
+    this.rawCode = code;
+  }
+
+  public String getRawCode() {
+    return rawCode;
+  }
 
   @Override
   public String getLiteral() {
@@ -24,10 +31,5 @@ public class NodeMock implements Declaration {
   @Override
   public void visit(Visitor visitor) {
 
-  }
-
-  @Override
-  public void accept(CodeGenerator cg) {
-    hit = true;
   }
 }

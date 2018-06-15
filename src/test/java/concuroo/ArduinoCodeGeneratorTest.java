@@ -73,7 +73,7 @@ public class ArduinoCodeGeneratorTest {
   @Before
   public void setup() {
     cg = new ArduinoCodeGenerator(mockTarget);
-    cg.generate(new Program());
+    cg.visit(new Program());
     mockTarget.clear();
   }
 
@@ -97,7 +97,7 @@ public class ArduinoCodeGeneratorTest {
     program.add(first);
     program.add(second);
 
-    new ArduinoCodeGenerator().generate(program);
+    new ArduinoCodeGenerator().visit(program);
 
     /*
      * Ensures that the constructor loops through every item in program and invoke the accept-method
@@ -520,10 +520,6 @@ public class ArduinoCodeGeneratorTest {
     //SETUP STUFF
     FunctionExpression func = new FunctionExpression("a");
     ArgumentExpressionList params = new ArgumentExpressionList();
-    DeclarationSpecifierList chanint = new DeclarationSpecifierList(new ArrayList<String>() {{
-      add("chan");
-      add("int");
-    }});
 
     IntLiteral a = new IntLiteral(23);
     BoolLiteral b = new BoolLiteral(true);

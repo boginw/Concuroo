@@ -4,6 +4,7 @@ import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.LiteralExpression;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -49,6 +50,11 @@ public class BoolLiteral implements LiteralExpression<Boolean> {
     setValue(actx.boolLiteral().getChild(0).toString().equals("true"));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(this);
   }
 
   @Override

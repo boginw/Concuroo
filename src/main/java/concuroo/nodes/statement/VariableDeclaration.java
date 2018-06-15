@@ -9,12 +9,13 @@ import ConcurooParser.ConcurooParser.ParameterDeclarationContext;
 import concuroo.CSTVisitor;
 import concuroo.CodeGenerator;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.Declaration;
 import concuroo.nodes.DeclarationSpecifierList;
+import concuroo.nodes.Expression;
 import concuroo.nodes.HasSpecifiers;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
-import concuroo.nodes.Expression;
 import concuroo.nodes.expression.Identifier;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.apache.commons.lang3.StringUtils;
@@ -50,8 +51,8 @@ public class VariableDeclaration implements Statement, Expression, Identifier, H
   }
 
   /**
-   * Returns if the variable declaration is in global scope.
-   * Usefull in Code Generation.
+   * Returns if the variable declaration is in global scope. Usefull in Code Generation.
+   *
    * @return boolean
    */
   public boolean isGlobal() {
@@ -60,6 +61,7 @@ public class VariableDeclaration implements Statement, Expression, Identifier, H
 
   /**
    * Sets global
+   *
    * @param global the boolean value
    */
   public void setGlobal(boolean global) {
@@ -202,11 +204,11 @@ public class VariableDeclaration implements Statement, Expression, Identifier, H
     DeclaratorContext declarator;
     DirectDeclaratorContext directDeclarator;
 
-    if(ctx instanceof ParameterDeclarationContext) {
+    if (ctx instanceof ParameterDeclarationContext) {
       declarator = ((ParameterDeclarationContext) ctx).declarator();
       directDeclarator = declarator.directDeclarator();
       setParam(true);
-    } else if(ctx instanceof DeclarationStatementContext) {
+    } else if (ctx instanceof DeclarationStatementContext) {
       initDeclarator = (InitDeclaratorContext) ctx.getChild(1);
       declarator = initDeclarator.declarator();
       directDeclarator = declarator.directDeclarator();
@@ -254,6 +256,15 @@ public class VariableDeclaration implements Statement, Expression, Identifier, H
   }
 
   @Override
+  public void visit(Visitor visitor) {
+    if (initializer != null) {
+      visitor.visit(initializer);
+    }
+
+    visitor.visit(this);
+  }
+
+  @Override
   public void accept(CodeGenerator cg) {
     cg.visit(this);
   }
@@ -267,7 +278,6 @@ public class VariableDeclaration implements Statement, Expression, Identifier, H
   public void setReturnType(ReturnType returnReturnType) {
     this.returnReturnType = returnReturnType;
   }
-
 
 
 }

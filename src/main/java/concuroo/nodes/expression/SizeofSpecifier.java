@@ -4,6 +4,7 @@ import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.Visitor;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.Expression;
 import concuroo.nodes.HasSpecifiers;
@@ -17,7 +18,6 @@ import org.antlr.v4.runtime.tree.ParseTree;
  */
 public class SizeofSpecifier implements Expression, HasSpecifiers {
 
-  private ReturnType returnReturnType;
   private DeclarationSpecifierList specifiers = new DeclarationSpecifierList();
 
   /**
@@ -51,6 +51,11 @@ public class SizeofSpecifier implements Expression, HasSpecifiers {
     }
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(specifiers);
   }
 
   @Override

@@ -4,6 +4,7 @@ import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.LiteralExpression;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -15,7 +16,8 @@ public class StringLiteral implements LiteralExpression<String> {
 
   private String value;
 
-  public StringLiteral(){}
+  public StringLiteral() {
+  }
 
   /**
    * The default constructor
@@ -54,6 +56,11 @@ public class StringLiteral implements LiteralExpression<String> {
     return new ReturnType() {{
       type = Types.CHAR;
     }};
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(this);
   }
 
   @Override

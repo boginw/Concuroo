@@ -3,6 +3,7 @@ package concuroo.nodes.expression.unaryExpression;
 import ConcurooParser.ConcurooParser.PostfixExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.ArgumentExpressionList;
 import concuroo.nodes.Expression;
 import concuroo.nodes.FunctionDeclaration;
@@ -84,6 +85,11 @@ public class FunctionExpression implements Expression, Identifier,
     }
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getParameterList());
   }
 
   @Override

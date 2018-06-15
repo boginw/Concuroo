@@ -2,6 +2,7 @@ package concuroo.nodes;
 
 import ConcurooParser.ConcurooParser.DeclarationSpecifiersContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -20,6 +21,8 @@ public interface Node {
   String getLiteral();
 
   Node parse(ParserRuleContext ctx, CSTVisitor visitor);
+
+  void visit(Visitor visitor);
 
   static <T extends ParserRuleContext> T checkCtx(ParserRuleContext ctx, Class<T> classObj) {
     if(!classObj.isInstance(ctx)) {

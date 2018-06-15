@@ -4,6 +4,7 @@ import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.UnaryExpression;
@@ -59,6 +60,11 @@ public class NegationExpression implements UnaryExpression {
     setFirstOperand((Expression) visitor.visit(ctx.getChild(1)));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getFirstOperand());
   }
 
   @Override

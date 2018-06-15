@@ -3,6 +3,7 @@ package concuroo.nodes;
 import ConcurooParser.ConcurooParser.StartContext;
 import ConcurooParser.ConcurooParser.TranslationUnitContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import java.util.ArrayList;
 import java.util.Stack;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -37,5 +38,12 @@ public class Program extends ArrayList<Declaration> implements Node {
     }
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    for (Declaration declaration : this) {
+      visitor.visit(declaration);
+    }
   }
 }

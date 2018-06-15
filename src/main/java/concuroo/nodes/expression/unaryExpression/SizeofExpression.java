@@ -4,6 +4,7 @@ import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
 import concuroo.Types;
+import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.UnaryExpression;
@@ -57,6 +58,11 @@ public class SizeofExpression implements UnaryExpression {
     UnaryExpressionContext actx = Node.checkCtx(ctx, UnaryExpressionContext.class);
     setFirstOperand((Expression) visitor.visitUnaryExpression(actx.unaryExpression()));
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getFirstOperand());
   }
 
   @Override

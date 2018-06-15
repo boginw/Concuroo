@@ -3,6 +3,7 @@ package concuroo.nodes.statement.selectionStatement;
 import static org.junit.Assert.*;
 
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
@@ -42,6 +43,11 @@ public class IfStatementTest {
       public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
         return null;
       }
+
+      @Override
+      public void visit(Visitor visitor) {
+
+      }
     };
     st.setConsequence(stat);
 
@@ -60,6 +66,11 @@ public class IfStatementTest {
       @Override
       public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
         return null;
+      }
+
+      @Override
+      public void visit(Visitor visitor) {
+
       }
     };
     st.setAlternative(stat);

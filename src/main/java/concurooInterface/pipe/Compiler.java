@@ -61,7 +61,8 @@ public class Compiler implements Pipe {
     ASTVisitor ast = new ASTVisitor(st);
     ast.visit((Program)n);
 
-    return generator.generate((Program) n);
+    generator.visit((Program) n);
+    return generator.getBuilder();
   }
 
   /**

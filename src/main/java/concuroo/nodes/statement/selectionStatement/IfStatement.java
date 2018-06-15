@@ -2,9 +2,10 @@ package concuroo.nodes.statement.selectionStatement;
 
 import ConcurooParser.ConcurooParser.IfStatementContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
+import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
-import concuroo.nodes.Expression;
 import concuroo.nodes.statement.SelectionStatement;
 import org.antlr.v4.runtime.ParserRuleContext;
 
@@ -83,6 +84,15 @@ public class IfStatement implements SelectionStatement {
     setConsequence((Statement) visitor.visit(ctx.getChild(4)));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(condition);
+    visitor.visit(consequence);
+    if (alternative != null) {
+      visitor.visit(alternative);
+    }
   }
 
 }

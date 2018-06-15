@@ -2,6 +2,7 @@ package concuroo.nodes.statement.jumpStatement;
 
 import ConcurooParser.ConcurooParser.JumpStatementContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.statement.JumpStatement;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -20,5 +21,10 @@ public class BreakStatement implements JumpStatement {
   public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
     Node.checkCtx(ctx, JumpStatementContext.class);
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(this);
   }
 }

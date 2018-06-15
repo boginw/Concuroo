@@ -3,6 +3,7 @@ package concuroo.nodes.expression.lhsExpression;
 import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.HasDefinition;
 import concuroo.nodes.expression.Identifier;
@@ -54,6 +55,11 @@ public class VariableExpression implements LHSExpression, Identifier,
     setIdentifier(id);
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(this);
   }
 
   @Override

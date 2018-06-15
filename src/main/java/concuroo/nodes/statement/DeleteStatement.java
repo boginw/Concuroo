@@ -2,6 +2,7 @@ package concuroo.nodes.statement;
 
 import ConcurooParser.ConcurooParser.DeleteStatementContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
@@ -47,6 +48,11 @@ public class DeleteStatement implements Statement {
     setVariable(new VariableExpression(identifier, def));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getVariable());
   }
 
 

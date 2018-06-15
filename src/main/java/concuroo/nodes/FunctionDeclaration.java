@@ -5,6 +5,7 @@ import ConcurooParser.ConcurooParser.ParameterListContext;
 import ConcurooParser.ConcurooParser.ParameterTypeListContext;
 import concuroo.CSTVisitor;
 import concuroo.CodeGenerator;
+import concuroo.Visitor;
 import concuroo.nodes.expression.Identifier;
 import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.VariableDeclaration;
@@ -192,5 +193,11 @@ public class FunctionDeclaration extends ArrayList<VariableDeclaration> implemen
     visitor.getGlobal().insert(this);
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getSpecifiers());
+    visitor.visit(getBody());
   }
 }

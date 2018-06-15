@@ -3,6 +3,7 @@ package concuroo.nodes.statement;
 import static org.junit.Assert.*;
 
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
@@ -41,6 +42,11 @@ public class SelectionStatementTest {
       @Override
       public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
         return null;
+      }
+
+      @Override
+      public void visit(Visitor visitor) {
+
       }
     };
     assertTrue(st instanceof Statement);

@@ -3,6 +3,7 @@ package concuroo.nodes.expression.unaryExpression;
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.CanSetOperator;
@@ -64,6 +65,11 @@ public class AdditivePrefixExpression implements UnaryExpression, CanSetOperator
     setOperator(actx.unaryOperator().getText());
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getFirstOperand());
   }
 
   @Override

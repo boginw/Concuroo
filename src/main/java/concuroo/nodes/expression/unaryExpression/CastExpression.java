@@ -4,6 +4,7 @@ import ConcurooParser.ConcurooParser;
 import ConcurooParser.ConcurooParser.CastExpressionContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
 import concuroo.nodes.Expression;
@@ -59,6 +60,11 @@ public class CastExpression implements UnaryExpression, HasSpecifiers {
     setFirstOperand((Expression) visitor.visit(ctx.getChild(3)));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getFirstOperand());
   }
 
   @Override

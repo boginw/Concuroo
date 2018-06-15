@@ -1,6 +1,7 @@
 package concuroo.nodes;
 
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import java.util.ArrayList;
 import java.util.List;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -30,5 +31,10 @@ public class DeclarationSpecifierList extends ArrayList<String> implements Node 
   @Override
   public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(this);
   }
 }

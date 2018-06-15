@@ -2,6 +2,7 @@ package concuroo.nodes.statement.selectionStatement;
 
 import ConcurooParser.ConcurooParser.IterationStatementContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
@@ -49,5 +50,11 @@ public class WhileStatement implements SelectionStatement {
     setConsequence((Statement) visitor.visit(ctx.getChild(4)));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(condition);
+    visitor.visit(consequence);
   }
 }

@@ -2,6 +2,7 @@ package concuroo.nodes.statement;
 
 import ConcurooParser.ConcurooParser.ExpressionStatementContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import concuroo.nodes.Expression;
@@ -26,6 +27,11 @@ public class ExpressionStatement implements Statement {
     setExpression((Expression) visitor.visit(ctx.getChild(0)));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getExpression());
   }
 
   public Expression getExpression() {

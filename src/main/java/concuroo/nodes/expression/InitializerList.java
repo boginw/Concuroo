@@ -3,6 +3,7 @@ package concuroo.nodes.expression;
 import ConcurooParser.ConcurooParser.InitializerListContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import java.util.ArrayList;
@@ -49,6 +50,13 @@ public class InitializerList extends ArrayList<Node> implements Expression {
     }
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    for(Node node : this) {
+      visitor.visit(node);
+    }
   }
 
 }

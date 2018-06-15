@@ -1,6 +1,7 @@
 package concuroo.nodes.expression.binaryExpression;
 
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.Expression;
 
 /**
@@ -69,5 +70,11 @@ public abstract class BinaryExpression implements Expression {
   @Override
   public void setReturnType(ReturnType returnReturnType) {
     this.returnReturnType = returnReturnType;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getFirstOperand());
+    visitor.visit(getSecondOperand());
   }
 }

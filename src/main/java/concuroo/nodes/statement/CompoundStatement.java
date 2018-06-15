@@ -3,6 +3,7 @@ package concuroo.nodes.statement;
 import ConcurooParser.ConcurooParser.CompoundStatementContext;
 import ConcurooParser.ConcurooParser.StatementListContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.HasScope;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
@@ -97,5 +98,12 @@ public class CompoundStatement extends ArrayList<Statement> implements Statement
     visitor.scopeOut();
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    for (Statement statement : this) {
+      visitor.visit(statement);
+    }
   }
 }

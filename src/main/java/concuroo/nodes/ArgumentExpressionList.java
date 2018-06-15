@@ -3,6 +3,8 @@ package concuroo.nodes;
 import ConcurooParser.ConcurooParser.ArgumentExpressionListContext;
 import ConcurooParser.ConcurooParser.AssignmentExpressionContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
+import concuroo.nodes.statement.ExpressionStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -43,5 +45,12 @@ public class ArgumentExpressionList extends ArrayList<Expression> implements Nod
     }
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    for (Expression expression : this) {
+      visitor.visit(expression);
+    }
   }
 }

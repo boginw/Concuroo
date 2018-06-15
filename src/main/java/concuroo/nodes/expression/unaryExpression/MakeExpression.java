@@ -3,6 +3,7 @@ package concuroo.nodes.expression.unaryExpression;
 import ConcurooParser.ConcurooParser.InitializerContext;
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;
 import concuroo.nodes.Node;
@@ -40,6 +41,11 @@ public class MakeExpression implements Node, HasSpecifiers, Expression {
     setSpecifiers(Node.parseDeclarationSpecifiers(actx.declarationSpecifiers()));
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(getSpecifiers());
   }
 
   @Override

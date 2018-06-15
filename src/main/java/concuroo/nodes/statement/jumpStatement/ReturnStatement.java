@@ -2,6 +2,7 @@ package concuroo.nodes.statement.jumpStatement;
 
 import ConcurooParser.ConcurooParser.JumpStatementContext;
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.statement.JumpStatement;
@@ -11,6 +12,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
  * This class represents an statement of the form return and return exp
  */
 public class ReturnStatement implements JumpStatement {
+
   private Expression returnValue;
 
   // TODO: interface me
@@ -26,7 +28,7 @@ public class ReturnStatement implements JumpStatement {
   @Override
   public String getLiteral() {
     StringBuilder sb = new StringBuilder("return");
-    if(returnValue != null){
+    if (returnValue != null) {
       sb.append(" ");
       sb.append(returnValue.getLiteral());
     }
@@ -47,5 +49,10 @@ public class ReturnStatement implements JumpStatement {
     }
 
     return this;
+  }
+
+  @Override
+  public void visit(Visitor visitor) {
+    visitor.visit(this);
   }
 }

@@ -3,6 +3,7 @@ package concuroo.nodes.statement;
 import static org.junit.Assert.*;
 
 import concuroo.CSTVisitor;
+import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;
 import org.antlr.v4.runtime.ParserRuleContext;
@@ -23,6 +24,11 @@ public class CompoundStatementTest {
       public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
         return null;
       }
+
+      @Override
+      public void visit(Visitor visitor) {
+
+      }
     };
     cs.add(st);
     assertEquals(st, cs.get(0));
@@ -40,6 +46,11 @@ public class CompoundStatementTest {
       @Override
       public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
         return null;
+      }
+
+      @Override
+      public void visit(Visitor visitor) {
+
       }
     };
     cs.add(st);

@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import concuroo.CSTVisitor;
 import concuroo.ReturnType;
+import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.LHSExpression;
@@ -25,6 +26,11 @@ public class LHSExpressionInterfaceTest {
     @Override
     public Node parse(ParserRuleContext ctx, CSTVisitor visitor) {
       return null;
+    }
+
+    @Override
+    public void visit(Visitor visitor) {
+
     }
 
     @Override
