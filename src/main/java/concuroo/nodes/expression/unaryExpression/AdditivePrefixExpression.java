@@ -2,7 +2,7 @@ package concuroo.nodes.expression.unaryExpression;
 
 import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
@@ -15,7 +15,7 @@ import org.antlr.v4.runtime.ParserRuleContext;
  */
 public class AdditivePrefixExpression implements UnaryExpression, CanSetOperator {
 
-  private ReturnType returnReturnType;
+  private ReturnType returnType;
   private Expression firstOperand;
   private String operator;
 
@@ -79,11 +79,11 @@ public class AdditivePrefixExpression implements UnaryExpression, CanSetOperator
 
   @Override
   public ReturnType getReturnType() {
-    return returnReturnType;
+    return returnType;
   }
 
   @Override
-  public void setReturnType(ReturnType returnReturnType) {
-    this.returnReturnType = returnReturnType;
+  public void setReturnType(ReturnType returnType) {
+    this.returnType = returnType;
   }
 }

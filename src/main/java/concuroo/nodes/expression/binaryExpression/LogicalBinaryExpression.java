@@ -1,12 +1,7 @@
 package concuroo.nodes.expression.binaryExpression;
 
-import ConcurooParser.ConcurooParser.RelationalExpressionContext;
-import concuroo.CSTVisitor;
-import concuroo.ReturnType;
-import concuroo.Types;
-import concuroo.nodes.Expression;
-import concuroo.nodes.Node;
-import org.antlr.v4.runtime.ParserRuleContext;
+import concuroo.types.ReturnType;
+import concuroo.types.Types;
 
 /**
  * This class represents an expression of the form EXPRESSION (>=, >, <=, <, &&, ||) EXPRESSION

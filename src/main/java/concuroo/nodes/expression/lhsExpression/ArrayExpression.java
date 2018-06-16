@@ -1,9 +1,8 @@
 package concuroo.nodes.expression.lhsExpression;
 
 import ConcurooParser.ConcurooParser.PostfixExpressionContext;
-import ConcurooParser.ConcurooParser.UnaryExpressionContext;
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.LHSExpression;

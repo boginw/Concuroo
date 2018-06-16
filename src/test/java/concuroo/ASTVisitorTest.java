@@ -6,11 +6,11 @@ import static org.junit.Assert.assertTrue;
 import ConcurooParser.ConcurooLexer;
 import ConcurooParser.ConcurooParser;
 import concuroo.nodes.DeclarationSpecifierList;
+import concuroo.nodes.Expression;
 import concuroo.nodes.FunctionDeclaration;
 import concuroo.nodes.Node;
 import concuroo.nodes.Program;
 import concuroo.nodes.Statement;
-import concuroo.nodes.Expression;
 import concuroo.nodes.expression.SizeofSpecifier;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
@@ -40,6 +40,8 @@ import concuroo.nodes.expression.unaryExpression.PipeExpression;
 import concuroo.nodes.expression.unaryExpression.SizeofExpression;
 import concuroo.nodes.statement.VariableDeclaration;
 import concuroo.symbol.SymbolTable;
+import concuroo.types.TypeModifier;
+import concuroo.types.Types;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -1037,7 +1039,13 @@ public class ASTVisitorTest {
     typeTest.setInput(mainWrapperSetup("int a = -100;"));
 
     testExpression(new VariableDeclaration(), typeTest.operands.get(0), Types.INT);
-    testExpression(new AdditivePrefixExpression(null, "-"), typeTest.operands.get(1), Types.INT);
+
+    testExpression(
+        new AdditivePrefixExpression(null, "-"),
+        typeTest.operands.get(1),
+        Types.INT
+    );
+
     TestIntegerLiteral(typeTest.operands.get(2), 100);
   }
 

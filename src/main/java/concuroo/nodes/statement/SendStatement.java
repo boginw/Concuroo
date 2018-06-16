@@ -3,8 +3,8 @@ package concuroo.nodes.statement;
 
 import ConcurooParser.ConcurooParser.SendStatementContext;
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
-import concuroo.Types;
+import concuroo.types.ReturnType;
+import concuroo.types.Types;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;
 import concuroo.nodes.Statement;

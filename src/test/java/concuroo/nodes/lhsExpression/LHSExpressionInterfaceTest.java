@@ -3,7 +3,7 @@ package concuroo.nodes.lhsExpression;
 import static org.junit.Assert.*;
 
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;

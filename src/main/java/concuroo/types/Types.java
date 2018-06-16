@@ -1,4 +1,4 @@
-package concuroo;
+package concuroo.types;
 
 public enum Types {
   DOUBLE,

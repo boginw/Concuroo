@@ -1,6 +1,6 @@
 package concuroo.nodes.expression.binaryExpression;
 
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.Expression;
 

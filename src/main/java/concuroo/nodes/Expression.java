@@ -1,6 +1,6 @@
 package concuroo.nodes;
 
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 
 /**
  * This interface should be used for all nodes that can be evaluated to a value.

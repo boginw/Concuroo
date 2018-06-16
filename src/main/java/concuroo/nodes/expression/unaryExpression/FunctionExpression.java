@@ -2,7 +2,7 @@ package concuroo.nodes.expression.unaryExpression;
 
 import ConcurooParser.ConcurooParser.PostfixExpressionContext;
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.ArgumentExpressionList;
 import concuroo.nodes.Expression;

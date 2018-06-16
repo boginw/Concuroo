@@ -2,7 +2,7 @@ package concuroo.nodes.expression.lhsExpression;
 
 import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.HasDefinition;

@@ -1,36 +1,39 @@
-package concuroo;
+package concuroo.types;
 
 import concuroo.nodes.Node;
 import concuroo.nodes.Expression;
+import concuroo.types.ReturnType;
+import concuroo.types.TypeModifier;
+import concuroo.types.Types;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-class TypeRules {
+public class TypeRules {
 
-  static ReturnType determineArithmeticReturnType(Node firstNode, Node secondNode) {
-    ReturnType firstReturnType = determineIfValidType(firstNode, Types.DOUBLE, Types.INT, Types.CHAR);
-    ReturnType secondReturnType = determineIfValidType(secondNode, Types.DOUBLE, Types.INT, Types.CHAR);
+  public static ReturnType determineArithmeticReturnType(Node firstNode, Node secondNode) {
+    ReturnType firstReturnType = TypeRules.determineIfValidType(firstNode, Types.DOUBLE, Types.INT, Types.CHAR);
+    ReturnType secondReturnType = TypeRules.determineIfValidType(secondNode, Types.DOUBLE, Types.INT, Types.CHAR);
 
-    return determineReturnType(firstReturnType, secondReturnType);
+    return TypeRules.determineReturnType(firstReturnType, secondReturnType);
   }
 
-  static void determineBooleanReturnType(Node firstNode, Node secondNode) {
-    ReturnType firstReturnType = determineIfValidType(firstNode, Types.BOOL);
-    ReturnType secondReturnType = determineIfValidType(secondNode, Types.BOOL);
+  public static void determineBooleanReturnType(Node firstNode, Node secondNode) {
+    ReturnType firstReturnType = TypeRules.determineIfValidType(firstNode, Types.BOOL);
+    ReturnType secondReturnType = TypeRules.determineIfValidType(secondNode, Types.BOOL);
 
-    determineReturnType(firstReturnType, secondReturnType);
+    TypeRules.determineReturnType(firstReturnType, secondReturnType);
   }
 
-  static ReturnType throwIfInvalidDeclaration(ReturnType declReturnType, Node firstNode) {
+  public static ReturnType throwIfInvalidDeclaration(ReturnType declReturnType, Node firstNode) {
     if (declReturnType.type == Types.BOOL) {
-      return determineIfValidType(firstNode, Types.BOOL);
+      return TypeRules.determineIfValidType(firstNode, Types.BOOL);
     } else {
-      return determineIfValidType(firstNode, Types.DOUBLE, Types.INT, Types.CHAR);
+      return TypeRules.determineIfValidType(firstNode, Types.DOUBLE, Types.INT, Types.CHAR);
     }
   }
 
-  static ReturnType determineIfValidType(Node node, Types... allowedTypes) {
+  public static ReturnType determineIfValidType(Node node, Types... allowedTypes) {
     ReturnType nodeReturnType = ((Expression) node).getReturnType();
     for (Types type : allowedTypes) {
       if (nodeReturnType.type == type) {
@@ -48,7 +51,7 @@ class TypeRules {
         "Invalid type. Expected: " + allowedTypesString + " but it wasn't found.");
   }
 
-  static ReturnType determineDeclarationSpecifier(List<String> specifiers) {
+  public static ReturnType determineDeclarationSpecifier(List<String> specifiers) {
     ReturnType returnType = new ReturnType();
 
     switch (specifiers.size()) {
@@ -136,7 +139,7 @@ class TypeRules {
     return returnType;
   }
 
-  static boolean isPrecedenceCorrect(
+  public static boolean isPrecedenceCorrect(
       ReturnType assignmentReturnType, ReturnType assigneeReturnType) {
     return assignmentReturnType.getPrecedenceLevel() >= assigneeReturnType.getPrecedenceLevel();
   }

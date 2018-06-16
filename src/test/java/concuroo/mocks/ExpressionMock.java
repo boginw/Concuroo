@@ -1,7 +1,7 @@
 package concuroo.mocks;
 
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.Expression;
 import concuroo.nodes.Node;

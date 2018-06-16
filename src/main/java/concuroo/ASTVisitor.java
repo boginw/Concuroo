@@ -1,6 +1,7 @@
 package concuroo;
 
 import concuroo.exceptions.ExpressionNotFoundException;
+import concuroo.nodes.ArgumentExpressionList;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.Expression;
 import concuroo.nodes.FunctionDeclaration;
@@ -14,17 +15,25 @@ import concuroo.nodes.expression.binaryExpression.ArithmeticBinaryExpression;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.BinaryExpression;
 import concuroo.nodes.expression.binaryExpression.LogicalBinaryExpression;
+import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
+import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.MultiplicativeExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalAndExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalEqualityExpression;
 import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalOrExpression;
+import concuroo.nodes.expression.binaryExpression.logicalBinaryExpression.LogicalRelantionalExpression;
 import concuroo.nodes.expression.lhsExpression.ArrayExpression;
 import concuroo.nodes.expression.lhsExpression.DereferenceExpression;
 import concuroo.nodes.expression.lhsExpression.VariableExpression;
+import concuroo.nodes.expression.literalExpression.BoolLiteral;
+import concuroo.nodes.expression.literalExpression.CharLiteral;
+import concuroo.nodes.expression.literalExpression.FloatLiteral;
+import concuroo.nodes.expression.literalExpression.IntLiteral;
 import concuroo.nodes.expression.literalExpression.StringLiteral;
 import concuroo.nodes.expression.unaryExpression.AdditivePrefixExpression;
 import concuroo.nodes.expression.unaryExpression.AddressOfExpression;
 import concuroo.nodes.expression.unaryExpression.CastExpression;
 import concuroo.nodes.expression.unaryExpression.FunctionExpression;
+import concuroo.nodes.expression.unaryExpression.IncrementDecrementExpression;
 import concuroo.nodes.expression.unaryExpression.MakeExpression;
 import concuroo.nodes.expression.unaryExpression.NegationExpression;
 import concuroo.nodes.expression.unaryExpression.PipeExpression;
@@ -33,13 +42,21 @@ import concuroo.nodes.statement.CompoundStatement;
 import concuroo.nodes.statement.CoroutineStatement;
 import concuroo.nodes.statement.DeleteStatement;
 import concuroo.nodes.statement.ExpressionStatement;
+import concuroo.nodes.statement.RawStatement;
+import concuroo.nodes.statement.SendStatement;
 import concuroo.nodes.statement.VariableDeclaration;
+import concuroo.nodes.statement.jumpStatement.BreakStatement;
+import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
 import concuroo.nodes.statement.selectionStatement.WhileStatement;
 import concuroo.symbol.SymbolTable;
+import concuroo.types.ReturnType;
+import concuroo.types.TypeModifier;
+import concuroo.types.TypeRules;
+import concuroo.types.Types;
 
-public class ASTVisitor {
+public class ASTVisitor implements Visitor {
 
   private SymbolTable global;
 
@@ -52,6 +69,7 @@ public class ASTVisitor {
    *
    * @param program The program to check
    */
+  @Override
   public void visit(Program program) {
 
     // We enforce the inclusion of both setup and loop
@@ -79,6 +97,7 @@ public class ASTVisitor {
    *
    * @param funcDef The function definition
    */
+  @Override
   public void visit(FunctionDeclaration funcDef) {
     // Visit all the parameters
     for (VariableDeclaration vd : funcDef) {
@@ -97,6 +116,7 @@ public class ASTVisitor {
    *
    * @param stm The statement to visit
    */
+  @Override
   public void visit(Statement stm) {
     if (stm instanceof ExpressionStatement) {
       visit((ExpressionStatement) stm);
@@ -111,12 +131,28 @@ public class ASTVisitor {
     }
   }
 
+  @Override
+  public void visit(BreakStatement breakStatement) {
+    // No type to decorate, hence empty
+  }
+
+  @Override
+  public void visit(ContinueStatement continueStatement) {
+    // No type to decorate, hence empty
+  }
+
+  @Override
+  public void visit(ReturnStatement returnStatement) {
+    // TODO: this
+  }
+
   /**
    * Visits a compound statement
    *
    * @param cpmStm The compound statement
    */
-  private void visit(CompoundStatement cpmStm) {
+  @Override
+  public void visit(CompoundStatement cpmStm) {
     for (Statement stm : cpmStm) {
       visit(stm);
     }
@@ -127,14 +163,15 @@ public class ASTVisitor {
    *
    * @param stm The delete statement to visit
    */
-  private void visit(DeleteStatement stm) {
-    Expression expr = (Expression) visit(stm.getVariable());
+  @Override
+  public void visit(DeleteStatement stm) {
+    VariableExpression var = stm.getVariable();
+    visit(var);
 
-    if (!(expr instanceof VariableExpression) || (
-        (expr.getReturnType().prefix.getLeft() != TypeModifier.CHAN)
-            && (expr.getReturnType().prefix.getRight() != TypeModifier.CHAN))) {
+    if ((var.getReturnType().prefix.getLeft() != TypeModifier.CHAN) &&
+        (var.getReturnType().prefix.getRight() != TypeModifier.CHAN)) {
       throw new RuntimeException(
-          "Can only delete chan types. Deleted type is: " + expr.getReturnType().toString());
+          "Can only delete chan types. Deleted type is: " + var.getReturnType().toString());
     }
   }
 
@@ -143,8 +180,10 @@ public class ASTVisitor {
    *
    * @param stm The coroutine statement to visit
    */
-  private void visit(CoroutineStatement stm) {
-    Expression expr = (Expression) visit(stm.getExpression());
+  @Override
+  public void visit(CoroutineStatement stm) {
+    Expression expr = stm.getExpression();
+    visit(stm.getExpression());
 
     if (!(expr instanceof FunctionExpression) || expr.getReturnType().type != Types.VOID) {
       throw new RuntimeException(
@@ -159,9 +198,11 @@ public class ASTVisitor {
    *
    * @param stm The if statement to visit
    */
-  private void visit(IfStatement stm) {
-    Expression condition = (Expression) visit(stm.getCondition());
+  @Override
+  public void visit(IfStatement stm) {
+    Expression condition = stm.getCondition();
 
+    visit(stm.getCondition());
     visit(stm.getConsequence());
 
     if (stm.getAlternative() != null) {
@@ -174,13 +215,26 @@ public class ASTVisitor {
     }
   }
 
+  @Override
+  public void visit(WhileStatement whileStatement) {
+    Expression condition = whileStatement.getCondition();
+
+    visit(whileStatement.getCondition());
+    visit(whileStatement.getConsequence());
+
+    if (condition.getReturnType().type != Types.BOOL) {
+      throw new RuntimeException(
+          "The condition was not a boolean expression in " + whileStatement.getClass().getName());
+    }
+  }
+
   /**
    * Visits an expression statement
    *
    * @param exprStm Expression statement
-   * @return The visited statement
    */
-  public Node visit(ExpressionStatement exprStm) {
+  @Override
+  public void visit(ExpressionStatement exprStm) {
     if (exprStm.getExpression() instanceof FunctionExpression) {
       visit((FunctionExpression) exprStm.getExpression());
     } else if (exprStm.getExpression() instanceof BinaryExpression) {
@@ -192,8 +246,11 @@ public class ASTVisitor {
     } else {
       throw new ExpressionNotFoundException("Expression was not found: " + exprStm.getLiteral());
     }
+  }
 
-    return exprStm;
+  @Override
+  public void visit(SendStatement sendStatement) {
+    // TODO: this
   }
 
   /**
@@ -201,8 +258,9 @@ public class ASTVisitor {
    *
    * @param stm The declaration statement to visit
    */
-  private void visit(VariableDeclaration stm) {
-    ReturnType returnType = visit(stm.getSpecifiers());
+  @Override
+  public void visit(VariableDeclaration stm) {
+    ReturnType returnType = TypeRules.determineDeclarationSpecifier(stm.getSpecifiers());
     stm.setReturnType(returnType);
 
     if (stm.getInitializer() != null) {
@@ -219,6 +277,7 @@ public class ASTVisitor {
 
       // visit the initializer
       visit(stm.getInitializer());
+
       TypeRules.throwIfInvalidDeclaration(returnType, stm.getInitializer());
 
       // string assignment
@@ -244,64 +303,75 @@ public class ASTVisitor {
     }
   }
 
-  /**
-   * Visit an initializer list, and verify that it can be assigned to the parents type
-   *
-   * @param initializerList The initalizer list
-   * @param parentReturnType The return type of the parent
-   */
-  private void visit(InitializerList initializerList, ReturnType parentReturnType) {
-    for (Node initializer : initializerList) {
-      visit((Expression) initializer);
-      TypeRules.throwIfInvalidDeclaration(parentReturnType, initializer);
-    }
-
-    initializerList.setReturnType(parentReturnType);
+  @Override
+  public void visit(RawStatement rawStatement) {
+    // Ignore this
   }
+
+  @Override
+  public void visit(ArgumentExpressionList expressionList) {
+    // TODO: this
+  }
+
+
 
   /**
    * Visits declartion specifiers
    *
    * @param specifiers The specifiers to visit
-   * @return The final type, given the specifiers
    */
-  private ReturnType visit(DeclarationSpecifierList specifiers) {
-    return TypeRules.determineDeclarationSpecifier(specifiers);
+  @Override
+  public void visit(DeclarationSpecifierList specifiers) {
+    TypeRules.determineDeclarationSpecifier(specifiers);
+  }
+
+  @Override
+  public void visit(Node node) {
+    Visitor.concreteify(node, this);
   }
 
   /**
    * Visits an expression
    *
    * @param expr The expression to visit
-   * @return The visited expression
    */
-  private Node visit(Expression expr) {
-    if (expr.getReturnType() != null) {
-      return expr;
-    } else if (expr instanceof BinaryExpression) {
-      return visit((BinaryExpression) expr);
-    } else if (expr instanceof UnaryExpression) {
-      return visit((UnaryExpression) expr);
-    } else if (expr instanceof FunctionExpression) {
-      return visit((FunctionExpression) expr);
-    } else if (expr instanceof MakeExpression) {
-      return visit((MakeExpression) expr);
-    } else if (expr instanceof InitializerList) {
-      return visit((InitializerList) expr);
-    } else if (expr instanceof VariableExpression) {
-      return visit((VariableExpression) expr);
-    } else {
-      throw new RuntimeException("The expression wasn't a valid type.");
-    }
+  @Override
+  public void visit(Expression expr) {
+    Visitor.concreteify(expr, this);
+  }
+
+  @Override
+  public void visit(BoolLiteral boolLiteral) {
+    // Type already assigned, as it's static, thereby this is ignored
+  }
+
+  @Override
+  public void visit(IntLiteral intLiteral) {
+    // Type already assigned, as it's static, thereby this is ignored
+  }
+
+  @Override
+  public void visit(CharLiteral charLiteral) {
+    // Type already assigned, as it's static, thereby this is ignored
+  }
+
+  @Override
+  public void visit(FloatLiteral floatLiteral) {
+    // Type already assigned, as it's static, thereby this is ignored
+  }
+
+  @Override
+  public void visit(StringLiteral stringLiteral) {
+    // Type already assigned, as it's static, thereby this is ignored
   }
 
   /**
    * Visits a unary expression
    *
    * @param expr The unary expression
-   * @return The visited unary expression
    */
-  private Node visit(UnaryExpression expr) {
+  @Override
+  public void visit(UnaryExpression expr) {
     if (expr instanceof AddressOfExpression) {
       visit((AddressOfExpression) expr);
     } else if (expr instanceof DereferenceExpression) {
@@ -320,17 +390,21 @@ public class ASTVisitor {
     } else {
       throw new ExpressionNotFoundException("Unary expression was not found: " + expr.getLiteral());
     }
+  }
 
-    return expr;
+  @Override
+  public void visit(AdditivePrefixExpression expression) {
+    visit(expression.getFirstOperand());
+    expression.setReturnType(expression.getFirstOperand().getReturnType());
   }
 
   /**
    * Visits a binary expression
    *
    * @param expr The binary expression
-   * @return The visited binary expression
    */
-  private Node visit(BinaryExpression expr) {
+  @Override
+  public void visit(BinaryExpression expr) {
     if (expr instanceof ArithmeticBinaryExpression) {
       visit((ArithmeticBinaryExpression) expr);
     } else if (expr instanceof LogicalBinaryExpression) {
@@ -343,8 +417,36 @@ public class ASTVisitor {
       throw new ExpressionNotFoundException(
           "Binary expression was not found: " + expr.getLiteral());
     }
+  }
 
-    return expr;
+  @Override
+  public void visit(AdditiveExpression additiveExpression) {
+    visit((ArithmeticBinaryExpression) additiveExpression);
+  }
+
+  @Override
+  public void visit(MultiplicativeExpression multiplicativeExpression) {
+    visit((ArithmeticBinaryExpression) multiplicativeExpression);
+  }
+
+  @Override
+  public void visit(LogicalRelantionalExpression logicalRelantionalExpression) {
+    // TODO: this
+  }
+
+  @Override
+  public void visit(LogicalAndExpression logicalAndExpression) {
+    visit((LogicalBinaryExpression) logicalAndExpression);
+  }
+
+  @Override
+  public void visit(LogicalEqualityExpression logicalEqualityExpression) {
+    // TODO: this
+  }
+
+  @Override
+  public void visit(LogicalOrExpression logicalOrExpression) {
+    visit((LogicalBinaryExpression) logicalOrExpression);
   }
 
   /**
@@ -352,7 +454,8 @@ public class ASTVisitor {
    *
    * @param expr The pipe expression
    */
-  private void visit(PipeExpression expr) {
+  @Override
+  public void visit(PipeExpression expr) {
     visit(expr.getFirstOperand());
 
     expr.setReturnType(expr.getFirstOperand().getReturnType());
@@ -363,8 +466,9 @@ public class ASTVisitor {
    *
    * @param expr Sizeof expression with specifiers
    */
-  private void visit(SizeofSpecifier expr) {
-    visit(expr.getSpecifiers());
+  @Override
+  public void visit(SizeofSpecifier expr) {
+    expr.visit(this);
   }
 
   /**
@@ -372,8 +476,9 @@ public class ASTVisitor {
    *
    * @param expr Sizeof expression without specifiers
    */
-  private void visit(SizeofExpression expr) {
-    visit(expr.getFirstOperand());
+  @Override
+  public void visit(SizeofExpression expr) {
+    expr.visit(this);
   }
 
   /**
@@ -381,7 +486,9 @@ public class ASTVisitor {
    *
    * @param expr The negation expression
    */
-  private void visit(NegationExpression expr) {
+  @Override
+  public void visit(NegationExpression expr) {
+    expr.visit(this);
     TypeRules.determineIfValidType(expr.getFirstOperand(), Types.BOOL);
   }
 
@@ -389,9 +496,9 @@ public class ASTVisitor {
    * Visits a function call expression
    *
    * @param expr The function call
-   * @return The visited function call expression
    */
-  private Node visit(FunctionExpression expr) {
+  @Override
+  public void visit(FunctionExpression expr) {
     String FuncID = expr.getIdentifier();
     FunctionDeclaration funcDef = (FunctionDeclaration) global.lookup(FuncID);
 
@@ -419,8 +526,11 @@ public class ASTVisitor {
       visit(parameter);
       TypeRules.throwIfInvalidDeclaration(declarationReturnType, parameter);
     }
+  }
 
-    return expr;
+  @Override
+  public void visit(IncrementDecrementExpression expression) {
+
   }
 
   /**
@@ -428,7 +538,8 @@ public class ASTVisitor {
    *
    * @param expr The array expression
    */
-  private void visit(ArrayExpression expr) {
+  @Override
+  public void visit(ArrayExpression expr) {
     visit(expr.getFirstOperand());
     visit(expr.getSecondOperand());
 
@@ -443,8 +554,9 @@ public class ASTVisitor {
    *
    * @param expr The address of expression
    */
-  private void visit(AddressOfExpression expr) {
-    visit(expr.getFirstOperand());
+  @Override
+  public void visit(AddressOfExpression expr) {
+    expr.visit(this);
     expr.setReturnType(expr.getFirstOperand().getReturnType());
   }
 
@@ -453,8 +565,9 @@ public class ASTVisitor {
    *
    * @param expr The dereference expression
    */
-  private void visit(DereferenceExpression expr) {
-    visit(expr.getFirstOperand());
+  @Override
+  public void visit(DereferenceExpression expr) {
+    expr.visit(this);
     expr.setReturnType(expr.getFirstOperand().getReturnType());
   }
 
@@ -463,12 +576,12 @@ public class ASTVisitor {
    *
    * @param expr Assignment expression
    */
-  private void visit(AssignmentExpression expr) {
-    Expression firstReturnType = (Expression) visit(expr.getFirstOperand());
-    expr.setSecondOperand((Expression) visit(expr.getSecondOperand()));
+  @Override
+  public void visit(AssignmentExpression expr) {
+    expr.visit(this);
 
     ReturnType returnType = TypeRules.throwIfInvalidDeclaration(
-        firstReturnType.getReturnType(), expr.getSecondOperand()
+        expr.getFirstOperand().getReturnType(), expr.getSecondOperand()
     );
 
     expr.setReturnType(returnType);
@@ -479,9 +592,11 @@ public class ASTVisitor {
    *
    * @param expr Logical binary expression
    */
-  private void visit(LogicalBinaryExpression expr) {
-    Node firstReturnType = visit(expr.getFirstOperand());
-    Node secondReturnType = visit(expr.getSecondOperand());
+  public void visit(LogicalBinaryExpression expr) {
+    expr.visit(this);
+
+    Node firstReturnType = expr.getFirstOperand();
+    Node secondReturnType = expr.getSecondOperand();
 
     if (expr instanceof LogicalAndExpression || expr instanceof LogicalOrExpression) {
       TypeRules.determineBooleanReturnType(firstReturnType, secondReturnType);
@@ -497,11 +612,12 @@ public class ASTVisitor {
    *
    * @param expr The arithmetic binary expression
    */
-  private void visit(ArithmeticBinaryExpression expr) {
-    Node firstReturnType = visit(expr.getFirstOperand());
-    Node secondReturnType = visit(expr.getSecondOperand());
+  public void visit(ArithmeticBinaryExpression expr) {
+    expr.visit(this);
 
-    expr.setReturnType(TypeRules.determineArithmeticReturnType(firstReturnType, secondReturnType));
+    expr.setReturnType(TypeRules.determineArithmeticReturnType(
+        expr.getFirstOperand(), expr.getSecondOperand())
+    );
 
   }
 
@@ -510,17 +626,18 @@ public class ASTVisitor {
    *
    * @param expr The variable expression
    */
-  private Node visit(VariableExpression expr) {
-    return expr;
+  @Override
+  public void visit(VariableExpression expr) {
+    expr.setReturnType(expr.getDefinition().getReturnType());
   }
 
   /**
    * Visits an initializer list
    *
    * @param expr The initializer list
-   * @return The visited initializer list
    */
-  private Node visit(InitializerList expr) {
+  @Override
+  public void visit(InitializerList expr) {
     ReturnType ty = new ReturnType();
 
     if (expr.size() > 0) {
@@ -532,16 +649,15 @@ public class ASTVisitor {
     }
 
     expr.setReturnType(ty);
-    return expr;
   }
 
   /**
    * Visits a make expression
    *
    * @param expr The make expression
-   * @return The visited make expression
    */
-  private Node visit(MakeExpression expr) {
+  @Override
+  public void visit(MakeExpression expr) {
     ReturnType returnType = TypeRules.determineDeclarationSpecifier(expr.getSpecifiers());
     if (returnType.prefix.getLeft() != TypeModifier.CHAN) {
       throw new RuntimeException(
@@ -551,7 +667,6 @@ public class ASTVisitor {
     }
 
     expr.setReturnType(returnType);
-    return expr;
   }
 
   /**
@@ -559,7 +674,8 @@ public class ASTVisitor {
    *
    * @param expr The cast expression
    */
-  private void visit(CastExpression expr) {
+  @Override
+  public void visit(CastExpression expr) {
     ReturnType specifierReturnType = TypeRules
         .determineDeclarationSpecifier(expr.getSpecifiers());
 
@@ -621,5 +737,20 @@ public class ASTVisitor {
     }
 
     throw new RuntimeException("No returnvalue was given, expected " + returnType.toString());
+  }
+
+  /**
+   * Visit an initializer list, and verify that it can be assigned to the parents type
+   *
+   * @param initializerList The initalizer list
+   * @param parentReturnType The return type of the parent
+   */
+  private void visit(InitializerList initializerList, ReturnType parentReturnType) {
+    for (Node initializer : initializerList) {
+      visit((Expression) initializer);
+      TypeRules.throwIfInvalidDeclaration(parentReturnType, initializer);
+    }
+
+    initializerList.setReturnType(parentReturnType);
   }
 }

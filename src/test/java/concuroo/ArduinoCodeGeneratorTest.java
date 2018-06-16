@@ -49,6 +49,8 @@ import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
+import concuroo.types.ReturnType;
+import concuroo.types.TypeRules;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Hashtable;

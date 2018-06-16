@@ -2,8 +2,8 @@ package concuroo.nodes.expression.literalExpression;
 
 import ConcurooParser.ConcurooParser.PrimaryExpressionContext;
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
-import concuroo.Types;
+import concuroo.types.ReturnType;
+import concuroo.types.Types;
 import concuroo.Visitor;
 import concuroo.nodes.Node;
 import concuroo.nodes.expression.LiteralExpression;

@@ -3,7 +3,7 @@ package concuroo.nodes.expression.unaryExpression;
 import ConcurooParser.ConcurooParser;
 import ConcurooParser.ConcurooParser.CastExpressionContext;
 import concuroo.CSTVisitor;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.DeclarationSpecifierList;
 import concuroo.nodes.HasSpecifiers;

@@ -8,7 +8,7 @@ import ConcurooParser.ConcurooParser.InitDeclaratorContext;
 import ConcurooParser.ConcurooParser.ParameterDeclarationContext;
 import concuroo.CSTVisitor;
 import concuroo.CodeGenerator;
-import concuroo.ReturnType;
+import concuroo.types.ReturnType;
 import concuroo.Visitor;
 import concuroo.nodes.Declaration;
 import concuroo.nodes.DeclarationSpecifierList;
