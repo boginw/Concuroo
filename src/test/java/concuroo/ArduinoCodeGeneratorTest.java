@@ -1,5 +1,6 @@
 package concuroo;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import concuroo.exceptions.ExpressionNotFoundException;
@@ -8,13 +9,13 @@ import concuroo.generators.ArduinoCodeGenerator;
 import concuroo.mocks.ExpressionMock;
 import concuroo.mocks.NodeMock;
 import concuroo.mocks.StatementMock;
-import concuroo.nodes.Declaration;
 import concuroo.nodes.ArgumentExpressionList;
+import concuroo.nodes.Declaration;
 import concuroo.nodes.DeclarationSpecifierList;
+import concuroo.nodes.Expression;
 import concuroo.nodes.FunctionDeclaration;
 import concuroo.nodes.Program;
 import concuroo.nodes.Statement;
-import concuroo.nodes.Expression;
 import concuroo.nodes.expression.SizeofSpecifier;
 import concuroo.nodes.expression.binaryExpression.AssignmentExpression;
 import concuroo.nodes.expression.binaryExpression.arithmeticBinaryExpression.AdditiveExpression;
@@ -44,11 +45,11 @@ import concuroo.nodes.statement.CoroutineStatement;
 import concuroo.nodes.statement.ExpressionStatement;
 import concuroo.nodes.statement.SendStatement;
 import concuroo.nodes.statement.VariableDeclaration;
-import concuroo.nodes.statement.selectionStatement.WhileStatement;
 import concuroo.nodes.statement.jumpStatement.BreakStatement;
 import concuroo.nodes.statement.jumpStatement.ContinueStatement;
 import concuroo.nodes.statement.jumpStatement.ReturnStatement;
 import concuroo.nodes.statement.selectionStatement.IfStatement;
+import concuroo.nodes.statement.selectionStatement.WhileStatement;
 import concuroo.types.ReturnType;
 import concuroo.types.TypeRules;
 import java.util.ArrayList;
@@ -412,6 +413,35 @@ public class ArduinoCodeGeneratorTest {
   }
 
   @Test
+  public void pipeExpression() {
+    PipeExpression pexpr = new PipeExpression();
+    pexpr.setFirstOperand(new VariableExpression() {{
+      setIdentifier("id");
+    }});
+
+    cg.visit(pexpr);
+
+    String Expected = prefixer + "id->recval()";
+
+    assertStringEqual(Expected, mockTarget.getOutput());
+  }
+
+  @Test
+  public void pipeExpressionSecond() {
+    VariableDeclaration def = new VariableDeclaration();
+    def.setSpecifiers(new DeclarationSpecifierList(new ArrayList<String>() {{
+      add("int");
+    }}));
+    ReturnType returnType = TypeRules.determineDeclarationSpecifier(def.getSpecifiers());
+    def.setReturnType(returnType);
+    PipeExpression pipe = new PipeExpression(new VariableExpression("a", def));
+
+    cg.visit(pipe);
+    String Expected = prefixer + "a->recval()";
+    assertStringEqual(Expected, mockTarget.getOutput());
+  }
+
+  @Test
   public void breakStatement() {
     BreakStatement bstm = new BreakStatement();
 
@@ -560,7 +590,7 @@ public class ArduinoCodeGeneratorTest {
 
   }
 
-  /**
+  /*
    *
    *
    * END OF STATEMENTS TESTS
@@ -910,22 +940,6 @@ public class ArduinoCodeGeneratorTest {
   }
 
   @Test
-  public void pipeExpression() {
-    VariableDeclaration def = new VariableDeclaration();
-    def.setSpecifiers(new DeclarationSpecifierList(new ArrayList<String>() {{
-      add("int");
-    }}));
-    ReturnType returnType = TypeRules.determineDeclarationSpecifier(def.getSpecifiers());
-    def.setReturnType(returnType);
-    PipeExpression pipe = new PipeExpression(new VariableExpression("a", def));
-
-    cg.visit(pipe);
-    String Expected = prefixer + "a->recval()";
-    assertStringEqual(Expected, mockTarget.getOutput());
-
-  }
-
-  @Test
   public void negationExpression() {
     NegationExpression neg = new NegationExpression(
         new VariableExpression("a", new VariableDeclaration()));
@@ -935,7 +949,7 @@ public class ArduinoCodeGeneratorTest {
     assertStringEqual(Expected, mockTarget.getOutput());
   }
 
-  /**
+  /*
    *
    *
    * END OF EXPRESSIONS TESTS
@@ -947,13 +961,11 @@ public class ArduinoCodeGeneratorTest {
    */
 
   private void assertStringEqual(String Expected, String Actual) {
-    assertTrue(
-        "\ndeclarationSpecifierList Failed:\nExpected: \"" + Expected + "\" \nActual: \"" + Actual
-            + "\"",
-        Actual.equals(Expected)
-    );
+    assertEquals("\ndeclarationSpecifierList Failed:\nExpected: \""
+        + Expected + "\" \nActual: \"" + Actual + "\"", Actual, Expected);
   }
-  /**
+
+  /*
    *
    *
    * END OF HELPERS
@@ -970,20 +982,20 @@ class TestData {
 
   private Hashtable<String, String> data;
 
-  public TestData() {
+  TestData() {
     this.data = new Hashtable<String, String>() {
     };
   }
 
-  public void add(String input, String result) {
+  void add(String input, String result) {
     data.put(input, result);
   }
 
-  public String getExpected(String key) {
+  String getExpected(String key) {
     return data.get(key);
   }
 
-  public Set<String> getInputs() {
+  Set<String> getInputs() {
     return this.data.keySet();
   }
 

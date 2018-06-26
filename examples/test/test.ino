@@ -53,6 +53,9 @@ goroutines__started.add(start(__concuroo__sender, (void*)(&sender__params__0)));
 flash__params__struct flash__params__1 = {__concuroo__LED1, __concuroo__channel};
 goroutines__started.add(start(__concuroo__flash, (void*)(&flash__params__1)));
 delay(__concuroo__DEL);
+int __concuroo__b = __concuroo__channel->recval();
+
+__concuroo__channel->sendval(__concuroo__b);
 {
 while(goroutines__started.size()){
 kill(goroutines__started.shift());

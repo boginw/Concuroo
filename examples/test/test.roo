@@ -17,6 +17,9 @@ void loop()
 	go flash(LED1, channel);
 	delay(DEL);
 
+  int b = <- channel;
+  channel <- b;
+
   return;
 	while(1) {
 		flashForAWhile(LED2, channel);
